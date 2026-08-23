@@ -1,0 +1,23 @@
+# Secrets
+backend/.env
+frontend/.env.local
+.env
+.env.local
+
+# Python
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+
+# Node / Next.js
+frontend/node_modules/
+node_modules/
+frontend/.next/
+.next/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
