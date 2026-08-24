@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import AppSidebar from "../../components/AppSidebar";
+
 import { supabase } from "../../lib/supabase";
+
+
+// =========================================================
+// TYPES
+// =========================================================
 
 type Profile = {
   full_name: string | null;
@@ -16,543 +24,2496 @@ type Profile = {
   diet_preference: string | null;
 };
 
+
+type Meal = {
+  name: string;
+  foods: string[];
+  calories: number;
+  protein_grams: number;
+  reason?: string;
+};
+
+
+type NutritionDay = {
+  day: string;
+  meals: Meal[];
+};
+
+
+type Exercise = {
+  name: string;
+  sets: number;
+  reps: string;
+  rest_seconds: number;
+};
+
+
+type Cardio = {
+  activity: string;
+  duration_minutes: number;
+};
+
+
+type WorkoutDay = {
+  day: string;
+  type: "workout" | "rest";
+  focus: string;
+  duration_minutes: number;
+  warmup: string[];
+  exercises: Exercise[];
+  cardio: Cardio | null;
+  cooldown: string[];
+};
+
+
+type TrackerRecord = {
+  breakfast_completed: boolean;
+  lunch_completed: boolean;
+  dinner_completed: boolean;
+  workout_completed: boolean;
+
+  water_litres: number | null;
+  steps: number | null;
+  sleep_hours: number | null;
+  weight_kg: number | null;
+
+  mood: number | null;
+  energy: number | null;
+};
+
+
+// =========================================================
+// DASHBOARD
+// =========================================================
+
 export default function Dashboard() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+
+  // =======================================================
+  // STATE
+  // =======================================================
+
+  const [
+    profile,
+    setProfile
+  ] = useState<Profile | null>(
+    null
+  );
+
+
+  const [
+    nutritionDay,
+    setNutritionDay
+  ] = useState<NutritionDay | null>(
+    null
+  );
+
+
+  const [
+    workoutDay,
+    setWorkoutDay
+  ] = useState<WorkoutDay | null>(
+    null
+  );
+
+
+  const [
+    tracker,
+    setTracker
+  ] = useState<TrackerRecord | null>(
+    null
+  );
+
+
+  const [
+    loading,
+    setLoading
+  ] = useState(
+    true
+  );
+
+
+  const [
+    errorMessage,
+    setErrorMessage
+  ] = useState(
+    ""
+  );
+
+
+  // =======================================================
+  // DATE
+  // =======================================================
+
+  const today =
+    new Date()
+      .toLocaleDateString(
+        "en-CA"
+      );
+
+
+  const todayName =
+    new Date()
+      .toLocaleDateString(
+        "en-US",
+        {
+          weekday:
+            "long"
+        }
+      );
+
+
+  const todayReadable =
+    new Date()
+      .toLocaleDateString(
+        "en-NZ",
+        {
+          weekday:
+            "long",
+
+          day:
+            "numeric",
+
+          month:
+            "long"
+        }
+      );
+
+
+  // =======================================================
+  // LOAD DASHBOARD
+  // =======================================================
 
   useEffect(() => {
-    async function loadProfile() {
-      // Get currently logged-in user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
 
-      // If there is no logged-in user, go to login
-      if (!user) {
-        window.location.href = "/login";
-        return;
+    async function loadDashboard() {
+
+      setLoading(
+        true
+      );
+
+      setErrorMessage(
+        ""
+      );
+
+
+      try {
+
+        // =================================================
+        // USER
+        // =================================================
+
+        const {
+
+          data: {
+            user
+          },
+
+          error:
+            userError
+
+        } =
+          await supabase.auth.getUser();
+
+
+        if (
+          userError ||
+          !user
+        ) {
+
+          window.location.href =
+            "/login";
+
+          return;
+
+        }
+
+
+        // =================================================
+        // PROFILE
+        // =================================================
+
+        const {
+
+          data:
+            profileData,
+
+          error:
+            profileError
+
+        } =
+          await supabase
+
+            .from(
+              "profiles"
+            )
+
+            .select(
+              `
+              full_name,
+              age,
+              gender,
+              height_cm,
+              weight_kg,
+              goal,
+              activity_level,
+              workout_days,
+              workout_duration,
+              diet_preference
+              `
+            )
+
+            .eq(
+              "id",
+              user.id
+            )
+
+            .single();
+
+
+        if (
+          profileError
+        ) {
+
+          console.error(
+            "Dashboard profile error:",
+            profileError
+          );
+
+          throw new Error(
+            "Could not load your profile."
+          );
+
+        }
+
+
+        setProfile(
+          profileData
+        );
+
+
+        // =================================================
+        // ACTIVE NUTRITION PLAN
+        // =================================================
+
+        const {
+
+          data:
+            nutritionData,
+
+          error:
+            nutritionError
+
+        } =
+          await supabase
+
+            .from(
+              "nutrition_plans"
+            )
+
+            .select(
+              "weekly_plan"
+            )
+
+            .eq(
+              "user_id",
+              user.id
+            )
+
+            .eq(
+              "active",
+              true
+            )
+
+            .order(
+              "created_at",
+              {
+                ascending:
+                  false
+              }
+            )
+
+            .limit(
+              1
+            )
+
+            .maybeSingle();
+
+
+        if (
+          nutritionError
+        ) {
+
+          console.error(
+            "Dashboard nutrition error:",
+            nutritionError
+          );
+
+        }
+
+
+        if (
+          nutritionData &&
+          Array.isArray(
+            nutritionData.weekly_plan
+          )
+        ) {
+
+          const day =
+            nutritionData.weekly_plan.find(
+              (
+                item:
+                  NutritionDay
+              ) =>
+                item.day ===
+                  todayName
+            );
+
+
+          setNutritionDay(
+            day ??
+              null
+          );
+
+        }
+
+        else {
+
+          setNutritionDay(
+            null
+          );
+
+        }
+
+
+        // =================================================
+        // ACTIVE WORKOUT PLAN
+        // =================================================
+
+        const {
+
+          data:
+            workoutData,
+
+          error:
+            workoutError
+
+        } =
+          await supabase
+
+            .from(
+              "workout_plans"
+            )
+
+            .select(
+              "weekly_plan"
+            )
+
+            .eq(
+              "user_id",
+              user.id
+            )
+
+            .eq(
+              "active",
+              true
+            )
+
+            .order(
+              "created_at",
+              {
+                ascending:
+                  false
+              }
+            )
+
+            .limit(
+              1
+            )
+
+            .maybeSingle();
+
+
+        if (
+          workoutError
+        ) {
+
+          console.error(
+            "Dashboard workout error:",
+            workoutError
+          );
+
+        }
+
+
+        if (
+          workoutData &&
+          Array.isArray(
+            workoutData.weekly_plan
+          )
+        ) {
+
+          const day =
+            workoutData.weekly_plan.find(
+              (
+                item:
+                  WorkoutDay
+              ) =>
+                item.day ===
+                  todayName
+            );
+
+
+          setWorkoutDay(
+            day ??
+              null
+          );
+
+        }
+
+        else {
+
+          setWorkoutDay(
+            null
+          );
+
+        }
+
+
+        // =================================================
+        // TODAY'S TRACKER
+        // =================================================
+
+        const {
+
+          data:
+            trackerData,
+
+          error:
+            trackerError
+
+        } =
+          await supabase
+
+            .from(
+              "daily_tracker"
+            )
+
+            .select(
+              `
+              breakfast_completed,
+              lunch_completed,
+              dinner_completed,
+              workout_completed,
+              water_litres,
+              steps,
+              sleep_hours,
+              weight_kg,
+              mood,
+              energy
+              `
+            )
+
+            .eq(
+              "user_id",
+              user.id
+            )
+
+            .eq(
+              "tracker_date",
+              today
+            )
+
+            .maybeSingle();
+
+
+        if (
+          trackerError
+        ) {
+
+          console.error(
+            "Dashboard tracker error:",
+            trackerError
+          );
+
+        }
+
+
+        setTracker(
+          trackerData ??
+            null
+        );
+
+
+      } catch (
+        err
+      ) {
+
+        console.error(
+          "Dashboard load error:",
+          err
+        );
+
+
+        if (
+          err instanceof Error
+        ) {
+
+          setErrorMessage(
+            err.message
+          );
+
+        }
+
+        else {
+
+          setErrorMessage(
+            "Something went wrong."
+          );
+
+        }
+
       }
 
-      // Get this user's profile from Supabase
-      const { data, error } = await supabase
-        .from("profiles")
-        .select(
-          `
-          full_name,
-          age,
-          gender,
-          height_cm,
-          weight_kg,
-          goal,
-          activity_level,
-          workout_days,
-          workout_duration,
-          diet_preference
-          `
-        )
-        .eq("id", user.id)
-        .single();
+      finally {
 
-      if (error) {
-        console.error(error);
-        setErrorMessage("Could not load your profile.");
-        setLoading(false);
-        return;
+        setLoading(
+          false
+        );
+
       }
 
-      setProfile(data);
-      setLoading(false);
     }
 
-    loadProfile();
-  }, []);
 
-  // Logout
+    loadDashboard();
+
+  }, [
+    today,
+    todayName
+  ]);
+
+
+  // =======================================================
+  // LOGOUT
+  // =======================================================
+
   async function logout() {
+
     await supabase.auth.signOut();
 
-    window.location.href = "/login";
+    window.location.href =
+      "/login";
+
   }
 
-  // Loading screen
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">
-          Loading your dashboard...
-        </p>
-      </main>
+
+  // =======================================================
+  // TODAY'S SCORE
+  // =======================================================
+
+  const todayStats =
+    useMemo(
+      () => {
+
+        if (
+          !tracker
+        ) {
+
+          return {
+
+            percentage:
+              0,
+
+            completed:
+              0,
+
+            total:
+              7
+
+          };
+
+        }
+
+
+        const workoutDone =
+          workoutDay?.type ===
+            "rest"
+
+            ? true
+
+            : tracker.workout_completed;
+
+
+        const habits = [
+
+          tracker.breakfast_completed,
+
+          tracker.lunch_completed,
+
+          tracker.dinner_completed,
+
+          workoutDone,
+
+          Number(
+            tracker.water_litres ||
+              0
+          ) >=
+            2,
+
+          Number(
+            tracker.steps ||
+              0
+          ) >=
+            7000,
+
+          Number(
+            tracker.sleep_hours ||
+              0
+          ) >=
+            7,
+
+        ];
+
+
+        const completed =
+          habits.filter(
+            Boolean
+          ).length;
+
+
+        return {
+
+          percentage:
+            Math.round(
+              (
+                completed /
+                habits.length
+              ) *
+                100
+            ),
+
+          completed,
+
+          total:
+            habits.length
+
+        };
+
+      },
+
+      [
+        tracker,
+        workoutDay
+      ]
+
     );
+
+
+  // =======================================================
+  // MEALS
+  // =======================================================
+
+  const breakfast =
+    findMeal(
+      nutritionDay,
+      "breakfast"
+    );
+
+
+  const lunch =
+    findMeal(
+      nutritionDay,
+      "lunch"
+    );
+
+
+  const dinner =
+    findMeal(
+      nutritionDay,
+      "dinner"
+    );
+
+
+  // =======================================================
+  // LOADING
+  // =======================================================
+
+  if (
+    loading
+  ) {
+
+    return (
+
+      <main className="min-h-screen bg-gray-50 flex">
+
+        <AppSidebar />
+
+        <section className="flex-1 flex items-center justify-center">
+
+          <p className="text-gray-600">
+
+            Loading your dashboard...
+
+          </p>
+
+        </section>
+
+      </main>
+
+    );
+
   }
 
-  // Error screen
-  if (errorMessage) {
+
+  // =======================================================
+  // ERROR
+  // =======================================================
+
+  if (
+    errorMessage
+  ) {
+
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-red-600">
-          {errorMessage}
-        </p>
+
+      <main className="min-h-screen bg-gray-50 flex">
+
+        <AppSidebar />
+
+        <section className="flex-1 flex items-center justify-center">
+
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
+
+            <p className="text-red-700">
+
+              {
+                errorMessage
+              }
+
+            </p>
+
+          </div>
+
+        </section>
+
       </main>
+
     );
+
   }
+
+
+  // =======================================================
+  // PAGE
+  // =======================================================
 
   return (
-    <main className="min-h-screen bg-gray-50">
 
-      {/* ================= HEADER ================= */}
+    <main className="min-h-screen bg-gray-50 flex">
 
-      <header className="bg-white border-b border-gray-200">
-
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-
-          <div>
-            <h1 className="text-2xl font-bold text-black">
-              AI Wellness Coach
-            </h1>
-
-            <p className="text-sm text-gray-500 mt-1">
-              Your personal wellness companion
-            </p>
-          </div>
-
-          <button
-            onClick={logout}
-            className="px-4 py-2 rounded-lg bg-black text-white text-sm font-medium hover:bg-gray-800"
-          >
-            Logout
-          </button>
-
-        </div>
-
-      </header>
+      <AppSidebar />
 
 
-      {/* ================= MAIN CONTENT ================= */}
+      <section className="flex-1 p-10">
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-
-        {/* ================= WELCOME ================= */}
-
-        <section>
-
-          <p className="text-gray-500">
-            Welcome back
-          </p>
-
-          <h2 className="text-4xl font-bold text-black mt-1">
-            {profile?.full_name || "there"} 👋
-          </h2>
-
-          <p className="text-gray-600 mt-3">
-            Let's make today a healthy and productive day.
-          </p>
-
-        </section>
+        <div className="max-w-7xl">
 
 
-        {/* ================= QUICK STATS ================= */}
+          {/* ============================================
+              HEADER
+          ============================================ */}
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
-
-          {/* Weight */}
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-6">
-
-            <p className="text-sm text-gray-500">
-              Weight
-            </p>
-
-            <p className="text-3xl font-bold text-black mt-2">
-              {profile?.weight_kg ?? "--"}
-
-              <span className="text-base font-normal ml-1">
-                kg
-              </span>
-            </p>
-
-          </div>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
 
 
-          {/* Height */}
+            <div>
 
-          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+              <p className="text-sm font-semibold text-gray-500">
 
-            <p className="text-sm text-gray-500">
-              Height
-            </p>
+                DASHBOARD
 
-            <p className="text-3xl font-bold text-black mt-2">
-              {profile?.height_cm ?? "--"}
+              </p>
 
-              <span className="text-base font-normal ml-1">
-                cm
-              </span>
-            </p>
+
+              <h1 className="text-4xl font-bold text-black mt-2">
+
+                Welcome back, {
+                  profile?.full_name ||
+                  "there"
+                } 👋
+
+              </h1>
+
+
+              <p className="text-gray-600 mt-3">
+
+                {
+                  todayReadable
+                } · Here&apos;s your wellness plan for today.
+
+              </p>
+
+            </div>
+
+
+            <button
+
+              type="button"
+
+              onClick={
+                logout
+              }
+
+              className="
+                px-5
+                py-3
+                rounded-xl
+                bg-black
+                text-white
+                text-sm
+                font-semibold
+                hover:bg-gray-800
+                cursor-pointer
+              "
+
+            >
+
+              Logout
+
+            </button>
 
           </div>
 
 
-          {/* Workout days */}
+          {/* ============================================
+              TODAY'S COMPLETION
+          ============================================ */}
 
-          <div className="bg-white border border-gray-200 rounded-2xl p-6">
-
-            <p className="text-sm text-gray-500">
-              Workout
-            </p>
-
-            <p className="text-3xl font-bold text-black mt-2">
-              {profile?.workout_days ?? "--"}
-
-              <span className="text-base font-normal ml-1">
-                days
-              </span>
-            </p>
-
-          </div>
+          <section className="mt-10 bg-black text-white rounded-2xl p-8">
 
 
-          {/* Workout duration */}
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-6">
-
-            <p className="text-sm text-gray-500">
-              Workout Time
-            </p>
-
-            <p className="text-3xl font-bold text-black mt-2">
-              {profile?.workout_duration ?? "--"}
-
-              <span className="text-base font-normal ml-1">
-                min
-              </span>
-            </p>
-
-          </div>
-
-        </section>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
 
 
-        {/* ================= GOAL ================= */}
+              <div>
 
-        <section className="mt-8 bg-black text-white rounded-2xl p-8">
+                <p className="text-sm text-gray-300">
 
-          <p className="text-gray-300 text-sm">
-            Your primary goal
-          </p>
+                  Today&apos;s Completion
 
-          <h3 className="text-3xl font-bold mt-2">
-            {formatGoal(profile?.goal)}
-          </h3>
-
-          <p className="text-gray-300 mt-3">
-            Your AI wellness plan will be personalized around
-            this goal.
-          </p>
-
-        </section>
+                </p>
 
 
-        {/* ================= WELLNESS FEATURES ================= */}
+                <div className="flex items-end gap-2 mt-2">
 
-        <section className="mt-10">
+                  <p className="text-6xl font-bold">
 
-          <h3 className="text-2xl font-bold text-black">
-            Your Wellness
-          </h3>
+                    {
+                      todayStats.percentage
+                    }
 
+                  </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+                  <p className="text-2xl text-gray-300 mb-2">
 
-            {/* Nutrition */}
+                    %
 
-            <DashboardCard
-              title="Nutrition"
-              description="Your personalized meal plan"
-              icon="🥗"
-            />
+                  </p>
 
-
-            {/* Workout */}
-
-            <DashboardCard
-              title="Workout"
-              description="Your personalized training plan"
-              icon="🏋️"
-            />
+                </div>
 
 
-            {/* Tracker */}
+                <p className="text-sm text-gray-300 mt-3">
 
-            <DashboardCard
-              title="Daily Tracker"
-              description="Track your daily habits"
-              icon="✅"
-            />
+                  {
+                    todayStats.completed
+                  } of {
+                    todayStats.total
+                  } wellness targets completed
 
+                </p>
 
-            {/* AI Coach */}
-
-            <DashboardCard
-              title="AI Coach"
-              description="Get personalized guidance"
-              icon="🤖"
-            />
-
-          </div>
-
-        </section>
+              </div>
 
 
-        {/* ================= PROFILE SUMMARY ================= */}
+              <a
 
-        <section className="mt-10">
+                href="/tracker"
 
-          <h3 className="text-2xl font-bold text-black">
-            Your Profile
-          </h3>
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  bg-white
+                  text-black
+                  px-6
+                  py-3
+                  rounded-xl
+                  font-semibold
+                  hover:bg-gray-100
+                "
 
-          <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
+              >
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                Open Daily Tracker
 
-              <ProfileItem
-                label="Age"
-                value={
-                  profile?.age
-                    ? `${profile.age} years`
-                    : "--"
-                }
-              />
+              </a>
 
-              <ProfileItem
-                label="Gender"
-                value={formatGender(profile?.gender)}
-              />
+            </div>
 
-              <ProfileItem
-                label="Activity Level"
-                value={formatActivity(profile?.activity_level)}
-              />
 
-              <ProfileItem
-                label="Diet"
-                value={formatDiet(profile?.diet_preference)}
-              />
+            <div className="mt-6 h-3 bg-gray-700 rounded-full overflow-hidden">
 
-              <ProfileItem
-                label="Height"
-                value={
-                  profile?.height_cm
-                    ? `${profile.height_cm} cm`
-                    : "--"
-                }
-              />
+              <div
 
-              <ProfileItem
-                label="Weight"
-                value={
-                  profile?.weight_kg
-                    ? `${profile.weight_kg} kg`
-                    : "--"
-                }
+                className="h-full bg-white rounded-full transition-all"
+
+                style={{
+
+                  width:
+                    `${todayStats.percentage}%`
+
+                }}
+
               />
 
             </div>
 
-          </div>
+          </section>
 
-        </section>
 
-      </div>
+          {/* ============================================
+              QUICK STATS
+          ============================================ */}
+
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+
+
+            <StatCard
+
+              title="Weight"
+
+              value={
+                tracker?.weight_kg ??
+                profile?.weight_kg ??
+                "--"
+              }
+
+              unit={
+                tracker?.weight_kg !==
+                  null ||
+                profile?.weight_kg !==
+                  null
+
+                  ? "kg"
+
+                  : ""
+              }
+
+              emoji="⚖️"
+
+            />
+
+
+            <StatCard
+
+              title="Water Today"
+
+              value={
+                tracker?.water_litres ??
+                0
+              }
+
+              unit="L"
+
+              emoji="💧"
+
+            />
+
+
+            <StatCard
+
+              title="Steps Today"
+
+              value={
+                tracker?.steps ??
+                0
+              }
+
+              unit=""
+
+              emoji="🚶"
+
+            />
+
+
+            <StatCard
+
+              title="Sleep"
+
+              value={
+                tracker?.sleep_hours ??
+                0
+              }
+
+              unit="hrs"
+
+              emoji="😴"
+
+            />
+
+
+          </section>
+
+
+          {/* ============================================
+              TODAY'S NUTRITION
+          ============================================ */}
+
+          <section className="mt-10">
+
+
+            <div className="flex items-center justify-between gap-5">
+
+              <div>
+
+                <p className="text-sm font-semibold text-gray-400">
+
+                  TODAY&apos;S PLAN
+
+                </p>
+
+
+                <h2 className="text-2xl font-bold text-black mt-1">
+
+                  Nutrition
+
+                </h2>
+
+              </div>
+
+
+              <a
+
+                href="/nutrition"
+
+                className="text-sm font-semibold text-gray-500 hover:text-black"
+
+              >
+
+                View full plan →
+
+              </a>
+
+            </div>
+
+
+            {
+              nutritionDay
+
+                ? (
+
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mt-5">
+
+
+                    <MealCard
+
+                      emoji="🍳"
+
+                      fallbackTitle="Breakfast"
+
+                      meal={
+                        breakfast
+                      }
+
+                      completed={
+                        tracker?.breakfast_completed ??
+                        false
+                      }
+
+                    />
+
+
+                    <MealCard
+
+                      emoji="🥗"
+
+                      fallbackTitle="Lunch"
+
+                      meal={
+                        lunch
+                      }
+
+                      completed={
+                        tracker?.lunch_completed ??
+                        false
+                      }
+
+                    />
+
+
+                    <MealCard
+
+                      emoji="🍽️"
+
+                      fallbackTitle="Dinner"
+
+                      meal={
+                        dinner
+                      }
+
+                      completed={
+                        tracker?.dinner_completed ??
+                        false
+                      }
+
+                    />
+
+
+                  </div>
+
+                )
+
+                : (
+
+                  <EmptyPlanCard
+
+                    title="No active nutrition plan"
+
+                    description="Generate your weekly nutrition plan to see today's meals here."
+
+                    href="/nutrition"
+
+                    buttonText="Open Nutrition"
+
+                  />
+
+                )
+            }
+
+          </section>
+
+
+          {/* ============================================
+              TODAY'S WORKOUT
+          ============================================ */}
+
+          <section className="mt-10">
+
+
+            <div className="flex items-center justify-between gap-5">
+
+              <div>
+
+                <p className="text-sm font-semibold text-gray-400">
+
+                  TODAY&apos;S TRAINING
+
+                </p>
+
+
+                <h2 className="text-2xl font-bold text-black mt-1">
+
+                  Workout
+
+                </h2>
+
+              </div>
+
+
+              <a
+
+                href="/workout"
+
+                className="text-sm font-semibold text-gray-500 hover:text-black"
+
+              >
+
+                View full plan →
+
+              </a>
+
+            </div>
+
+
+            {
+              workoutDay
+
+                ? (
+
+                  workoutDay.type ===
+                    "rest"
+
+                    ? (
+
+                      <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-7">
+
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+
+                          <div>
+
+                            <span className="text-4xl">
+
+                              🧘
+
+                            </span>
+
+
+                            <h3 className="text-2xl font-bold text-black mt-4">
+
+                              Recovery Day
+
+                            </h3>
+
+
+                            <p className="text-gray-500 mt-2">
+
+                              {
+                                workoutDay.focus
+                              }
+
+                            </p>
+
+                          </div>
+
+
+                          <span className="bg-green-50 text-green-700 px-4 py-2 rounded-xl text-sm font-semibold">
+
+                            Recovery
+
+                          </span>
+
+                        </div>
+
+
+                        {
+                          workoutDay.cardio && (
+
+                            <div className="mt-6 pt-5 border-t border-gray-100">
+
+                              <p className="text-sm text-gray-500">
+
+                                Suggested activity
+
+                              </p>
+
+
+                              <p className="font-semibold text-black mt-2">
+
+                                {
+                                  workoutDay.cardio.activity
+                                } · {
+                                  workoutDay.cardio.duration_minutes
+                                } minutes
+
+                              </p>
+
+                            </div>
+
+                          )
+                        }
+
+                      </div>
+
+                    )
+
+                    : (
+
+                      <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-7">
+
+
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+
+                          <div>
+
+                            <span className="text-4xl">
+
+                              🏋️
+
+                            </span>
+
+
+                            <h3 className="text-2xl font-bold text-black mt-4">
+
+                              {
+                                workoutDay.focus
+                              }
+
+                            </h3>
+
+
+                            <p className="text-gray-500 mt-2">
+
+                              {
+                                workoutDay.duration_minutes
+                              } minutes · {
+                                workoutDay.exercises?.length ||
+                                0
+                              } exercises
+
+                            </p>
+
+                          </div>
+
+
+                          <span className={`
+                            px-4
+                            py-2
+                            rounded-xl
+                            text-sm
+                            font-semibold
+
+                            ${
+                              tracker?.workout_completed
+
+                                ? "bg-green-50 text-green-700"
+
+                                : "bg-gray-100 text-gray-600"
+                            }
+                          `}>
+
+                            {
+                              tracker?.workout_completed
+
+                                ? "✓ Completed"
+
+                                : "Not completed"
+                            }
+
+                          </span>
+
+                        </div>
+
+
+                        {
+                          Array.isArray(
+                            workoutDay.exercises
+                          ) &&
+                          workoutDay.exercises.length >
+                            0 && (
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
+
+                              {
+                                workoutDay.exercises
+                                  .slice(
+                                    0,
+                                    6
+                                  )
+                                  .map(
+                                    (
+                                      exercise,
+                                      index
+                                    ) => (
+
+                                      <div
+
+                                        key={
+                                          `${exercise.name}-${index}`
+                                        }
+
+                                        className="bg-gray-50 rounded-xl p-4"
+
+                                      >
+
+                                        <p className="font-semibold text-black">
+
+                                          {
+                                            exercise.name
+                                          }
+
+                                        </p>
+
+
+                                        <p className="text-sm text-gray-500 mt-1">
+
+                                          {
+                                            exercise.sets
+                                          } sets × {
+                                            exercise.reps
+                                          }
+
+                                        </p>
+
+                                      </div>
+
+                                    )
+                                  )
+                              }
+
+                            </div>
+
+                          )
+                        }
+
+                      </div>
+
+                    )
+
+                )
+
+                : (
+
+                  <EmptyPlanCard
+
+                    title="No active workout plan"
+
+                    description="Generate your weekly training plan to see today's workout here."
+
+                    href="/workout"
+
+                    buttonText="Open Workout"
+
+                  />
+
+                )
+            }
+
+          </section>
+
+
+          {/* ============================================
+              WELLBEING
+          ============================================ */}
+
+          <section className="mt-10">
+
+
+            <h2 className="text-2xl font-bold text-black">
+
+              Today&apos;s Wellbeing
+
+            </h2>
+
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+
+
+              <WellbeingCard
+
+                emoji="🙂"
+
+                title="Mood"
+
+                value={
+                  tracker?.mood ??
+                  null
+                }
+
+              />
+
+
+              <WellbeingCard
+
+                emoji="⚡"
+
+                title="Energy"
+
+                value={
+                  tracker?.energy ??
+                  null
+                }
+
+              />
+
+
+            </div>
+
+          </section>
+
+
+          {/* ============================================
+              QUICK ACTIONS
+          ============================================ */}
+
+          <section className="mt-10">
+
+
+            <h2 className="text-2xl font-bold text-black">
+
+              Quick Actions
+
+            </h2>
+
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 mt-5">
+
+
+              <DashboardCard
+
+                title="Nutrition"
+
+                description="View or regenerate your meal plan."
+
+                icon="🥗"
+
+                href="/nutrition"
+
+              />
+
+
+              <DashboardCard
+
+                title="Workout"
+
+                description="See your weekly training plan."
+
+                icon="🏋️"
+
+                href="/workout"
+
+              />
+
+
+              <DashboardCard
+
+                title="Daily Tracker"
+
+                description="Record today's habits and metrics."
+
+                icon="✅"
+
+                href="/tracker"
+
+              />
+
+
+              <DashboardCard
+
+                title="Progress"
+
+                description="Review trends and consistency."
+
+                icon="📈"
+
+                href="/progress"
+
+              />
+
+
+              <DashboardCard
+
+                title="AI Coach"
+
+                description="Ask questions about your progress."
+
+                icon="🤖"
+
+                href="/coach"
+
+              />
+
+
+            </div>
+
+          </section>
+
+
+          {/* ============================================
+              PROFILE SUMMARY
+          ============================================ */}
+
+          <section className="mt-10 mb-10">
+
+
+            <h2 className="text-2xl font-bold text-black">
+
+              Your Profile
+
+            </h2>
+
+
+            <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
+
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+                <ProfileItem
+
+                  label="Age"
+
+                  value={
+                    profile?.age
+
+                      ? `${profile.age} years`
+
+                      : "--"
+                  }
+
+                />
+
+
+                <ProfileItem
+
+                  label="Gender"
+
+                  value={
+                    formatGender(
+                      profile?.gender
+                    )
+                  }
+
+                />
+
+
+                <ProfileItem
+
+                  label="Primary Goal"
+
+                  value={
+                    formatGoal(
+                      profile?.goal
+                    )
+                  }
+
+                />
+
+
+                <ProfileItem
+
+                  label="Activity Level"
+
+                  value={
+                    formatActivity(
+                      profile?.activity_level
+                    )
+                  }
+
+                />
+
+
+                <ProfileItem
+
+                  label="Diet"
+
+                  value={
+                    formatDiet(
+                      profile?.diet_preference
+                    )
+                  }
+
+                />
+
+
+                <ProfileItem
+
+                  label="Weekly Training"
+
+                  value={
+                    profile?.workout_days
+
+                      ? `${profile.workout_days} days`
+
+                      : "--"
+                  }
+
+                />
+
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+        </div>
+
+      </section>
 
     </main>
+
   );
+
 }
 
 
-/* =====================================================
-   DASHBOARD CARD
-===================================================== */
+// =========================================================
+// STAT CARD
+// =========================================================
 
-function DashboardCard({
+function StatCard({
+
   title,
-  description,
-  icon,
+
+  value,
+
+  unit,
+
+  emoji,
+
 }: {
-  title: string;
-  description: string;
-  icon: string;
+
+  title:
+    string;
+
+  value:
+    number | string;
+
+  unit:
+    string;
+
+  emoji:
+    string;
+
 }) {
+
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow cursor-pointer">
 
-      <div className="text-3xl">
-        {icon}
-      </div>
+    <div className="bg-white border border-gray-200 rounded-2xl p-6">
 
-      <h4 className="text-xl font-semibold text-black mt-4">
-        {title}
-      </h4>
 
-      <p className="text-gray-500 mt-2 text-sm">
-        {description}
+      <span className="text-3xl">
+
+        {
+          emoji
+        }
+
+      </span>
+
+
+      <p className="text-sm text-gray-500 mt-4">
+
+        {
+          title
+        }
+
+      </p>
+
+
+      <p className="text-3xl font-bold text-black mt-2">
+
+        {
+          value
+        }
+
+
+        {
+          unit && (
+
+            <span className="text-base font-normal ml-1">
+
+              {
+                unit
+              }
+
+            </span>
+
+          )
+        }
+
       </p>
 
     </div>
+
   );
+
 }
 
 
-/* =====================================================
-   PROFILE ITEM
-===================================================== */
+// =========================================================
+// MEAL CARD
+// =========================================================
+
+function MealCard({
+
+  emoji,
+
+  fallbackTitle,
+
+  meal,
+
+  completed,
+
+}: {
+
+  emoji:
+    string;
+
+  fallbackTitle:
+    string;
+
+  meal:
+    Meal | null;
+
+  completed:
+    boolean;
+
+}) {
+
+  return (
+
+    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+
+
+      <div className="flex items-start justify-between gap-4">
+
+
+        <span className="text-3xl">
+
+          {
+            emoji
+          }
+
+        </span>
+
+
+        <span className={`
+          text-xs
+          font-semibold
+          px-3
+          py-2
+          rounded-xl
+
+          ${
+            completed
+
+              ? "bg-green-50 text-green-700"
+
+              : "bg-gray-100 text-gray-500"
+          }
+        `}>
+
+          {
+            completed
+
+              ? "✓ Completed"
+
+              : "Pending"
+          }
+
+        </span>
+
+      </div>
+
+
+      <h3 className="text-xl font-bold text-black mt-5">
+
+        {
+          meal?.name ||
+          fallbackTitle
+        }
+
+      </h3>
+
+
+      {
+        meal
+
+          ? (
+
+            <>
+
+              <p className="text-sm text-gray-500 mt-2">
+
+                {
+                  meal.calories
+                } kcal · {
+                  meal.protein_grams
+                }g protein
+
+              </p>
+
+
+              {
+                Array.isArray(
+                  meal.foods
+                ) &&
+                meal.foods.length >
+                  0 && (
+
+                  <ul className="mt-4 space-y-2 text-sm text-gray-700">
+
+                    {
+                      meal.foods
+                        .slice(
+                          0,
+                          4
+                        )
+                        .map(
+                          (
+                            food,
+                            index
+                          ) => (
+
+                            <li
+
+                              key={
+                                `${food}-${index}`
+                              }
+
+                            >
+
+                              • {
+                                food
+                              }
+
+                            </li>
+
+                          )
+                        )
+                    }
+
+                  </ul>
+
+                )
+              }
+
+            </>
+
+          )
+
+          : (
+
+            <p className="text-sm text-gray-500 mt-3">
+
+              Meal details unavailable.
+
+            </p>
+
+          )
+      }
+
+    </div>
+
+  );
+
+}
+
+
+// =========================================================
+// DASHBOARD CARD
+// =========================================================
+
+function DashboardCard({
+
+  title,
+
+  description,
+
+  icon,
+
+  href,
+
+}: {
+
+  title:
+    string;
+
+  description:
+    string;
+
+  icon:
+    string;
+
+  href:
+    string;
+
+}) {
+
+  return (
+
+    <a
+
+      href={
+        href
+      }
+
+      className="
+        block
+        bg-white
+        border
+        border-gray-200
+        rounded-2xl
+        p-6
+        hover:shadow-md
+        hover:border-gray-300
+        transition
+      "
+
+    >
+
+      <div className="text-3xl">
+
+        {
+          icon
+        }
+
+      </div>
+
+
+      <h3 className="text-lg font-semibold text-black mt-4">
+
+        {
+          title
+        }
+
+      </h3>
+
+
+      <p className="text-gray-500 mt-2 text-sm">
+
+        {
+          description
+        }
+
+      </p>
+
+    </a>
+
+  );
+
+}
+
+
+// =========================================================
+// WELLBEING CARD
+// =========================================================
+
+function WellbeingCard({
+
+  emoji,
+
+  title,
+
+  value,
+
+}: {
+
+  emoji:
+    string;
+
+  title:
+    string;
+
+  value:
+    number | null;
+
+}) {
+
+  return (
+
+    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+
+
+      <div className="flex items-center gap-3">
+
+        <span className="text-3xl">
+
+          {
+            emoji
+          }
+
+        </span>
+
+
+        <div>
+
+          <p className="text-sm text-gray-500">
+
+            {
+              title
+            }
+
+          </p>
+
+
+          <p className="text-2xl font-bold text-black mt-1">
+
+            {
+              value !==
+                null
+
+                ? `${value} / 5`
+
+                : "--"
+            }
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+
+// =========================================================
+// EMPTY PLAN CARD
+// =========================================================
+
+function EmptyPlanCard({
+
+  title,
+
+  description,
+
+  href,
+
+  buttonText,
+
+}: {
+
+  title:
+    string;
+
+  description:
+    string;
+
+  href:
+    string;
+
+  buttonText:
+    string;
+
+}) {
+
+  return (
+
+    <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-7">
+
+
+      <h3 className="text-xl font-semibold text-black">
+
+        {
+          title
+        }
+
+      </h3>
+
+
+      <p className="text-gray-500 mt-2">
+
+        {
+          description
+        }
+
+      </p>
+
+
+      <a
+
+        href={
+          href
+        }
+
+        className="inline-block mt-5 bg-black text-white px-5 py-3 rounded-xl font-semibold"
+
+      >
+
+        {
+          buttonText
+        }
+
+      </a>
+
+    </div>
+
+  );
+
+}
+
+
+// =========================================================
+// PROFILE ITEM
+// =========================================================
 
 function ProfileItem({
+
   label,
+
   value,
+
 }: {
-  label: string;
-  value: string;
+
+  label:
+    string;
+
+  value:
+    string;
+
 }) {
+
   return (
+
     <div>
 
       <p className="text-sm text-gray-500">
-        {label}
+
+        {
+          label
+        }
+
       </p>
 
+
       <p className="text-lg font-semibold text-black mt-1">
-        {value}
+
+        {
+          value
+        }
+
       </p>
 
     </div>
+
   );
+
 }
 
 
-/* =====================================================
-   FORMAT GOAL
-===================================================== */
+// =========================================================
+// FIND MEAL
+// =========================================================
+
+function findMeal(
+
+  day:
+    NutritionDay | null,
+
+  mealName:
+    string
+
+) {
+
+  if (
+    !day ||
+    !Array.isArray(
+      day.meals
+    )
+  ) {
+
+    return null;
+
+  }
+
+
+  return (
+
+    day.meals.find(
+      meal =>
+        meal.name
+          .toLowerCase()
+          .includes(
+            mealName.toLowerCase()
+          )
+    ) ??
+    null
+
+  );
+
+}
+
+
+// =========================================================
+// FORMAT GOAL
+// =========================================================
 
 function formatGoal(
-  goal: string | null | undefined
+  goal:
+    string |
+    null |
+    undefined
 ) {
-  if (!goal) {
+
+  if (
+    !goal
+  ) {
+
     return "Wellness";
+
   }
 
-  const goals: Record<string, string> = {
 
-    lose_weight:
-      "Lose Weight",
+  const goals:
+    Record<
+      string,
+      string
+    > = {
 
-    build_muscle:
-      "Build Muscle",
+      lose_weight:
+        "Lose Weight",
 
-    maintain_weight:
-      "Maintain Weight",
+      build_muscle:
+        "Build Muscle",
 
-    improve_fitness:
-      "Improve Fitness",
+      maintain_weight:
+        "Maintain Weight",
 
-    general_wellness:
-      "General Wellness",
+      improve_fitness:
+        "Improve Fitness",
 
-  };
+      general_wellness:
+        "General Wellness",
 
-  return goals[goal] || goal;
+    };
+
+
+  return (
+    goals[
+      goal
+    ] ||
+    goal
+  );
+
 }
 
 
-/* =====================================================
-   FORMAT GENDER
-===================================================== */
+// =========================================================
+// FORMAT GENDER
+// =========================================================
 
 function formatGender(
-  gender: string | null | undefined
+  gender:
+    string |
+    null |
+    undefined
 ) {
-  if (!gender) {
+
+  if (
+    !gender
+  ) {
+
     return "--";
+
   }
 
-  const genders: Record<string, string> = {
 
-    male: "Male",
+  const genders:
+    Record<
+      string,
+      string
+    > = {
 
-    female: "Female",
+      male:
+        "Male",
 
-    non_binary: "Non-binary",
+      female:
+        "Female",
 
-    prefer_not_to_say:
-      "Prefer not to say",
+      non_binary:
+        "Non-binary",
 
-  };
+      prefer_not_to_say:
+        "Prefer not to say",
 
-  return genders[gender] || gender;
+    };
+
+
+  return (
+    genders[
+      gender
+    ] ||
+    gender
+  );
+
 }
 
 
-/* =====================================================
-   FORMAT ACTIVITY
-===================================================== */
+// =========================================================
+// FORMAT ACTIVITY
+// =========================================================
 
 function formatActivity(
-  activity: string | null | undefined
+  activity:
+    string |
+    null |
+    undefined
 ) {
-  if (!activity) {
+
+  if (
+    !activity
+  ) {
+
     return "--";
+
   }
 
-  const activities: Record<string, string> = {
 
-    sedentary:
-      "Mostly sedentary",
+  const activities:
+    Record<
+      string,
+      string
+    > = {
 
-    light:
-      "Lightly active",
+      sedentary:
+        "Mostly sedentary",
 
-    moderate:
-      "Moderately active",
+      light:
+        "Lightly active",
 
-    very_active:
-      "Very active",
+      moderate:
+        "Moderately active",
 
-  };
+      very_active:
+        "Very active",
 
-  return activities[activity] || activity;
+    };
+
+
+  return (
+    activities[
+      activity
+    ] ||
+    activity
+  );
+
 }
 
 
-/* =====================================================
-   FORMAT DIET
-===================================================== */
+// =========================================================
+// FORMAT DIET
+// =========================================================
 
 function formatDiet(
-  diet: string | null | undefined
+  diet:
+    string |
+    null |
+    undefined
 ) {
-  if (!diet) {
+
+  if (
+    !diet
+  ) {
+
     return "--";
+
   }
 
-  const diets: Record<string, string> = {
 
-    no_preference:
-      "No specific preference",
+  const diets:
+    Record<
+      string,
+      string
+    > = {
 
-    vegetarian:
-      "Vegetarian",
+      no_preference:
+        "No specific preference",
 
-    vegan:
-      "Vegan",
+      vegetarian:
+        "Vegetarian",
 
-    pescatarian:
-      "Pescatarian",
+      vegan:
+        "Vegan",
 
-    high_protein:
-      "High protein",
+      pescatarian:
+        "Pescatarian",
 
-  };
+      high_protein:
+        "High protein",
 
-  return diets[diet] || diet;
+    };
+
+
+  return (
+    diets[
+      diet
+    ] ||
+    diet
+  );
+
 }
