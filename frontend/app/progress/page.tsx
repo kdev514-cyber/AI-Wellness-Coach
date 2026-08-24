@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import AppSidebar from "../../components/AppSidebar";
 
@@ -46,7 +50,8 @@ type TrackerRecord = {
 };
 
 
-type RangeOption = 7 | 30;
+type RangeOption =
+  7 | 30;
 
 
 // =========================================================
@@ -58,25 +63,33 @@ export default function ProgressPage() {
   const [
     records,
     setRecords
-  ] = useState<TrackerRecord[]>([]);
+  ] = useState<TrackerRecord[]>(
+    []
+  );
 
 
   const [
     loading,
     setLoading
-  ] = useState(true);
+  ] = useState(
+    true
+  );
 
 
   const [
     error,
     setError
-  ] = useState("");
+  ] = useState(
+    ""
+  );
 
 
   const [
     range,
     setRange
-  ] = useState<RangeOption>(7);
+  ] = useState<RangeOption>(
+    7
+  );
 
 
   // =====================================================
@@ -87,152 +100,197 @@ export default function ProgressPage() {
 
     async function loadProgress() {
 
-      setLoading(true);
+      setLoading(
+        true
+      );
 
-      setError("");
-
-
-      // =================================================
-      // GET CURRENT USER
-      // =================================================
-
-      const {
-        data: {
-          user
-        },
-
-        error:
-          userError
-
-      } =
-        await supabase.auth.getUser();
-
-
-      if (
-        userError ||
-        !user
-      ) {
-
-        setError(
-          "You must be logged in."
-        );
-
-        setLoading(false);
-
-        return;
-
-      }
-
-
-      // =================================================
-      // CALCULATE START DATE
-      // =================================================
-
-      const startDate =
-        new Date();
-
-
-      startDate.setDate(
-        startDate.getDate() -
-        (range - 1)
+      setError(
+        ""
       );
 
 
-      const formattedStartDate =
-        startDate
-          .toLocaleDateString(
+      try {
+
+        // =================================================
+        // GET CURRENT USER
+        // =================================================
+
+        const {
+
+          data: {
+            user
+          },
+
+          error:
+            userError
+
+        } =
+          await supabase.auth.getUser();
+
+
+        if (
+          userError ||
+          !user
+        ) {
+
+          throw new Error(
+            "You must be logged in."
+          );
+
+        }
+
+
+        // =================================================
+        // CALCULATE START DATE
+        // =================================================
+
+        const startDate =
+          new Date();
+
+
+        startDate.setDate(
+
+          startDate.getDate() -
+          (
+            range -
+            1
+          )
+
+        );
+
+
+        const formattedStartDate =
+          startDate.toLocaleDateString(
             "en-CA"
           );
 
 
-      // =================================================
-      // LOAD TRACKER RECORDS
-      // =================================================
+        // =================================================
+        // LOAD TRACKER RECORDS
+        // =================================================
 
-      const {
-        data,
-        error:
+        const {
+
+          data,
+
+          error:
+            trackerError
+
+        } =
+          await supabase
+
+            .from(
+              "daily_tracker"
+            )
+
+            .select(
+              `
+              id,
+              tracker_date,
+              breakfast_completed,
+              lunch_completed,
+              dinner_completed,
+              workout_completed,
+              water_litres,
+              steps,
+              sleep_hours,
+              weight_kg,
+              mood,
+              energy,
+              notes
+              `
+            )
+
+            .eq(
+              "user_id",
+              user.id
+            )
+
+            .gte(
+              "tracker_date",
+              formattedStartDate
+            )
+
+            .order(
+              "tracker_date",
+              {
+                ascending:
+                  true
+              }
+            );
+
+
+        if (
           trackerError
+        ) {
 
-      } =
-        await supabase
-
-          .from(
-            "daily_tracker"
-          )
-
-          .select(
-            `
-            id,
-            tracker_date,
-            breakfast_completed,
-            lunch_completed,
-            dinner_completed,
-            workout_completed,
-            water_litres,
-            steps,
-            sleep_hours,
-            weight_kg,
-            mood,
-            energy,
-            notes
-            `
-          )
-
-          .eq(
-            "user_id",
-            user.id
-          )
-
-          .gte(
-            "tracker_date",
-            formattedStartDate
-          )
-
-          .order(
-            "tracker_date",
-            {
-              ascending:
-                true
-            }
+          console.error(
+            "Progress load error:",
+            trackerError
           );
 
+          throw new Error(
+            trackerError.message ||
+            "Could not load your progress."
+          );
 
-      if (
-        trackerError
+        }
+
+
+        setRecords(
+          (
+            data ||
+            []
+          ) as TrackerRecord[]
+        );
+
+
+      } catch (
+        err
       ) {
 
         console.error(
-          "Progress load error:",
-          trackerError
+          "Progress page error:",
+          err
         );
 
 
-        setError(
-          "Could not load your progress."
-        );
+        if (
+          err instanceof Error
+        ) {
 
+          setError(
+            err.message
+          );
 
-        setLoading(false);
+        }
 
-        return;
+        else {
+
+          setError(
+            "Something went wrong."
+          );
+
+        }
 
       }
 
+      finally {
 
-      setRecords(
-        (data || []) as TrackerRecord[]
-      );
+        setLoading(
+          false
+        );
 
-
-      setLoading(false);
+      }
 
     }
 
 
     loadProgress();
 
-  }, [range]);
+  }, [
+    range
+  ]);
 
 
   // =====================================================
@@ -244,25 +302,26 @@ export default function ProgressPage() {
       () => {
 
         if (
-          records.length === 0
+          records.length ===
+          0
         ) {
 
           return {
 
             averageSleep:
-              0,
+              null as number | null,
 
             averageWater:
-              0,
+              null as number | null,
 
             averageSteps:
-              0,
+              null as number | null,
 
             averageMood:
-              0,
+              null as number | null,
 
             averageEnergy:
-              0,
+              null as number | null,
 
             workoutCompletion:
               0,
@@ -279,6 +338,18 @@ export default function ProgressPage() {
             weightChange:
               null as number | null,
 
+            trackedDays:
+              0,
+
+            completedWorkouts:
+              0,
+
+            completedMeals:
+              0,
+
+            totalMeals:
+              0,
+
           };
 
         }
@@ -291,21 +362,26 @@ export default function ProgressPage() {
         const sleepValues =
           records
 
+            .filter(
+              record =>
+                record.sleep_hours !==
+                  null &&
+                Number(
+                  record.sleep_hours
+                ) >
+                  0
+            )
+
             .map(
               record =>
                 Number(
-                  record.sleep_hours || 0
+                  record.sleep_hours
                 )
-            )
-
-            .filter(
-              value =>
-                value > 0
             );
 
 
         const averageSleep =
-          average(
+          averageNullable(
             sleepValues
           );
 
@@ -317,21 +393,22 @@ export default function ProgressPage() {
         const waterValues =
           records
 
+            .filter(
+              record =>
+                record.water_litres !==
+                  null
+            )
+
             .map(
               record =>
                 Number(
-                  record.water_litres || 0
+                  record.water_litres
                 )
-            )
-
-            .filter(
-              value =>
-                value >= 0
             );
 
 
         const averageWater =
-          average(
+          averageNullable(
             waterValues
           );
 
@@ -343,21 +420,22 @@ export default function ProgressPage() {
         const stepValues =
           records
 
+            .filter(
+              record =>
+                record.steps !==
+                  null
+            )
+
             .map(
               record =>
                 Number(
-                  record.steps || 0
+                  record.steps
                 )
-            )
-
-            .filter(
-              value =>
-                value >= 0
             );
 
 
         const averageSteps =
-          average(
+          averageNullable(
             stepValues
           );
 
@@ -369,21 +447,26 @@ export default function ProgressPage() {
         const moodValues =
           records
 
+            .filter(
+              record =>
+                record.mood !==
+                  null &&
+                Number(
+                  record.mood
+                ) >
+                  0
+            )
+
             .map(
               record =>
                 Number(
-                  record.mood || 0
+                  record.mood
                 )
-            )
-
-            .filter(
-              value =>
-                value > 0
             );
 
 
         const averageMood =
-          average(
+          averageNullable(
             moodValues
           );
 
@@ -395,21 +478,26 @@ export default function ProgressPage() {
         const energyValues =
           records
 
+            .filter(
+              record =>
+                record.energy !==
+                  null &&
+                Number(
+                  record.energy
+                ) >
+                  0
+            )
+
             .map(
               record =>
                 Number(
-                  record.energy || 0
+                  record.energy
                 )
-            )
-
-            .filter(
-              value =>
-                value > 0
             );
 
 
         const averageEnergy =
-          average(
+          averageNullable(
             energyValues
           );
 
@@ -418,7 +506,7 @@ export default function ProgressPage() {
         // WORKOUT COMPLETION
         // =================================================
 
-        const workoutsCompleted =
+        const completedWorkouts =
           records.filter(
             record =>
               record.workout_completed
@@ -426,14 +514,15 @@ export default function ProgressPage() {
 
 
         const workoutCompletion =
-          records.length > 0
+          records.length >
+            0
 
             ? Math.round(
                 (
-                  workoutsCompleted /
+                  completedWorkouts /
                   records.length
                 ) *
-                100
+                  100
               )
 
             : 0;
@@ -454,14 +543,16 @@ export default function ProgressPage() {
         records.forEach(
           record => {
 
-            totalMeals += 3;
+            totalMeals +=
+              3;
 
 
             if (
               record.breakfast_completed
             ) {
 
-              completedMeals += 1;
+              completedMeals +=
+                1;
 
             }
 
@@ -470,7 +561,8 @@ export default function ProgressPage() {
               record.lunch_completed
             ) {
 
-              completedMeals += 1;
+              completedMeals +=
+                1;
 
             }
 
@@ -479,7 +571,8 @@ export default function ProgressPage() {
               record.dinner_completed
             ) {
 
-              completedMeals += 1;
+              completedMeals +=
+                1;
 
             }
 
@@ -488,14 +581,15 @@ export default function ProgressPage() {
 
 
         const mealCompletion =
-          totalMeals > 0
+          totalMeals >
+            0
 
             ? Math.round(
                 (
                   completedMeals /
                   totalMeals
                 ) *
-                100
+                  100
               )
 
             : 0;
@@ -520,16 +614,22 @@ export default function ProgressPage() {
                 record.workout_completed,
 
                 Number(
-                  record.water_litres || 0
-                ) >= 2,
+                  record.water_litres ||
+                    0
+                ) >=
+                  2,
 
                 Number(
-                  record.steps || 0
-                ) >= 7000,
+                  record.steps ||
+                    0
+                ) >=
+                  7000,
 
                 Number(
-                  record.sleep_hours || 0
-                ) >= 7,
+                  record.sleep_hours ||
+                    0
+                ) >=
+                  7,
 
               ];
 
@@ -541,10 +641,12 @@ export default function ProgressPage() {
 
 
               return (
+
                 completed /
                 habits.length
+
               ) *
-              100;
+                100;
 
             }
           );
@@ -567,11 +669,13 @@ export default function ProgressPage() {
 
             .filter(
               record =>
-                record.weight_kg !== null
+                record.weight_kg !==
+                  null
             )
 
             .map(
               record => ({
+
                 date:
                   record.tracker_date,
 
@@ -579,30 +683,37 @@ export default function ProgressPage() {
                   Number(
                     record.weight_kg
                   ),
+
               })
             );
 
 
         const latestWeight =
-          weightValues.length > 0
+          weightValues.length >
+            0
 
             ? weightValues[
-                weightValues.length - 1
+                weightValues.length -
+                1
               ].weight
 
             : null;
 
 
         const weightChange =
-          weightValues.length >= 2
+          weightValues.length >=
+            2
 
             ? Number(
                 (
                   weightValues[
-                    weightValues.length - 1
+                    weightValues.length -
+                    1
                   ].weight -
+
                   weightValues[0]
                     .weight
+
                 ).toFixed(
                   1
                 )
@@ -614,33 +725,58 @@ export default function ProgressPage() {
         return {
 
           averageSleep:
-            round(
-              averageSleep,
-              1
-            ),
+            averageSleep !==
+              null
+
+              ? round(
+                  averageSleep,
+                  1
+                )
+
+              : null,
 
           averageWater:
-            round(
-              averageWater,
-              1
-            ),
+            averageWater !==
+              null
+
+              ? round(
+                  averageWater,
+                  1
+                )
+
+              : null,
 
           averageSteps:
-            Math.round(
-              averageSteps
-            ),
+            averageSteps !==
+              null
+
+              ? Math.round(
+                  averageSteps
+                )
+
+              : null,
 
           averageMood:
-            round(
-              averageMood,
-              1
-            ),
+            averageMood !==
+              null
+
+              ? round(
+                  averageMood,
+                  1
+                )
+
+              : null,
 
           averageEnergy:
-            round(
-              averageEnergy,
-              1
-            ),
+            averageEnergy !==
+              null
+
+              ? round(
+                  averageEnergy,
+                  1
+                )
+
+              : null,
 
           workoutCompletion,
 
@@ -652,11 +788,22 @@ export default function ProgressPage() {
 
           weightChange,
 
+          trackedDays:
+            records.length,
+
+          completedWorkouts,
+
+          completedMeals,
+
+          totalMeals,
+
         };
 
       },
 
-      [records]
+      [
+        records
+      ]
 
     );
 
@@ -674,37 +821,68 @@ export default function ProgressPage() {
             record.tracker_date
           ),
 
+        fullDate:
+          record.tracker_date,
+
         weight:
-          record.weight_kg !== null
+          record.weight_kg !==
+            null
+
             ? Number(
                 record.weight_kg
               )
+
             : null,
 
         sleep:
-          Number(
-            record.sleep_hours || 0
-          ),
+          record.sleep_hours !==
+            null
+
+            ? Number(
+                record.sleep_hours
+              )
+
+            : null,
 
         water:
-          Number(
-            record.water_litres || 0
-          ),
+          record.water_litres !==
+            null
+
+            ? Number(
+                record.water_litres
+              )
+
+            : null,
 
         steps:
-          Number(
-            record.steps || 0
-          ),
+          record.steps !==
+            null
+
+            ? Number(
+                record.steps
+              )
+
+            : null,
 
         mood:
-          Number(
-            record.mood || 0
-          ),
+          record.mood !==
+            null
+
+            ? Number(
+                record.mood
+              )
+
+            : null,
 
         energy:
-          Number(
-            record.energy || 0
-          ),
+          record.energy !==
+            null
+
+            ? Number(
+                record.energy
+              )
+
+            : null,
 
       })
     );
@@ -718,12 +896,10 @@ export default function ProgressPage() {
 
     <main className="min-h-screen bg-gray-50 flex">
 
-
       <AppSidebar />
 
 
       <section className="flex-1 p-10">
-
 
         <div className="max-w-7xl">
 
@@ -736,7 +912,6 @@ export default function ProgressPage() {
 
 
             <div>
-
 
               <p className="text-sm font-semibold text-gray-500">
 
@@ -755,10 +930,9 @@ export default function ProgressPage() {
               <p className="text-gray-600 mt-3">
 
                 Understand your habits and track how consistently
-                you're following your wellness routine.
+                you&apos;re following your wellness routine.
 
               </p>
-
 
             </div>
 
@@ -784,9 +958,11 @@ export default function ProgressPage() {
                   py-2
                   rounded-lg
                   font-medium
+                  cursor-pointer
 
                   ${
-                    range === 7
+                    range ===
+                      7
 
                       ? "bg-black text-white"
 
@@ -817,9 +993,11 @@ export default function ProgressPage() {
                   py-2
                   rounded-lg
                   font-medium
+                  cursor-pointer
 
                   ${
-                    range === 30
+                    range ===
+                      30
 
                       ? "bg-black text-white"
 
@@ -836,7 +1014,6 @@ export default function ProgressPage() {
 
             </div>
 
-
           </div>
 
 
@@ -844,32 +1021,32 @@ export default function ProgressPage() {
               LOADING
           ============================================ */}
 
-          {loading && (
+          {
+            loading && (
 
-            <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
 
+                <p className="text-gray-500">
 
-              <p className="text-gray-500">
+                  Loading your progress...
 
-                Loading your progress...
+                </p>
 
-              </p>
+              </div>
 
-
-            </div>
-
-          )}
+            )
+          }
 
 
           {/* ============================================
               ERROR
           ============================================ */}
 
-          {!loading &&
+          {
+            !loading &&
             error && (
 
               <div className="mt-10 bg-red-50 border border-red-200 rounded-2xl p-6">
-
 
                 <p className="text-red-700">
 
@@ -879,22 +1056,23 @@ export default function ProgressPage() {
 
                 </p>
 
-
               </div>
 
-            )}
+            )
+          }
 
 
           {/* ============================================
               NO DATA
           ============================================ */}
 
-          {!loading &&
+          {
+            !loading &&
             !error &&
-            records.length === 0 && (
+            records.length ===
+              0 && (
 
               <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-10">
-
 
                 <h2 className="text-2xl font-semibold text-black">
 
@@ -923,19 +1101,21 @@ export default function ProgressPage() {
 
                 </a>
 
-
               </div>
 
-            )}
+            )
+          }
 
 
           {/* ============================================
               PROGRESS CONTENT
           ============================================ */}
 
-          {!loading &&
+          {
+            !loading &&
             !error &&
-            records.length > 0 && (
+            records.length >
+              0 && (
 
               <>
 
@@ -946,38 +1126,76 @@ export default function ProgressPage() {
 
                 <div className="mt-10 bg-black text-white rounded-2xl p-8">
 
+                  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
 
-                  <p className="text-sm text-gray-300">
+                    <div>
 
-                    Overall Consistency
+                      <p className="text-sm text-gray-300">
 
-                  </p>
+                        Overall Consistency
 
-
-                  <div className="flex items-end gap-3 mt-2">
-
-
-                    <p className="text-6xl font-bold">
-
-                      {
-                        stats.consistencyScore
-                      }
-
-                    </p>
+                      </p>
 
 
-                    <p className="text-2xl text-gray-300 mb-2">
+                      <div className="flex items-end gap-3 mt-2">
 
-                      %
+                        <p className="text-6xl font-bold">
 
-                    </p>
+                          {
+                            stats.consistencyScore
+                          }
 
+                        </p>
+
+
+                        <p className="text-2xl text-gray-300 mb-2">
+
+                          %
+
+                        </p>
+
+                      </div>
+
+
+                      <p className="text-sm text-gray-300 mt-4">
+
+                        Based on meals, workouts, water, steps and sleep.
+
+                      </p>
+
+                    </div>
+
+
+                    <div className="text-left md:text-right">
+
+                      <p className="text-sm text-gray-400">
+
+                        Tracked Days
+
+                      </p>
+
+                      <p className="text-3xl font-bold mt-1">
+
+                        {
+                          stats.trackedDays
+                        }
+
+                      </p>
+
+                      <p className="text-sm text-gray-400 mt-1">
+
+                        of {
+                          range
+                        } possible days
+
+                      </p>
+
+                    </div>
 
                   </div>
 
 
                   <div className="mt-6 h-3 bg-gray-700 rounded-full overflow-hidden">
-
 
                     <div
 
@@ -992,16 +1210,7 @@ export default function ProgressPage() {
 
                     />
 
-
                   </div>
-
-
-                  <p className="text-sm text-gray-300 mt-4">
-
-                    Based on meals, workouts, water, steps and sleep.
-
-                  </p>
-
 
                 </div>
 
@@ -1020,10 +1229,18 @@ export default function ProgressPage() {
                     title="Average Sleep"
 
                     value={
-                      stats.averageSleep
+                      stats.averageSleep ??
+                      "--"
                     }
 
-                    unit="hrs"
+                    unit={
+                      stats.averageSleep !==
+                        null
+
+                        ? "hrs"
+
+                        : ""
+                    }
 
                   />
 
@@ -1035,10 +1252,18 @@ export default function ProgressPage() {
                     title="Average Water"
 
                     value={
-                      stats.averageWater
+                      stats.averageWater ??
+                      "--"
                     }
 
-                    unit="L"
+                    unit={
+                      stats.averageWater !==
+                        null
+
+                        ? "L"
+
+                        : ""
+                    }
 
                   />
 
@@ -1050,7 +1275,13 @@ export default function ProgressPage() {
                     title="Average Steps"
 
                     value={
-                      stats.averageSteps
+                      stats.averageSteps !==
+                        null
+
+                        ? stats.averageSteps
+                            .toLocaleString()
+
+                        : "--"
                     }
 
                     unit=""
@@ -1070,8 +1301,11 @@ export default function ProgressPage() {
                     }
 
                     unit={
-                      stats.latestWeight !== null
+                      stats.latestWeight !==
+                        null
+
                         ? "kg"
+
                         : ""
                     }
 
@@ -1082,91 +1316,119 @@ export default function ProgressPage() {
 
 
                 {/* ========================================
-                    COMPLETION CARDS
+                    ADHERENCE
                 ======================================== */}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                <section className="mt-8">
+
+                  <h2 className="text-2xl font-bold text-black">
+
+                    Plan Adherence
+
+                  </h2>
 
 
-                  <PercentageCard
+                  <p className="text-gray-500 mt-1">
 
-                    emoji="🏋️"
+                    How consistently you followed your meals and training.
 
-                    title="Workout Completion"
-
-                    percentage={
-                      stats.workoutCompletion
-                    }
-
-                  />
+                  </p>
 
 
-                  <PercentageCard
-
-                    emoji="🥗"
-
-                    title="Meal Completion"
-
-                    percentage={
-                      stats.mealCompletion
-                    }
-
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
 
 
-                </div>
+                    <PercentageCard
+
+                      emoji="🏋️"
+
+                      title="Workout Completion"
+
+                      percentage={
+                        stats.workoutCompletion
+                      }
+
+                      subtitle={
+                        `${stats.completedWorkouts} of ${stats.trackedDays} tracked days`
+                      }
+
+                    />
+
+
+                    <PercentageCard
+
+                      emoji="🥗"
+
+                      title="Meal Completion"
+
+                      percentage={
+                        stats.mealCompletion
+                      }
+
+                      subtitle={
+                        `${stats.completedMeals} of ${stats.totalMeals} meals`
+                      }
+
+                    />
+
+
+                  </div>
+
+                </section>
 
 
                 {/* ========================================
                     WEIGHT CHANGE
                 ======================================== */}
 
-                {stats.weightChange !== null && (
+                {
+                  stats.weightChange !==
+                    null && (
 
-                  <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
+                    <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
 
+                      <p className="text-sm text-gray-500">
 
-                    <p className="text-sm text-gray-500">
+                        Weight Change
 
-                      Weight Change
-
-                    </p>
-
-
-                    <p className="text-3xl font-bold text-black mt-2">
-
-                      {
-                        stats.weightChange > 0
-                          ? "+"
-                          : ""
-                      }
-
-                      {
-                        stats.weightChange
-                      }
-
-                      <span className="text-base font-normal ml-1">
-
-                        kg
-
-                      </span>
+                      </p>
 
 
-                    </p>
+                      <p className="text-3xl font-bold text-black mt-2">
+
+                        {
+                          stats.weightChange >
+                            0
+                            ? "+"
+                            : ""
+                        }
+
+                        {
+                          stats.weightChange
+                        }
+
+                        <span className="text-base font-normal ml-1">
+
+                          kg
+
+                        </span>
+
+                      </p>
 
 
-                    <p className="text-sm text-gray-500 mt-2">
+                      <p className="text-sm text-gray-500 mt-2">
 
-                      During the selected {
-                        range
-                      }-day period.
+                        Between your first and latest recorded weight
+                        in the selected {
+                          range
+                        }-day period.
 
-                    </p>
+                      </p>
 
+                    </div>
 
-                  </div>
-
-                )}
+                  )
+                }
 
 
                 {/* ========================================
@@ -1181,7 +1443,6 @@ export default function ProgressPage() {
 
                 >
 
-
                   <ResponsiveContainer
                     width="100%"
                     height={300}
@@ -1193,16 +1454,13 @@ export default function ProgressPage() {
                       }
                     >
 
-
                       <CartesianGrid
                         strokeDasharray="3 3"
                       />
 
-
                       <XAxis
                         dataKey="date"
                       />
-
 
                       <YAxis
                         domain={[
@@ -1211,9 +1469,7 @@ export default function ProgressPage() {
                         ]}
                       />
 
-
                       <Tooltip />
-
 
                       <Line
 
@@ -1229,12 +1485,9 @@ export default function ProgressPage() {
 
                       />
 
-
                     </LineChart>
 
-
                   </ResponsiveContainer>
-
 
                 </ChartCard>
 
@@ -1251,12 +1504,10 @@ export default function ProgressPage() {
 
                 >
 
-
                   <ResponsiveContainer
                     width="100%"
                     height={300}
                   >
-
 
                     <BarChart
                       data={
@@ -1264,34 +1515,26 @@ export default function ProgressPage() {
                       }
                     >
 
-
                       <CartesianGrid
                         strokeDasharray="3 3"
                       />
-
 
                       <XAxis
                         dataKey="date"
                       />
 
-
                       <YAxis />
 
-
                       <Tooltip />
-
 
                       <Bar
                         dataKey="steps"
                         fill="currentColor"
                       />
 
-
                     </BarChart>
 
-
                   </ResponsiveContainer>
-
 
                 </ChartCard>
 
@@ -1308,12 +1551,10 @@ export default function ProgressPage() {
 
                 >
 
-
                   <ResponsiveContainer
                     width="100%"
                     height={300}
                   >
-
 
                     <LineChart
                       data={
@@ -1321,22 +1562,17 @@ export default function ProgressPage() {
                       }
                     >
 
-
                       <CartesianGrid
                         strokeDasharray="3 3"
                       />
-
 
                       <XAxis
                         dataKey="date"
                       />
 
-
                       <YAxis />
 
-
                       <Tooltip />
-
 
                       <Line
 
@@ -1348,14 +1584,13 @@ export default function ProgressPage() {
 
                         strokeWidth={2}
 
-                      />
+                        connectNulls
 
+                      />
 
                     </LineChart>
 
-
                   </ResponsiveContainer>
-
 
                 </ChartCard>
 
@@ -1372,12 +1607,10 @@ export default function ProgressPage() {
 
                 >
 
-
                   <ResponsiveContainer
                     width="100%"
                     height={300}
                   >
-
 
                     <BarChart
                       data={
@@ -1385,44 +1618,35 @@ export default function ProgressPage() {
                       }
                     >
 
-
                       <CartesianGrid
                         strokeDasharray="3 3"
                       />
-
 
                       <XAxis
                         dataKey="date"
                       />
 
-
                       <YAxis />
 
-
                       <Tooltip />
-
 
                       <Bar
                         dataKey="water"
                         fill="currentColor"
                       />
 
-
                     </BarChart>
 
-
                   </ResponsiveContainer>
-
 
                 </ChartCard>
 
 
                 {/* ========================================
-                    MOOD + ENERGY
+                    WELLBEING
                 ======================================== */}
 
                 <section className="mt-8">
-
 
                   <h2 className="text-2xl font-bold text-black">
 
@@ -1441,10 +1665,18 @@ export default function ProgressPage() {
                       title="Average Mood"
 
                       value={
-                        stats.averageMood
+                        stats.averageMood ??
+                        "--"
                       }
 
-                      unit="/ 5"
+                      unit={
+                        stats.averageMood !==
+                          null
+
+                          ? "/ 5"
+
+                          : ""
+                      }
 
                     />
 
@@ -1456,16 +1688,23 @@ export default function ProgressPage() {
                       title="Average Energy"
 
                       value={
-                        stats.averageEnergy
+                        stats.averageEnergy ??
+                        "--"
                       }
 
-                      unit="/ 5"
+                      unit={
+                        stats.averageEnergy !==
+                          null
+
+                          ? "/ 5"
+
+                          : ""
+                      }
 
                     />
 
 
                   </div>
-
 
                 </section>
 
@@ -1478,12 +1717,10 @@ export default function ProgressPage() {
 
                 >
 
-
                   <ResponsiveContainer
                     width="100%"
                     height={300}
                   >
-
 
                     <LineChart
                       data={
@@ -1491,16 +1728,13 @@ export default function ProgressPage() {
                       }
                     >
 
-
                       <CartesianGrid
                         strokeDasharray="3 3"
                       />
 
-
                       <XAxis
                         dataKey="date"
                       />
-
 
                       <YAxis
                         domain={[
@@ -1509,9 +1743,7 @@ export default function ProgressPage() {
                         ]}
                       />
 
-
                       <Tooltip />
-
 
                       <Line
 
@@ -1522,6 +1754,8 @@ export default function ProgressPage() {
                         stroke="currentColor"
 
                         strokeWidth={2}
+
+                        connectNulls
 
                       />
 
@@ -1538,14 +1772,13 @@ export default function ProgressPage() {
 
                         strokeDasharray="6 4"
 
-                      />
+                        connectNulls
 
+                      />
 
                     </LineChart>
 
-
                   </ResponsiveContainer>
-
 
                 </ChartCard>
 
@@ -1556,7 +1789,6 @@ export default function ProgressPage() {
 
                 <section className="mt-10 mb-10">
 
-
                   <h2 className="text-2xl font-bold text-black">
 
                     Recent Activity
@@ -1564,20 +1796,22 @@ export default function ProgressPage() {
                   </h2>
 
 
-                  <div className="mt-5 bg-white border border-gray-200 rounded-2xl overflow-hidden">
+                  <p className="text-gray-500 mt-1">
 
+                    Your most recent Daily Tracker entries.
+
+                  </p>
+
+
+                  <div className="mt-5 bg-white border border-gray-200 rounded-2xl overflow-hidden">
 
                     <div className="overflow-x-auto">
 
-
                       <table className="w-full">
-
 
                         <thead className="bg-gray-50">
 
-
                           <tr>
-
 
                             <th className="text-left px-6 py-4 text-sm text-gray-500">
 
@@ -1585,13 +1819,11 @@ export default function ProgressPage() {
 
                             </th>
 
-
                             <th className="text-left px-6 py-4 text-sm text-gray-500">
 
                               Meals
 
                             </th>
-
 
                             <th className="text-left px-6 py-4 text-sm text-gray-500">
 
@@ -1599,13 +1831,11 @@ export default function ProgressPage() {
 
                             </th>
 
-
                             <th className="text-left px-6 py-4 text-sm text-gray-500">
 
                               Water
 
                             </th>
-
 
                             <th className="text-left px-6 py-4 text-sm text-gray-500">
 
@@ -1613,153 +1843,180 @@ export default function ProgressPage() {
 
                             </th>
 
-
                             <th className="text-left px-6 py-4 text-sm text-gray-500">
 
                               Sleep
 
                             </th>
 
+                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+
+                              Mood
+
+                            </th>
 
                           </tr>
-
 
                         </thead>
 
 
                         <tbody>
 
+                          {
+                            [
+                              ...records
+                            ]
 
-                          {[...records]
-                            .reverse()
-                            .map(
+                              .reverse()
 
-                              record => {
+                              .map(
+                                record => {
 
-                                const mealsCompleted = [
+                                  const mealsCompleted = [
 
-                                  record.breakfast_completed,
+                                    record.breakfast_completed,
 
-                                  record.lunch_completed,
+                                    record.lunch_completed,
 
-                                  record.dinner_completed,
+                                    record.dinner_completed,
 
-                                ].filter(
-                                  Boolean
-                                ).length;
-
-
-                                return (
-
-                                  <tr
-
-                                    key={
-                                      record.id
-                                    }
-
-                                    className="border-t border-gray-100"
-
-                                  >
+                                  ].filter(
+                                    Boolean
+                                  ).length;
 
 
-                                    <td className="px-6 py-4 font-medium text-black">
+                                  return (
 
-                                      {
-                                        formatReadableDate(
-                                          record.tracker_date
-                                        )
+                                    <tr
+
+                                      key={
+                                        record.id
                                       }
 
-                                    </td>
+                                      className="border-t border-gray-100"
+
+                                    >
+
+                                      <td className="px-6 py-4 font-medium text-black">
+
+                                        {
+                                          formatReadableDate(
+                                            record.tracker_date
+                                          )
+                                        }
+
+                                      </td>
 
 
-                                    <td className="px-6 py-4 text-gray-600">
+                                      <td className="px-6 py-4 text-gray-600">
 
-                                      {
-                                        mealsCompleted
-                                      } / 3
+                                        {
+                                          mealsCompleted
+                                        } / 3
 
-                                    </td>
-
-
-                                    <td className="px-6 py-4 text-gray-600">
-
-                                      {
-                                        record.workout_completed
-                                          ? "✓"
-                                          : "—"
-                                      }
-
-                                    </td>
+                                      </td>
 
 
-                                    <td className="px-6 py-4 text-gray-600">
+                                      <td className="px-6 py-4 text-gray-600">
 
-                                      {
-                                        Number(
-                                          record.water_litres || 0
-                                        )
-                                      } L
+                                        {
+                                          record.workout_completed
+                                            ? "✓"
+                                            : "—"
+                                        }
 
-                                    </td>
-
-
-                                    <td className="px-6 py-4 text-gray-600">
-
-                                      {
-                                        Number(
-                                          record.steps || 0
-                                        ).toLocaleString()
-                                      }
-
-                                    </td>
+                                      </td>
 
 
-                                    <td className="px-6 py-4 text-gray-600">
+                                      <td className="px-6 py-4 text-gray-600">
 
-                                      {
-                                        Number(
-                                          record.sleep_hours || 0
-                                        )
-                                      } hrs
+                                        {
+                                          record.water_litres !==
+                                            null
 
-                                    </td>
+                                            ? `${Number(
+                                                record.water_litres
+                                              )} L`
+
+                                            : "—"
+                                        }
+
+                                      </td>
 
 
-                                  </tr>
+                                      <td className="px-6 py-4 text-gray-600">
 
-                                );
+                                        {
+                                          record.steps !==
+                                            null
 
-                              }
+                                            ? Number(
+                                                record.steps
+                                              ).toLocaleString()
 
-                            )}
+                                            : "—"
+                                        }
 
+                                      </td>
+
+
+                                      <td className="px-6 py-4 text-gray-600">
+
+                                        {
+                                          record.sleep_hours !==
+                                            null
+
+                                            ? `${Number(
+                                                record.sleep_hours
+                                              )} hrs`
+
+                                            : "—"
+                                        }
+
+                                      </td>
+
+
+                                      <td className="px-6 py-4 text-gray-600">
+
+                                        {
+                                          record.mood !==
+                                            null
+
+                                            ? `${record.mood}/5`
+
+                                            : "—"
+                                        }
+
+                                      </td>
+
+                                    </tr>
+
+                                  );
+
+                                }
+                              )
+                          }
 
                         </tbody>
 
-
                       </table>
-
 
                     </div>
 
-
                   </div>
-
 
                 </section>
 
 
               </>
 
-            )}
+            )
+          }
 
 
         </div>
 
-
       </section>
-
 
     </main>
 
@@ -1802,7 +2059,6 @@ function StatCard({
 
     <div className="bg-white border border-gray-200 rounded-2xl p-6">
 
-
       <span className="text-3xl">
 
         {
@@ -1828,21 +2084,21 @@ function StatCard({
         }
 
 
-        {unit && (
+        {
+          unit && (
 
-          <span className="text-base font-normal ml-1">
+            <span className="text-base font-normal ml-1">
 
-            {
-              unit
-            }
+              {
+                unit
+              }
 
-          </span>
+            </span>
 
-        )}
-
+          )
+        }
 
       </p>
-
 
     </div>
 
@@ -1863,6 +2119,8 @@ function PercentageCard({
 
   percentage,
 
+  subtitle,
+
 }: {
 
   emoji:
@@ -1874,12 +2132,14 @@ function PercentageCard({
   percentage:
     number;
 
+  subtitle:
+    string;
+
 }) {
 
   return (
 
     <div className="bg-white border border-gray-200 rounded-2xl p-6">
-
 
       <span className="text-3xl">
 
@@ -1910,7 +2170,6 @@ function PercentageCard({
 
       <div className="mt-4 h-2 bg-gray-100 rounded-full overflow-hidden">
 
-
         <div
 
           className="h-full bg-black rounded-full"
@@ -1924,9 +2183,16 @@ function PercentageCard({
 
         />
 
-
       </div>
 
+
+      <p className="text-sm text-gray-400 mt-3">
+
+        {
+          subtitle
+        }
+
+      </p>
 
     </div>
 
@@ -1964,7 +2230,6 @@ function ChartCard({
 
     <section className="mt-8 bg-white border border-gray-200 rounded-2xl p-6">
 
-
       <h2 className="text-2xl font-bold text-black">
 
         {
@@ -1987,7 +2252,6 @@ function ChartCard({
         children
       }
 
-
     </section>
 
   );
@@ -2005,7 +2269,8 @@ function average(
 ) {
 
   if (
-    values.length === 0
+    values.length ===
+      0
   ) {
 
     return 0;
@@ -2026,6 +2291,28 @@ function average(
     ) /
     values.length
 
+  );
+
+}
+
+
+function averageNullable(
+  values:
+    number[]
+) {
+
+  if (
+    values.length ===
+      0
+  ) {
+
+    return null;
+
+  }
+
+
+  return average(
+    values
   );
 
 }
@@ -2068,7 +2355,8 @@ function formatShortDate(
 
 
   if (
-    parts.length !== 3
+    parts.length !==
+      3
   ) {
 
     return date;
