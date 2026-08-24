@@ -12,11 +12,11 @@ import {
 } from "next/navigation";
 
 import {
-  supabase
+  supabase,
 } from "../lib/supabase";
 
 import {
-  getUserFlowState
+  getAuthFlowStatus,
 } from "../lib/authFlow";
 
 
@@ -31,6 +31,7 @@ const protectedRoutes = [
   "/tracker",
   "/progress",
   "/coach",
+  "/profile",
 ];
 
 
@@ -41,7 +42,7 @@ const authRoutes = [
 
 
 // =========================================================
-// HELPERS
+// ROUTE MATCHER
 // =========================================================
 
 function matchesRoute(
@@ -67,7 +68,8 @@ function matchesRoute(
 export default function AuthFlowGuard({
   children,
 }: {
-  children: ReactNode;
+  children:
+    ReactNode;
 }) {
 
   const pathname =
@@ -80,11 +82,9 @@ export default function AuthFlowGuard({
 
   const [
     checking,
-    setChecking
+    setChecking,
   ] =
-    useState(
-      true
-    );
+    useState(true);
 
 
   useEffect(
@@ -95,7 +95,7 @@ export default function AuthFlowGuard({
 
 
       // ===================================================
-      // ENFORCE FLOW
+      // CHECK FLOW
       // ===================================================
 
       async function enforceFlow() {
@@ -108,7 +108,7 @@ export default function AuthFlowGuard({
 
 
           const state =
-            await getUserFlowState();
+            await getAuthFlowStatus();
 
 
           if (
@@ -136,7 +136,7 @@ export default function AuthFlowGuard({
 
           const isOnboardingPage =
             pathname ===
-              "/onboarding";
+            "/onboarding";
 
 
           // =================================================
@@ -144,7 +144,7 @@ export default function AuthFlowGuard({
           // =================================================
 
           if (
-            !state.user
+            !state.isLoggedIn
           ) {
 
             if (
@@ -171,7 +171,7 @@ export default function AuthFlowGuard({
 
 
           // =================================================
-          // LOGGED IN + LOGIN / SIGNUP
+          // LOGGED IN USER VISITS LOGIN / SIGNUP
           // =================================================
 
           if (
@@ -186,9 +186,7 @@ export default function AuthFlowGuard({
                 "/dashboard"
               );
 
-            }
-
-            else {
+            } else {
 
               router.replace(
                 "/onboarding"
@@ -203,7 +201,8 @@ export default function AuthFlowGuard({
 
 
           // =================================================
-          // PROFILE EXISTS + ONBOARDING
+          // USER ALREADY HAS PROFILE
+          // BUT OPENS ONBOARDING
           // =================================================
 
           if (
@@ -221,7 +220,7 @@ export default function AuthFlowGuard({
 
 
           // =================================================
-          // PROTECTED PAGE WITHOUT PROFILE
+          // PROTECTED PAGE BUT PROFILE DOES NOT EXIST
           // =================================================
 
           if (
@@ -238,14 +237,16 @@ export default function AuthFlowGuard({
           }
 
 
+          // =================================================
+          // PAGE IS ALLOWED
+          // =================================================
+
           setChecking(
             false
           );
 
 
-        }
-
-        catch (
+        } catch (
           error
         ) {
 
@@ -268,13 +269,13 @@ export default function AuthFlowGuard({
 
 
       // ===================================================
-      // LISTEN FOR LOGIN / LOGOUT CHANGES
+      // LISTEN FOR LOGIN / LOGOUT
       // ===================================================
 
       const {
         data: {
-          subscription
-        }
+          subscription,
+        },
       } =
         supabase.auth.onAuthStateChange(
           () => {
@@ -299,14 +300,14 @@ export default function AuthFlowGuard({
 
     [
       pathname,
-      router
+      router,
     ]
 
   );
 
 
   // =====================================================
-  // LOADING
+  // FLOW-SENSITIVE ROUTES
   // =====================================================
 
   const flowSensitivePage =
@@ -319,6 +320,10 @@ export default function AuthFlowGuard({
       ]
     );
 
+
+  // =====================================================
+  // LOADING
+  // =====================================================
 
   if (
     checking &&
@@ -353,10 +358,20 @@ export default function AuthFlowGuard({
   }
 
 
+  // =====================================================
+  // PAGE CONTENT
+  // =====================================================
+
   return (
+
     <>
-      {children}
+
+      {
+        children
+      }
+
     </>
+
   );
 
 }

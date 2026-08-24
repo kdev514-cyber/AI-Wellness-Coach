@@ -6,15 +6,15 @@ import {
 } from "react";
 
 import {
-  useRouter
+  useRouter,
 } from "next/navigation";
 
 import {
-  supabase
+  supabase,
 } from "../../lib/supabase";
 
 import {
-  getUserFlowState
+  getAuthFlowStatus,
 } from "../../lib/authFlow";
 
 
@@ -30,38 +30,30 @@ export default function LoginPage() {
 
   const [
     email,
-    setEmail
+    setEmail,
   ] =
-    useState(
-      ""
-    );
+    useState("");
 
 
   const [
     password,
-    setPassword
+    setPassword,
   ] =
-    useState(
-      ""
-    );
+    useState("");
 
 
   const [
     message,
-    setMessage
+    setMessage,
   ] =
-    useState(
-      ""
-    );
+    useState("");
 
 
   const [
     loading,
-    setLoading
+    setLoading,
   ] =
-    useState(
-      false
-    );
+    useState(false);
 
 
   // =====================================================
@@ -74,6 +66,15 @@ export default function LoginPage() {
   ) {
 
     event.preventDefault();
+
+
+    if (
+      loading
+    ) {
+
+      return;
+
+    }
 
 
     setLoading(
@@ -95,7 +96,7 @@ export default function LoginPage() {
 
 
       const {
-        error
+        error,
       } =
         await supabase.auth.signInWithPassword({
 
@@ -117,26 +118,27 @@ export default function LoginPage() {
 
 
       // =================================================
-      // CHECK ONBOARDING STATUS
+      // CHECK USER FLOW
       // =================================================
 
       const flow =
-        await getUserFlowState();
+        await getAuthFlowStatus();
 
 
       if (
-        !flow.user
+        !flow.isLoggedIn ||
+        !flow.userId
       ) {
 
         throw new Error(
-          "Login succeeded but the session could not be loaded."
+          "Login succeeded, but your session could not be loaded."
         );
 
       }
 
 
       // =================================================
-      // EXISTING USER
+      // EXISTING USER WITH PROFILE
       // =================================================
 
       if (
@@ -153,7 +155,7 @@ export default function LoginPage() {
 
 
       // =================================================
-      // NEW USER
+      // USER HAS NOT COMPLETED ONBOARDING
       // =================================================
 
       router.replace(
@@ -161,9 +163,7 @@ export default function LoginPage() {
       );
 
 
-    }
-
-    catch (
+    } catch (
       error
     ) {
 
@@ -181,9 +181,7 @@ export default function LoginPage() {
           error.message
         );
 
-      }
-
-      else {
+      } else {
 
         setMessage(
           "Could not log in."
@@ -191,9 +189,7 @@ export default function LoginPage() {
 
       }
 
-    }
-
-    finally {
+    } finally {
 
       setLoading(
         false
@@ -212,14 +208,12 @@ export default function LoginPage() {
 
     <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-12">
 
-
       <div className="w-full max-w-md">
 
 
         {/* HEADER */}
 
         <div className="text-center mb-8">
-
 
           <h1 className="text-4xl font-bold text-black">
 
@@ -233,7 +227,6 @@ export default function LoginPage() {
             Welcome back
 
           </p>
-
 
         </div>
 
@@ -261,7 +254,6 @@ export default function LoginPage() {
           {/* EMAIL */}
 
           <div className="mb-5">
-
 
             <label className="block text-sm font-medium text-gray-700 mb-2">
 
@@ -306,14 +298,12 @@ export default function LoginPage() {
 
             />
 
-
           </div>
 
 
           {/* PASSWORD */}
 
           <div className="mb-6">
-
 
             <label className="block text-sm font-medium text-gray-700 mb-2">
 
@@ -358,11 +348,10 @@ export default function LoginPage() {
 
             />
 
-
           </div>
 
 
-          {/* LOGIN BUTTON */}
+          {/* BUTTON */}
 
           <button
 
@@ -390,9 +379,7 @@ export default function LoginPage() {
 
             {
               loading
-
                 ? "Checking your account..."
-
                 : "Log In"
             }
 
@@ -406,7 +393,6 @@ export default function LoginPage() {
 
               <div className="mt-5 bg-red-50 border border-red-200 rounded-xl p-4">
 
-
                 <p className="text-sm text-red-700">
 
                   {
@@ -415,17 +401,15 @@ export default function LoginPage() {
 
                 </p>
 
-
               </div>
 
             )
           }
 
 
-          {/* SIGNUP */}
+          {/* SIGNUP LINK */}
 
           <div className="mt-7 pt-6 border-t border-gray-100 text-center">
-
 
             <p className="text-sm text-gray-500">
 
@@ -446,15 +430,12 @@ export default function LoginPage() {
 
             </a>
 
-
           </div>
 
 
         </form>
 
-
       </div>
-
 
     </main>
 
