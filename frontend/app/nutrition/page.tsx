@@ -26,13 +26,29 @@ type NutritionPlan = {
 
 export default function NutritionPage() {
   const [plan, setPlan] = useState<NutritionPlan | null>(null);
-  const [selectedDay, setSelectedDay] = useState("Monday");
 
-  const [loading, setLoading] = useState(false);
-  const [loadingSavedPlan, setLoadingSavedPlan] = useState(true);
+  const [selectedDay, setSelectedDay] =
+    useState("Monday");
 
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] =
+    useState(false);
+
+  const [loadingSavedPlan, setLoadingSavedPlan] =
+    useState(true);
+
+  const [message, setMessage] =
+    useState("");
+
+  const [errorMessage, setErrorMessage] =
+    useState("");
+
+  // =====================================================
+  // API BASE URL
+  // =====================================================
+
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    "http://127.0.0.1:8000";
 
   // =====================================================
   // LOAD SAVED WEEKLY PLAN
@@ -41,56 +57,173 @@ export default function NutritionPage() {
   useEffect(() => {
     async function loadSavedPlan() {
       setLoadingSavedPlan(true);
+      setErrorMessage("");
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
+        // -----------------------------------------------
+        // GET LOGGED-IN USER
+        // -----------------------------------------------
 
-      if (!user) {
-        setLoadingSavedPlan(false);
-        return;
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+
+        if (userError) {
+          console.error(
+            "Supabase user error:",
+            userError.message,
+            userError
+          );
+
+          throw new Error(
+            `Authentication error: ${userError.message}`
+          );
+        }
+
+        if (!user) {
+          throw new Error(
+            "You are not logged in."
+          );
+        }
+
+        // -----------------------------------------------
+        // LOAD ACTIVE NUTRITION PLAN
+        // -----------------------------------------------
+
+        const {
+          data,
+          error: savedPlanError,
+        } = await supabase
+          .from("nutrition_plans")
+          .select(
+            `
+            daily_calories,
+            protein_grams,
+            water_litres,
+            weekly_plan,
+            created_at
+            `
+          )
+          .eq(
+            "user_id",
+            user.id
+          )
+          .eq(
+            "active",
+            true
+          )
+          .order(
+            "created_at",
+            {
+              ascending: false,
+            }
+          )
+          .limit(1)
+          .maybeSingle();
+
+        // -----------------------------------------------
+        // SHOW REAL SUPABASE ERROR
+        // -----------------------------------------------
+
+        if (savedPlanError) {
+          console.error(
+            "SUPABASE NUTRITION ERROR"
+          );
+
+          console.error(
+            "Message:",
+            savedPlanError.message
+          );
+
+          console.error(
+            "Code:",
+            savedPlanError.code
+          );
+
+          console.error(
+            "Details:",
+            savedPlanError.details
+          );
+
+          console.error(
+            "Hint:",
+            savedPlanError.hint
+          );
+
+          console.error(
+            "Full error:",
+            JSON.stringify(
+              savedPlanError,
+              null,
+              2
+            )
+          );
+
+          throw new Error(
+            savedPlanError.message ||
+              "Could not load your saved nutrition plan."
+          );
+        }
+
+        // -----------------------------------------------
+        // LOAD VALID 7-DAY PLAN
+        // -----------------------------------------------
+
+        if (
+          data &&
+          Array.isArray(
+            data.weekly_plan
+          ) &&
+          data.weekly_plan.length === 7
+        ) {
+          setPlan({
+            daily_calories:
+              Number(
+                data.daily_calories
+              ),
+
+            protein_grams:
+              Number(
+                data.protein_grams
+              ),
+
+            water_litres:
+              Number(
+                data.water_litres
+              ),
+
+            days:
+              data.weekly_plan,
+          });
+
+          setSelectedDay(
+            data.weekly_plan[0]?.day ||
+              "Monday"
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Nutrition load error:",
+          error
+        );
+
+        if (
+          error instanceof Error
+        ) {
+          setErrorMessage(
+            error.message
+          );
+        } else {
+          setErrorMessage(
+            "Could not load your nutrition plan."
+          );
+        }
+      } finally {
+        setLoadingSavedPlan(
+          false
+        );
       }
-
-      const { data, error } = await supabase
-        .from("nutrition_plans")
-        .select(
-          `
-          daily_calories,
-          protein_grams,
-          water_litres,
-          weekly_plan,
-          created_at
-          `
-        )
-        .eq("user_id", user.id)
-        .eq("active", true)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (error) {
-        console.error("Saved nutrition plan error:", error);
-        setLoadingSavedPlan(false);
-        return;
-      }
-
-      // Only load NEW 7-day format
-      if (
-        data &&
-        Array.isArray(data.weekly_plan) &&
-        data.weekly_plan.length === 7
-      ) {
-        setPlan({
-          daily_calories: data.daily_calories,
-          protein_grams: data.protein_grams,
-          water_litres: Number(data.water_litres),
-          days: data.weekly_plan,
-        });
-
-        setSelectedDay(data.weekly_plan[0]?.day || "Monday");
-      }
-
-      setLoadingSavedPlan(false);
     }
 
     loadSavedPlan();
@@ -106,151 +239,261 @@ export default function NutritionPage() {
     }
 
     setLoading(true);
-    setMessage("Loading your wellness profile...");
-    setError("");
+
+    setMessage(
+      "Loading your wellness profile..."
+    );
+
+    setErrorMessage("");
 
     try {
-      // -------------------------------------------------
-      // GET USER
-      // -------------------------------------------------
+      // -----------------------------------------------
+      // GET LOGGED-IN USER
+      // -----------------------------------------------
 
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
-      if (userError || !user) {
-        throw new Error("You must be logged in.");
+      if (
+        userError ||
+        !user
+      ) {
+        throw new Error(
+          "You must be logged in."
+        );
       }
 
-      // -------------------------------------------------
-      // GET PROFILE
-      // -------------------------------------------------
+      // -----------------------------------------------
+      // GET USER PROFILE
+      // -----------------------------------------------
 
-      const { data: profile, error: profileError } = await supabase
+      const {
+        data: profile,
+        error: profileError,
+      } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq(
+          "id",
+          user.id
+        )
         .single();
 
-      if (profileError || !profile) {
-        throw new Error("Could not load your wellness profile.");
+      if (
+        profileError ||
+        !profile
+      ) {
+        console.error(
+          "Profile error:",
+          profileError
+        );
+
+        throw new Error(
+          profileError?.message ||
+            "Could not load your wellness profile."
+        );
       }
 
-      // -------------------------------------------------
-      // CALL FASTAPI
-      // -------------------------------------------------
+      // -----------------------------------------------
+      // CALL RAILWAY FASTAPI
+      // -----------------------------------------------
 
-      setMessage("AI is creating your 7-day nutrition plan...");
-
-      const response = await fetch(
-        "http://127.0.0.1:8000/nutrition-plan",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            profile,
-          }),
-        }
+      setMessage(
+        "AI is creating your 7-day nutrition plan..."
       );
 
-      const data = await response.json();
+      console.log(
+        "Nutrition API:",
+        `${API_BASE_URL}/nutrition-plan`
+      );
+
+      const response =
+        await fetch(
+          `${API_BASE_URL}/nutrition-plan`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body:
+              JSON.stringify({
+                profile,
+              }),
+          }
+        );
+
+      let responseData;
+
+      try {
+        responseData =
+          await response.json();
+      } catch {
+        throw new Error(
+          "Backend returned an invalid response."
+        );
+      }
 
       if (!response.ok) {
         throw new Error(
-          data?.error || `Backend error: ${response.status}`
+          responseData?.error ||
+            `Backend error: ${response.status}`
         );
       }
-
-      if (!data.success) {
-        throw new Error(
-          data.error || "AI could not generate your nutrition plan."
-        );
-      }
-
-      if (!data.plan) {
-        throw new Error("Backend did not return a nutrition plan.");
-      }
-
-      const newPlan = data.plan as NutritionPlan;
-
-      // -------------------------------------------------
-      // VALIDATE NEW FORMAT
-      // -------------------------------------------------
 
       if (
-        !Array.isArray(newPlan.days) ||
-        newPlan.days.length !== 7
+        !responseData.success
       ) {
-        console.error("Invalid weekly nutrition plan:", newPlan);
-
         throw new Error(
-          "AI returned an invalid weekly nutrition plan."
+          responseData.error ||
+            "AI could not generate your nutrition plan."
         );
       }
 
-      // -------------------------------------------------
-      // DISABLE OLD PLANS
-      // -------------------------------------------------
+      if (
+        !responseData.plan
+      ) {
+        throw new Error(
+          "Backend did not return a nutrition plan."
+        );
+      }
 
-      const { error: deactivateError } = await supabase
-        .from("nutrition_plans")
+      const newPlan =
+        responseData.plan as NutritionPlan;
+
+      // -----------------------------------------------
+      // VALIDATE PLAN
+      // -----------------------------------------------
+
+      if (
+        !Array.isArray(
+          newPlan.days
+        ) ||
+        newPlan.days.length !== 7
+      ) {
+        throw new Error(
+          "AI returned an invalid 7-day nutrition plan."
+        );
+      }
+
+      // -----------------------------------------------
+      // DEACTIVATE OLD PLANS
+      // -----------------------------------------------
+
+      const {
+        error:
+          deactivateError,
+      } = await supabase
+        .from(
+          "nutrition_plans"
+        )
         .update({
           active: false,
         })
-        .eq("user_id", user.id)
-        .eq("active", true);
+        .eq(
+          "user_id",
+          user.id
+        )
+        .eq(
+          "active",
+          true
+        );
 
-      if (deactivateError) {
+      if (
+        deactivateError
+      ) {
         console.error(
-          "Could not deactivate previous plan:",
-          deactivateError
+          "Deactivate plan error:",
+          deactivateError.message
         );
       }
 
-      // -------------------------------------------------
+      // -----------------------------------------------
       // SAVE NEW PLAN
-      // -------------------------------------------------
+      // -----------------------------------------------
 
-      const { error: saveError } = await supabase
-        .from("nutrition_plans")
+      const {
+        error: saveError,
+      } = await supabase
+        .from(
+          "nutrition_plans"
+        )
         .insert({
-          user_id: user.id,
-          daily_calories: newPlan.daily_calories,
-          protein_grams: newPlan.protein_grams,
-          water_litres: newPlan.water_litres,
-          weekly_plan: newPlan.days,
-          active: true,
+          user_id:
+            user.id,
+
+          daily_calories:
+            newPlan.daily_calories,
+
+          protein_grams:
+            newPlan.protein_grams,
+
+          water_litres:
+            newPlan.water_litres,
+
+          weekly_plan:
+            newPlan.days,
+
+          active:
+            true,
         });
 
       if (saveError) {
-        console.error("Save nutrition plan error:", saveError);
+        console.error(
+          "Nutrition save message:",
+          saveError.message
+        );
+
+        console.error(
+          "Nutrition save code:",
+          saveError.code
+        );
+
+        console.error(
+          "Nutrition save details:",
+          saveError.details
+        );
 
         throw new Error(
-          "Your AI plan was generated but could not be saved."
+          saveError.message ||
+            "AI generated your plan, but it could not be saved."
         );
       }
 
-      // -------------------------------------------------
-      // DISPLAY NEW PLAN
-      // -------------------------------------------------
+      // -----------------------------------------------
+      // DISPLAY PLAN
+      // -----------------------------------------------
 
-      setPlan(newPlan);
+      setPlan(
+        newPlan
+      );
 
       setSelectedDay(
-        newPlan.days[0]?.day || "Monday"
+        newPlan.days[0]?.day ||
+          "Monday"
       );
 
       setMessage("");
-    } catch (err) {
-      console.error("Nutrition generation error:", err);
+    } catch (error) {
+      console.error(
+        "Nutrition generation error:",
+        error
+      );
 
-      if (err instanceof Error) {
-        setError(err.message);
+      if (
+        error instanceof Error
+      ) {
+        setErrorMessage(
+          error.message
+        );
       } else {
-        setError("Something went wrong.");
+        setErrorMessage(
+          "Something went wrong."
+        );
       }
 
       setMessage("");
@@ -263,30 +506,40 @@ export default function NutritionPage() {
   // CURRENT DAY
   // =====================================================
 
-  const currentDay = plan?.days?.find(
-    (day) => day.day === selectedDay
-  );
+  const currentDay =
+    plan?.days?.find(
+      (day) =>
+        day.day ===
+        selectedDay
+    );
 
   // =====================================================
-  // RESET VIEW FOR NEW GENERATION
+  // GENERATE NEW WEEK
   // =====================================================
 
   function generateNewWeek() {
     setPlan(null);
-    setSelectedDay("Monday");
+
+    setSelectedDay(
+      "Monday"
+    );
+
     setMessage("");
-    setError("");
+
+    setErrorMessage("");
   }
 
   // =====================================================
-  // PAGE
+  // UI
   // =====================================================
 
   return (
     <main className="min-h-screen bg-gray-50 flex">
+
       <AppSidebar />
 
       <section className="flex-1 p-10">
+
         <div className="max-w-6xl">
 
           {/* HEADER */}
@@ -303,242 +556,317 @@ export default function NutritionPage() {
             Your personalized AI-powered weekly nutrition plan.
           </p>
 
-          {/* LOADING SAVED PLAN */}
+          {/* LOADING */}
 
           {loadingSavedPlan && (
             <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+
               <p className="text-gray-500">
                 Loading your saved nutrition plan...
               </p>
+
             </div>
           )}
+
+          {/* LOAD ERROR */}
+
+          {!loadingSavedPlan &&
+            errorMessage &&
+            !plan && (
+              <div className="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
+
+                <p className="font-semibold text-red-700">
+                  Nutrition data error
+                </p>
+
+                <p className="text-red-600 mt-2">
+                  {errorMessage}
+                </p>
+
+              </div>
+            )}
 
           {/* GENERATOR */}
 
-          {!loadingSavedPlan && !plan && (
-            <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+          {!loadingSavedPlan &&
+            !plan && (
+              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
 
-              <h2 className="text-2xl font-semibold text-black">
-                Create Your Weekly Nutrition Plan
-              </h2>
+                <h2 className="text-2xl font-semibold text-black">
+                  Create Your Weekly Nutrition Plan
+                </h2>
 
-              <p className="text-gray-500 mt-2">
-                AI will create a seven-day meal plan using your
-                profile, goals, diet preferences and foods.
-              </p>
+                <p className="text-gray-500 mt-2">
+                  AI will create a seven-day meal plan using your profile,
+                  goals, diet preferences and foods.
+                </p>
 
-              <button
-                type="button"
-                onClick={generatePlan}
-                disabled={loading}
-                className="
-                  mt-6
-                  bg-black
-                  text-white
-                  px-6
-                  py-3
-                  rounded-xl
-                  font-semibold
-                  hover:bg-gray-800
-                  disabled:bg-gray-400
-                  disabled:cursor-not-allowed
-                  cursor-pointer
-                "
-              >
-                {loading
-                  ? "Generating 7-Day Plan..."
-                  : "Generate Nutrition Plan"}
-              </button>
+                <button
+                  type="button"
 
-              {message && (
-                <div className="mt-5 bg-blue-50 rounded-xl p-4">
-                  <p className="text-blue-700 text-sm">
-                    {message}
-                  </p>
-                </div>
-              )}
+                  onClick={
+                    generatePlan
+                  }
 
-              {error && (
-                <div className="mt-5 bg-red-50 border border-red-200 rounded-xl p-4">
+                  disabled={
+                    loading
+                  }
 
-                  <p className="text-red-700 font-semibold">
-                    Could not generate plan
-                  </p>
+                  className="
+                    mt-6
+                    bg-black
+                    text-white
+                    px-6
+                    py-3
+                    rounded-xl
+                    font-semibold
+                    hover:bg-gray-800
+                    disabled:bg-gray-400
+                    disabled:cursor-not-allowed
+                    cursor-pointer
+                  "
+                >
+                  {loading
+                    ? "Generating 7-Day Plan..."
+                    : "Generate Nutrition Plan"}
+                </button>
 
-                  <p className="text-red-600 mt-1 text-sm">
-                    {error}
-                  </p>
+                {message && (
+                  <div className="mt-5 bg-blue-50 rounded-xl p-4">
 
-                </div>
-              )}
-
-            </div>
-          )}
-
-          {/* WEEKLY PLAN */}
-
-          {plan && Array.isArray(plan.days) && (
-            <>
-              {/* TARGETS */}
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
-
-                <TargetCard
-                  title="Daily Calories"
-                  value={plan.daily_calories}
-                  unit="kcal"
-                />
-
-                <TargetCard
-                  title="Protein"
-                  value={plan.protein_grams}
-                  unit="g"
-                />
-
-                <TargetCard
-                  title="Water"
-                  value={plan.water_litres}
-                  unit="L"
-                />
-
-              </div>
-
-              {/* DAY NAVIGATION */}
-
-              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-4">
-
-                <div className="flex flex-wrap gap-2">
-
-                  {plan.days.map((day) => (
-                    <button
-                      key={day.day}
-                      type="button"
-                      onClick={() =>
-                        setSelectedDay(day.day)
-                      }
-                      className={`
-                        px-4
-                        py-2
-                        rounded-xl
-                        font-medium
-                        cursor-pointer
-
-                        ${
-                          selectedDay === day.day
-                            ? "bg-black text-white"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                        }
-                      `}
-                    >
-                      {day.day.slice(0, 3)}
-                    </button>
-                  ))}
-
-                </div>
-
-              </div>
-
-              {/* SELECTED DAY */}
-
-              {currentDay && (
-                <section className="mt-8">
-
-                  <div className="flex justify-between items-center">
-
-                    <h2 className="text-3xl font-bold text-black">
-                      {currentDay.day}
-                    </h2>
-
-                    <button
-                      type="button"
-                      onClick={generateNewWeek}
-                      className="text-sm text-gray-500 hover:text-black cursor-pointer"
-                    >
-                      Generate New Week
-                    </button>
+                    <p className="text-blue-700 text-sm">
+                      {message}
+                    </p>
 
                   </div>
+                )}
 
-                  {/* MEALS */}
+              </div>
+            )}
 
-                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+          {/* PLAN */}
 
-                    {currentDay.meals.map(
-                      (meal, index) => (
-                        <div
-                          key={`${meal.name}-${index}`}
-                          className="bg-white border border-gray-200 rounded-2xl p-6"
+          {plan &&
+            Array.isArray(
+              plan.days
+            ) && (
+              <>
+
+                {/* DAILY TARGETS */}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+
+                  <TargetCard
+                    title="Daily Calories"
+                    value={
+                      plan.daily_calories
+                    }
+                    unit="kcal"
+                  />
+
+                  <TargetCard
+                    title="Protein"
+                    value={
+                      plan.protein_grams
+                    }
+                    unit="g"
+                  />
+
+                  <TargetCard
+                    title="Water"
+                    value={
+                      plan.water_litres
+                    }
+                    unit="L"
+                  />
+
+                </div>
+
+                {/* DAY SELECTOR */}
+
+                <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-4">
+
+                  <div className="flex flex-wrap gap-2">
+
+                    {plan.days.map(
+                      (day) => (
+                        <button
+                          key={
+                            day.day
+                          }
+
+                          type="button"
+
+                          onClick={() =>
+                            setSelectedDay(
+                              day.day
+                            )
+                          }
+
+                          className={`
+                            px-4
+                            py-2
+                            rounded-xl
+                            font-medium
+                            cursor-pointer
+
+                            ${
+                              selectedDay ===
+                              day.day
+                                ? "bg-black text-white"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }
+                          `}
                         >
-
-                          <h3 className="text-xl font-bold text-black">
-                            {meal.name}
-                          </h3>
-
-                          {/* MACROS */}
-
-                          <div className="flex gap-4 mt-3 text-sm text-gray-500">
-
-                            <span>
-                              {meal.calories} kcal
-                            </span>
-
-                            <span>
-                              {meal.protein_grams}g protein
-                            </span>
-
-                          </div>
-
-                          {/* FOODS */}
-
-                          <div className="mt-5 space-y-3">
-
-                            {meal.foods.map(
-                              (food, foodIndex) => (
-                                <div
-                                  key={`${food}-${foodIndex}`}
-                                  className="flex gap-3 items-start"
-                                >
-                                  <span>•</span>
-
-                                  <p className="text-gray-700">
-                                    {food}
-                                  </p>
-                                </div>
-                              )
-                            )}
-
-                          </div>
-
-                          {/* REASON */}
-
-                          {meal.reason && (
-                            <div className="mt-6 pt-5 border-t border-gray-100">
-
-                              <p className="text-xs font-semibold text-gray-400 uppercase">
-                                Why this meal?
-                              </p>
-
-                              <p className="text-sm text-gray-600 mt-2">
-                                {meal.reason}
-                              </p>
-
-                            </div>
+                          {day.day.slice(
+                            0,
+                            3
                           )}
-
-                        </div>
+                        </button>
                       )
                     )}
 
                   </div>
 
-                </section>
-              )}
+                </div>
 
-            </>
-          )}
+                {/* CURRENT DAY */}
+
+                {currentDay && (
+                  <section className="mt-8">
+
+                    <div className="flex justify-between items-center">
+
+                      <h2 className="text-3xl font-bold text-black">
+                        {
+                          currentDay.day
+                        }
+                      </h2>
+
+                      <button
+                        type="button"
+
+                        onClick={
+                          generateNewWeek
+                        }
+
+                        className="text-sm text-gray-500 hover:text-black cursor-pointer"
+                      >
+                        Generate New Week
+                      </button>
+
+                    </div>
+
+                    {/* MEALS */}
+
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+
+                      {Array.isArray(
+                        currentDay.meals
+                      ) &&
+                        currentDay.meals.map(
+                          (
+                            meal,
+                            index
+                          ) => (
+                            <div
+                              key={`${meal.name}-${index}`}
+
+                              className="bg-white border border-gray-200 rounded-2xl p-6"
+                            >
+
+                              <h3 className="text-xl font-bold text-black">
+                                {
+                                  meal.name
+                                }
+                              </h3>
+
+                              {/* MACROS */}
+
+                              <div className="flex gap-4 mt-3 text-sm text-gray-500">
+
+                                <span>
+                                  {
+                                    meal.calories
+                                  }{" "}
+                                  kcal
+                                </span>
+
+                                <span>
+                                  {
+                                    meal.protein_grams
+                                  }
+                                  g protein
+                                </span>
+
+                              </div>
+
+                              {/* FOODS */}
+
+                              <div className="mt-5 space-y-3">
+
+                                {Array.isArray(
+                                  meal.foods
+                                ) &&
+                                  meal.foods.map(
+                                    (
+                                      food,
+                                      foodIndex
+                                    ) => (
+                                      <div
+                                        key={`${food}-${foodIndex}`}
+
+                                        className="flex gap-3 items-start"
+                                      >
+                                        <span>
+                                          •
+                                        </span>
+
+                                        <p className="text-gray-700">
+                                          {
+                                            food
+                                          }
+                                        </p>
+                                      </div>
+                                    )
+                                  )}
+
+                              </div>
+
+                              {/* REASON */}
+
+                              {meal.reason && (
+                                <div className="mt-6 pt-5 border-t border-gray-100">
+
+                                  <p className="text-xs font-semibold text-gray-400 uppercase">
+                                    Why this meal?
+                                  </p>
+
+                                  <p className="text-sm text-gray-600 mt-2">
+                                    {
+                                      meal.reason
+                                    }
+                                  </p>
+
+                                </div>
+                              )}
+
+                            </div>
+                          )
+                        )}
+
+                    </div>
+
+                  </section>
+                )}
+
+              </>
+            )}
 
         </div>
+
       </section>
+
     </main>
   );
 }

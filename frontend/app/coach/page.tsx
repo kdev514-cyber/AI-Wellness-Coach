@@ -2,14 +2,11 @@
 
 import {
   FormEvent,
-  useState
+  useState,
 } from "react";
 
 import AppSidebar from "../../components/AppSidebar";
-
-import {
-  supabase
-} from "../../lib/supabase";
+import { supabase } from "../../lib/supabase";
 
 
 // =========================================================
@@ -17,14 +14,8 @@ import {
 // =========================================================
 
 type ChatMessage = {
-
-  role:
-    "user" |
-    "assistant";
-
-  content:
-    string;
-
+  role: "user" | "assistant";
+  content: string;
 };
 
 
@@ -36,34 +27,32 @@ export default function CoachPage() {
 
   const [
     question,
-    setQuestion
-  ] = useState(
-    ""
-  );
-
+    setQuestion,
+  ] = useState("");
 
   const [
     messages,
-    setMessages
-  ] = useState<ChatMessage[]>(
-    []
-  );
-
+    setMessages,
+  ] = useState<ChatMessage[]>([]);
 
   const [
     loading,
-    setLoading
-  ] = useState(
-    false
-  );
-
+    setLoading,
+  ] = useState(false);
 
   const [
     error,
-    setError
-  ] = useState(
-    ""
-  );
+    setError,
+  ] = useState("");
+
+
+  // =====================================================
+  // API BASE URL
+  // =====================================================
+
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    "http://127.0.0.1:8000";
 
 
   // =====================================================
@@ -71,68 +60,41 @@ export default function CoachPage() {
   // =====================================================
 
   async function askCoach(
-    event:
-      FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>
   ) {
 
     event.preventDefault();
 
-
-    if (
-      loading
-    ) {
-
+    if (loading) {
       return;
-
     }
-
 
     const cleanQuestion =
       question.trim();
 
-
-    if (
-      !cleanQuestion
-    ) {
-
+    if (!cleanQuestion) {
       return;
-
     }
 
-
-    setLoading(
-      true
-    );
+    setLoading(true);
+    setError("");
 
 
-    setError(
-      ""
-    );
+    // ===================================================
+    // ADD USER MESSAGE TO CHAT
+    // ===================================================
 
-
-    // Add user's message immediately
     setMessages(
       previous => [
-
         ...previous,
-
         {
-
-          role:
-            "user",
-
-          content:
-            cleanQuestion,
-
+          role: "user",
+          content: cleanQuestion,
         },
-
       ]
     );
 
-
-    setQuestion(
-      ""
-    );
+    setQuestion("");
 
 
     try {
@@ -142,27 +104,19 @@ export default function CoachPage() {
       // =================================================
 
       const {
-
         data: {
-          user
+          user,
         },
-
-        error:
-          userError
-
-      } =
-        await supabase.auth.getUser();
-
+        error: userError,
+      } = await supabase.auth.getUser();
 
       if (
         userError ||
         !user
       ) {
-
         throw new Error(
           "You must be logged in."
         );
-
       }
 
 
@@ -171,41 +125,31 @@ export default function CoachPage() {
       // =================================================
 
       const {
-
-        data:
-          profile,
-
-        error:
-          profileError
-
-      } =
-        await supabase
-
-          .from(
-            "profiles"
-          )
-
-          .select(
-            "*"
-          )
-
-          .eq(
-            "id",
-            user.id
-          )
-
-          .single();
-
+        data: profile,
+        error: profileError,
+      } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          user.id
+        )
+        .single();
 
       if (
         profileError ||
         !profile
       ) {
 
-        throw new Error(
-          "Could not load your wellness profile."
+        console.error(
+          "Profile context error:",
+          profileError
         );
 
+        throw new Error(
+          profileError?.message ||
+          "Could not load your wellness profile."
+        );
       }
 
 
@@ -214,63 +158,51 @@ export default function CoachPage() {
       // =================================================
 
       const {
+        data: nutritionPlan,
+        error: nutritionError,
+      } = await supabase
+        .from("nutrition_plans")
+        .select(
+          `
+          daily_calories,
+          protein_grams,
+          water_litres,
+          weekly_plan
+          `
+        )
+        .eq(
+          "user_id",
+          user.id
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false,
+          }
+        )
+        .limit(1)
+        .maybeSingle();
 
-        data:
-          nutritionPlan,
-
-        error:
-          nutritionError
-
-      } =
-        await supabase
-
-          .from(
-            "nutrition_plans"
-          )
-
-          .select(
-            `
-            daily_calories,
-            protein_grams,
-            water_litres,
-            weekly_plan
-            `
-          )
-
-          .eq(
-            "user_id",
-            user.id
-          )
-
-          .eq(
-            "active",
-            true
-          )
-
-          .order(
-            "created_at",
-            {
-              ascending:
-                false
-            }
-          )
-
-          .limit(
-            1
-          )
-
-          .maybeSingle();
-
-
-      if (
-        nutritionError
-      ) {
+      if (nutritionError) {
 
         console.error(
-          "Nutrition context error:",
-          nutritionError
+          "Nutrition context message:",
+          nutritionError.message
         );
 
+        console.error(
+          "Nutrition context code:",
+          nutritionError.code
+        );
+
+        console.error(
+          "Nutrition context details:",
+          nutritionError.details
+        );
       }
 
 
@@ -279,85 +211,68 @@ export default function CoachPage() {
       // =================================================
 
       const {
+        data: workoutPlan,
+        error: workoutError,
+      } = await supabase
+        .from("workout_plans")
+        .select(
+          `
+          workout_days,
+          weekly_plan
+          `
+        )
+        .eq(
+          "user_id",
+          user.id
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false,
+          }
+        )
+        .limit(1)
+        .maybeSingle();
 
-        data:
-          workoutPlan,
-
-        error:
-          workoutError
-
-      } =
-        await supabase
-
-          .from(
-            "workout_plans"
-          )
-
-          .select(
-            `
-            workout_days,
-            weekly_plan
-            `
-          )
-
-          .eq(
-            "user_id",
-            user.id
-          )
-
-          .eq(
-            "active",
-            true
-          )
-
-          .order(
-            "created_at",
-            {
-              ascending:
-                false
-            }
-          )
-
-          .limit(
-            1
-          )
-
-          .maybeSingle();
-
-
-      if (
-        workoutError
-      ) {
+      if (workoutError) {
 
         console.error(
-          "Workout context error:",
-          workoutError
+          "Workout context message:",
+          workoutError.message
         );
 
+        console.error(
+          "Workout context code:",
+          workoutError.code
+        );
+
+        console.error(
+          "Workout context details:",
+          workoutError.details
+        );
       }
 
 
       // =================================================
-      // LAST 7 DAYS DATE
+      // CALCULATE LAST 7 DAYS
       // =================================================
 
       const sevenDaysAgo =
         new Date();
 
-
       sevenDaysAgo.setDate(
-
         sevenDaysAgo.getDate() -
         6
-
       );
 
-
       const startDate =
-        sevenDaysAgo
-          .toLocaleDateString(
-            "en-CA"
-          );
+        sevenDaysAgo.toLocaleDateString(
+          "en-CA"
+        );
 
 
       // =================================================
@@ -365,92 +280,85 @@ export default function CoachPage() {
       // =================================================
 
       const {
-
-        data:
-          trackerHistory,
-
-        error:
-          trackerError
-
-      } =
-        await supabase
-
-          .from(
-            "daily_tracker"
-          )
-
-          .select(
-            `
-            tracker_date,
-            breakfast_completed,
-            lunch_completed,
-            dinner_completed,
-            workout_completed,
-            water_litres,
-            steps,
-            sleep_hours,
-            weight_kg,
-            mood,
-            energy,
-            notes
-            `
-          )
-
-          .eq(
-            "user_id",
-            user.id
-          )
-
-          .gte(
-            "tracker_date",
-            startDate
-          )
-
-          .order(
-            "tracker_date",
-            {
-              ascending:
-                true
-            }
-          );
-
-
-      if (
-        trackerError
-      ) {
-
-        console.error(
-          "Tracker context error:",
-          trackerError
+        data: trackerHistory,
+        error: trackerError,
+      } = await supabase
+        .from("daily_tracker")
+        .select(
+          `
+          tracker_date,
+          breakfast_completed,
+          lunch_completed,
+          dinner_completed,
+          workout_completed,
+          water_litres,
+          steps,
+          sleep_hours,
+          weight_kg,
+          mood,
+          energy,
+          notes
+          `
+        )
+        .eq(
+          "user_id",
+          user.id
+        )
+        .gte(
+          "tracker_date",
+          startDate
+        )
+        .order(
+          "tracker_date",
+          {
+            ascending: true,
+          }
         );
 
+      if (trackerError) {
+
+        console.error(
+          "Tracker context message:",
+          trackerError.message
+        );
+
+        console.error(
+          "Tracker context code:",
+          trackerError.code
+        );
+
+        console.error(
+          "Tracker context details:",
+          trackerError.details
+        );
       }
 
 
       // =================================================
-      // CALL FASTAPI
+      // CALL RAILWAY FASTAPI
       // =================================================
+
+      const apiUrl =
+        `${API_BASE_URL}/coach`;
+
+      console.log(
+        "Calling Coach API:",
+        apiUrl
+      );
 
       const response =
         await fetch(
-
-          "http://127.0.0.1:8000/coach",
-
+          apiUrl,
           {
-
-            method:
-              "POST",
+            method: "POST",
 
             headers: {
-
               "Content-Type":
                 "application/json",
-
             },
 
             body:
               JSON.stringify({
-
                 question:
                   cleanQuestion,
 
@@ -464,46 +372,60 @@ export default function CoachPage() {
                   workoutPlan,
 
                 tracker_history:
-                  trackerHistory || [],
-
+                  trackerHistory ||
+                  [],
               }),
-
           }
-
         );
 
 
-      const data =
-        await response.json();
+      // =================================================
+      // READ BACKEND RESPONSE
+      // =================================================
 
+      let data;
 
-      if (
-        !response.ok
-      ) {
-
+      try {
+        data =
+          await response.json();
+      } catch {
         throw new Error(
-
-          data?.error ||
-
-          `Backend error: ${response.status}`
-
+          "The AI Coach backend returned an invalid response."
         );
-
       }
 
 
-      if (
-        !data.success
-      ) {
+      // =================================================
+      // HTTP ERROR
+      // =================================================
+
+      if (!response.ok) {
 
         throw new Error(
-
-          data.error ||
-
-          "AI Coach could not answer."
-
+          data?.error ||
+          `Backend error: ${response.status}`
         );
+      }
 
+
+      // =================================================
+      // APPLICATION ERROR
+      // =================================================
+
+      if (!data.success) {
+
+        throw new Error(
+          data.error ||
+          "AI Coach could not answer."
+        );
+      }
+
+
+      if (!data.answer) {
+
+        throw new Error(
+          "AI Coach returned an empty answer."
+        );
       }
 
 
@@ -513,32 +435,24 @@ export default function CoachPage() {
 
       setMessages(
         previous => [
-
           ...previous,
-
           {
-
             role:
               "assistant",
 
             content:
               data.answer,
-
           },
-
         ]
       );
 
 
-    } catch (
-      err
-    ) {
+    } catch (err) {
 
       console.error(
         "AI Coach error:",
         err
       );
-
 
       if (
         err instanceof Error
@@ -553,15 +467,11 @@ export default function CoachPage() {
         setError(
           "Something went wrong."
         );
-
       }
-
 
     } finally {
 
-      setLoading(
-        false
-      );
+      setLoading(false);
 
     }
 
@@ -573,19 +483,12 @@ export default function CoachPage() {
   // =====================================================
 
   const quickQuestions = [
-
     "How am I doing this week?",
-
     "What should I improve today?",
-
     "Am I getting enough sleep?",
-
     "How consistent have I been with my workouts?",
-
     "How can I improve my meal adherence?",
-
     "What should I focus on tomorrow?",
-
   ];
 
 
@@ -727,6 +630,7 @@ export default function CoachPage() {
                         text-gray-700
                         hover:border-gray-400
                         hover:text-black
+                        cursor-pointer
                       "
 
                     >
@@ -996,6 +900,7 @@ export default function CoachPage() {
                     hover:bg-gray-800
                     disabled:bg-gray-400
                     disabled:cursor-not-allowed
+                    cursor-pointer
                   "
 
                 >
