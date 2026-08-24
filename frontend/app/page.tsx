@@ -1,125 +1,77 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const [status, setStatus] = useState("Connecting...");
-  const [connected, setConnected] = useState(false);
+import { getAuthFlowStatus } from "../lib/authFlow";
 
-  // =====================================================
-  // BACKEND HEALTH CHECK
-  // =====================================================
+
+export default function HomePage() {
+
+  const router = useRouter();
+
 
   useEffect(() => {
-    async function checkBackend() {
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL;
 
-      // Make sure the Vercel environment variable exists
-      if (!apiBaseUrl) {
-        console.error(
-          "NEXT_PUBLIC_API_BASE_URL is missing."
-        );
+    async function redirectUser() {
 
-        setStatus("Backend URL not configured");
-        setConnected(false);
+      const state =
+        await getAuthFlowStatus();
+
+
+      // Not logged in
+      if (!state.isLoggedIn) {
+
+        router.replace("/login");
 
         return;
+
       }
 
-      try {
-        console.log(
-          "Checking backend:",
-          `${apiBaseUrl}/health`
-        );
 
-        const response = await fetch(
-          `${apiBaseUrl}/health`,
-          {
-            method: "GET",
-          }
-        );
+      // Logged in but onboarding not completed
+      if (!state.hasProfile) {
 
-        if (!response.ok) {
-          throw new Error(
-            `Backend returned HTTP ${response.status}`
-          );
-        }
+        router.replace("/onboarding");
 
-        const data =
-          await response.json();
+        return;
 
-        console.log(
-          "Backend health response:",
-          data
-        );
-
-        if (data.status === "healthy") {
-          setStatus("Backend connected");
-          setConnected(true);
-        } else {
-          setStatus("Backend unavailable");
-          setConnected(false);
-        }
-      } catch (error) {
-        console.error(
-          "Backend health check failed:",
-          error
-        );
-
-        setStatus("Backend unavailable");
-        setConnected(false);
       }
+
+
+      // Existing onboarded user
+      router.replace("/dashboard");
+
     }
 
-    checkBackend();
-  }, []);
 
-  // =====================================================
-  // PAGE
-  // =====================================================
+    redirectUser();
+
+  }, [router]);
+
 
   return (
+
     <main className="min-h-screen bg-white flex items-center justify-center">
 
       <div className="text-center">
 
-        <h1 className="text-5xl font-bold text-black">
+        <h1 className="text-3xl font-bold text-black">
+
           AI Wellness Coach
+
         </h1>
 
-        <p className="mt-4 text-gray-600">
-          Your personalized wellness companion
+        <p className="mt-3 text-gray-500">
+
+          Loading your wellness experience...
+
         </p>
-
-        <div className="mt-8">
-
-          <p className="text-sm text-gray-500">
-            Backend status
-          </p>
-
-          <p
-            className={`
-              mt-2
-              text-xl
-              font-semibold
-
-              ${
-                connected
-                  ? "text-green-600"
-                  : status === "Connecting..."
-                    ? "text-gray-500"
-                    : "text-red-600"
-              }
-            `}
-          >
-            {status}
-          </p>
-
-        </div>
 
       </div>
 
     </main>
+
   );
+
 }
