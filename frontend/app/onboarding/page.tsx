@@ -1,551 +1,1453 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { supabase } from "../../lib/supabase";
+import {
+  FormEvent,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  useRouter
+} from "next/navigation";
+
+import {
+  supabase
+} from "../../lib/supabase";
+
+
+// =========================================================
+// ONBOARDING
+// =========================================================
 
 export default function OnboardingPage() {
-  const [fullName, setFullName] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
 
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
+  const router =
+    useRouter();
 
-  const [goal, setGoal] = useState("");
-  const [activityLevel, setActivityLevel] = useState("");
 
-  const [workoutDays, setWorkoutDays] = useState("");
-  const [workoutDuration, setWorkoutDuration] = useState("");
+  // =====================================================
+  // BASIC INFORMATION
+  // =====================================================
 
-  const [dietPreference, setDietPreference] = useState("");
-  const [favoriteFoods, setFavoriteFoods] = useState("");
-  const [avoidedFoods, setAvoidedFoods] = useState("");
-  const [allergies, setAllergies] = useState("");
+  const [
+    fullName,
+    setFullName
+  ] =
+    useState(
+      ""
+    );
 
-  const [sleepTime, setSleepTime] = useState("");
-  const [wakeTime, setWakeTime] = useState("");
 
-  const [message, setMessage] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [
+    age,
+    setAge
+  ] =
+    useState(
+      ""
+    );
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+
+  const [
+    gender,
+    setGender
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    height,
+    setHeight
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    weight,
+    setWeight
+  ] =
+    useState(
+      ""
+    );
+
+
+  // =====================================================
+  // GOALS
+  // =====================================================
+
+  const [
+    goal,
+    setGoal
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    activityLevel,
+    setActivityLevel
+  ] =
+    useState(
+      ""
+    );
+
+
+  // =====================================================
+  // FITNESS
+  // =====================================================
+
+  const [
+    workoutDays,
+    setWorkoutDays
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    workoutDuration,
+    setWorkoutDuration
+  ] =
+    useState(
+      ""
+    );
+
+
+  // =====================================================
+  // NUTRITION
+  // =====================================================
+
+  const [
+    dietPreference,
+    setDietPreference
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    favoriteFoods,
+    setFavoriteFoods
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    avoidedFoods,
+    setAvoidedFoods
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    allergies,
+    setAllergies
+  ] =
+    useState(
+      ""
+    );
+
+
+  // =====================================================
+  // SLEEP
+  // =====================================================
+
+  const [
+    sleepTime,
+    setSleepTime
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    wakeTime,
+    setWakeTime
+  ] =
+    useState(
+      ""
+    );
+
+
+  // =====================================================
+  // PAGE STATE
+  // =====================================================
+
+  const [
+    checkingUser,
+    setCheckingUser
+  ] =
+    useState(
+      true
+    );
+
+
+  const [
+    saving,
+    setSaving
+  ] =
+    useState(
+      false
+    );
+
+
+  const [
+    message,
+    setMessage
+  ] =
+    useState(
+      ""
+    );
+
+
+  const [
+    errorMessage,
+    setErrorMessage
+  ] =
+    useState(
+      ""
+    );
+
+
+  // =====================================================
+  // VERIFY LOGIN
+  // =====================================================
+
+  useEffect(
+    () => {
+
+      async function checkUser() {
+
+        const {
+          data: {
+            user
+          }
+        } =
+          await supabase.auth.getUser();
+
+
+        if (
+          !user
+        ) {
+
+          router.replace(
+            "/login"
+          );
+
+          return;
+
+        }
+
+
+        setCheckingUser(
+          false
+        );
+
+      }
+
+
+      checkUser();
+
+    },
+
+    [
+      router
+    ]
+
+  );
+
+
+  // =====================================================
+  // SAVE ONBOARDING
+  // =====================================================
+
+  async function handleSubmit(
+    event:
+      FormEvent<HTMLFormElement>
+  ) {
+
     event.preventDefault();
 
-    setSaving(true);
-    setMessage("");
 
-    // Get the currently logged-in user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    setSaving(
+      true
+    );
 
-    if (userError || !user) {
-      setMessage("You must be logged in to save your profile.");
-      setSaving(false);
-      return;
+
+    setMessage(
+      ""
+    );
+
+
+    setErrorMessage(
+      ""
+    );
+
+
+    try {
+
+      // =================================================
+      // GET CURRENT USER
+      // =================================================
+
+      const {
+
+        data: {
+          user
+        },
+
+        error:
+          userError
+
+      } =
+        await supabase.auth.getUser();
+
+
+      if (
+        userError ||
+        !user
+      ) {
+
+        throw new Error(
+          "You must be logged in to complete onboarding."
+        );
+
+      }
+
+
+      // =================================================
+      // SAVE PROFILE
+      // =================================================
+
+      const {
+        error
+      } =
+        await supabase
+
+          .from(
+            "profiles"
+          )
+
+          .upsert({
+
+            id:
+              user.id,
+
+            full_name:
+              fullName.trim(),
+
+            age:
+              Number(
+                age
+              ),
+
+            gender,
+
+            height_cm:
+              Number(
+                height
+              ),
+
+            weight_kg:
+              Number(
+                weight
+              ),
+
+            goal,
+
+            activity_level:
+              activityLevel,
+
+            workout_days:
+              Number(
+                workoutDays
+              ),
+
+            workout_duration:
+              Number(
+                workoutDuration
+              ),
+
+            diet_preference:
+              dietPreference,
+
+            favorite_foods:
+              favoriteFoods.trim(),
+
+            avoided_foods:
+              avoidedFoods.trim(),
+
+            allergies:
+              allergies.trim(),
+
+            sleep_time:
+              sleepTime,
+
+            wake_time:
+              wakeTime,
+
+            updated_at:
+              new Date()
+                .toISOString(),
+
+          });
+
+
+      if (
+        error
+      ) {
+
+        console.error(
+          "Profile save error:",
+          error
+        );
+
+        throw error;
+
+      }
+
+
+      setMessage(
+        "Profile saved. Preparing your dashboard..."
+      );
+
+
+      // =================================================
+      // GO TO DASHBOARD
+      // =================================================
+
+      router.replace(
+        "/dashboard"
+      );
+
+
     }
 
-    // Save the user's profile to Supabase
-    const { error } = await supabase.from("profiles").upsert({
-      id: user.id,
+    catch (
+      error
+    ) {
 
-      full_name: fullName,
-      age: Number(age),
-      gender: gender,
+      console.error(
+        "Onboarding error:",
+        error
+      );
 
-      height_cm: Number(height),
-      weight_kg: Number(weight),
 
-      goal: goal,
-      activity_level: activityLevel,
+      if (
+        error instanceof Error
+      ) {
 
-      workout_days: Number(workoutDays),
-      workout_duration: Number(workoutDuration),
+        setErrorMessage(
+          error.message
+        );
 
-      diet_preference: dietPreference,
-      favorite_foods: favoriteFoods,
-      avoided_foods: avoidedFoods,
-      allergies: allergies,
+      }
 
-      sleep_time: sleepTime,
-      wake_time: wakeTime,
+      else {
 
-      updated_at: new Date().toISOString(),
-    });
+        setErrorMessage(
+          "Could not save your profile."
+        );
 
-    setSaving(false);
+      }
 
-    if (error) {
-      console.error("Profile save error:", error);
-      setMessage(error.message);
-      return;
     }
 
-    setMessage("Profile saved successfully!");
+    finally {
 
-    // Move user to dashboard
-    setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 800);
+      setSaving(
+        false
+      );
+
+    }
+
   }
 
+
+  // =====================================================
+  // CHECKING USER
+  // =====================================================
+
+  if (
+    checkingUser
+  ) {
+
+    return (
+
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+
+        <p className="text-gray-500">
+
+          Preparing onboarding...
+
+        </p>
+
+      </main>
+
+    );
+
+  }
+
+
+  // =====================================================
+  // PAGE
+  // =====================================================
+
   return (
+
     <main className="min-h-screen bg-gray-50 py-12 px-6">
+
+
       <div className="max-w-3xl mx-auto">
+
 
         {/* HEADER */}
 
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-black">
-            AI Wellness Coach
+
+
+          <p className="text-sm font-semibold text-gray-400">
+
+            STEP 1 OF 1
+
+          </p>
+
+
+          <h1 className="text-4xl font-bold text-black mt-2">
+
+            Let&apos;s build your wellness profile
+
           </h1>
 
-          <p className="mt-3 text-xl font-semibold text-gray-800">
-            Let's get to know you
+
+          <p className="mt-3 text-gray-500 max-w-xl mx-auto">
+
+            Your answers will personalize your nutrition plan,
+            workout plan, dashboard and AI Coach.
+
           </p>
 
-          <p className="mt-2 text-gray-500">
-            Your answers will help us create a wellness plan
-            personalized to your lifestyle and goals.
-          </p>
+
         </div>
+
 
         {/* FORM */}
 
         <form
-          onSubmit={handleSubmit}
+
+          onSubmit={
+            handleSubmit
+          }
+
           className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm"
+
         >
 
-          {/* BASIC INFORMATION */}
+
+          {/* =================================================
+              BASIC INFORMATION
+          ================================================= */}
 
           <section>
+
+
             <h2 className="text-2xl font-semibold text-black">
+
               Basic Information
+
             </h2>
 
+
             <p className="text-gray-500 mt-1 mb-6">
+
               Tell us a little about yourself.
+
             </p>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-              {/* NAME */}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
-                </label>
+              <InputField
+                label="Full Name"
+                type="text"
+                value={fullName}
+                onChange={setFullName}
+                placeholder="Enter your name"
+                required
+              />
 
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Enter your name"
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black outline-none focus:ring-2 focus:ring-black"
-                />
-              </div>
 
-              {/* AGE */}
+              <InputField
+                label="Age"
+                type="number"
+                value={age}
+                onChange={setAge}
+                placeholder="25"
+                min="13"
+                max="100"
+                required
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Age
-                </label>
 
-                <input
-                  type="number"
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  placeholder="25"
-                  min="13"
-                  max="100"
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black outline-none focus:ring-2 focus:ring-black"
-                />
-              </div>
+              <SelectField
 
-              {/* GENDER */}
+                label="Gender"
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Gender
-                </label>
+                value={
+                  gender
+                }
 
-                <select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black bg-white"
-                >
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="non_binary">Non-binary</option>
-                  <option value="prefer_not_to_say">
-                    Prefer not to say
-                  </option>
-                </select>
-              </div>
+                onChange={
+                  setGender
+                }
 
-              {/* HEIGHT */}
+                options={[
+                  [
+                    "",
+                    "Select gender"
+                  ],
+                  [
+                    "male",
+                    "Male"
+                  ],
+                  [
+                    "female",
+                    "Female"
+                  ],
+                  [
+                    "non_binary",
+                    "Non-binary"
+                  ],
+                  [
+                    "prefer_not_to_say",
+                    "Prefer not to say"
+                  ],
+                ]}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Height (cm)
-                </label>
+                required
 
-                <input
-                  type="number"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                  placeholder="180"
-                  min="100"
-                  max="250"
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
+              />
 
-              {/* WEIGHT */}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Weight (kg)
-                </label>
+              <InputField
+                label="Height (cm)"
+                type="number"
+                value={height}
+                onChange={setHeight}
+                placeholder="180"
+                min="100"
+                max="250"
+                required
+              />
 
-                <input
-                  type="number"
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  placeholder="80"
-                  min="30"
-                  max="300"
-                  step="0.1"
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
+
+              <InputField
+                label="Weight (kg)"
+                type="number"
+                value={weight}
+                onChange={setWeight}
+                placeholder="80"
+                min="30"
+                max="300"
+                step="0.1"
+                required
+              />
+
 
             </div>
+
+
           </section>
 
-          {/* GOALS */}
+
+          {/* =================================================
+              GOAL
+          ================================================= */}
 
           <section className="mt-12">
+
+
             <h2 className="text-2xl font-semibold text-black">
+
               Your Goal
+
             </h2>
 
+
             <p className="text-gray-500 mt-1 mb-6">
+
               What would you primarily like to achieve?
+
             </p>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Primary Goal
-                </label>
 
-                <select
-                  value={goal}
-                  onChange={(e) => setGoal(e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black bg-white"
-                >
-                  <option value="">Select your goal</option>
+              <SelectField
 
-                  <option value="lose_weight">
-                    Lose Weight
-                  </option>
+                label="Primary Goal"
 
-                  <option value="build_muscle">
-                    Build Muscle
-                  </option>
+                value={
+                  goal
+                }
 
-                  <option value="maintain_weight">
-                    Maintain Weight
-                  </option>
+                onChange={
+                  setGoal
+                }
 
-                  <option value="improve_fitness">
-                    Improve Fitness
-                  </option>
+                options={[
+                  [
+                    "",
+                    "Select your goal"
+                  ],
+                  [
+                    "lose_weight",
+                    "Lose Weight"
+                  ],
+                  [
+                    "build_muscle",
+                    "Build Muscle"
+                  ],
+                  [
+                    "maintain_weight",
+                    "Maintain Weight"
+                  ],
+                  [
+                    "improve_fitness",
+                    "Improve Fitness"
+                  ],
+                  [
+                    "general_wellness",
+                    "General Wellness"
+                  ],
+                ]}
 
-                  <option value="general_wellness">
-                    General Wellness
-                  </option>
-                </select>
-              </div>
+                required
 
-              {/* ACTIVITY */}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Current Activity Level
-                </label>
 
-                <select
-                  value={activityLevel}
-                  onChange={(e) => setActivityLevel(e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black bg-white"
-                >
-                  <option value="">
-                    Select activity level
-                  </option>
+              <SelectField
 
-                  <option value="sedentary">
-                    Mostly Sedentary
-                  </option>
+                label="Current Activity Level"
 
-                  <option value="light">
-                    Lightly Active
-                  </option>
+                value={
+                  activityLevel
+                }
 
-                  <option value="moderate">
-                    Moderately Active
-                  </option>
+                onChange={
+                  setActivityLevel
+                }
 
-                  <option value="very_active">
-                    Very Active
-                  </option>
-                </select>
-              </div>
+                options={[
+                  [
+                    "",
+                    "Select activity level"
+                  ],
+                  [
+                    "sedentary",
+                    "Mostly Sedentary"
+                  ],
+                  [
+                    "light",
+                    "Lightly Active"
+                  ],
+                  [
+                    "moderate",
+                    "Moderately Active"
+                  ],
+                  [
+                    "very_active",
+                    "Very Active"
+                  ],
+                ]}
+
+                required
+
+              />
+
 
             </div>
+
+
           </section>
 
-          {/* WORKOUT */}
+
+          {/* =================================================
+              FITNESS
+          ================================================= */}
 
           <section className="mt-12">
+
+
             <h2 className="text-2xl font-semibold text-black">
+
               Fitness
+
             </h2>
 
+
             <p className="text-gray-500 mt-1 mb-6">
-              Tell us how much time you can realistically dedicate
-              to exercise.
+
+              Tell us how much time you can realistically dedicate to exercise.
+
             </p>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Workout Days Per Week
-                </label>
 
-                <select
-                  value={workoutDays}
-                  onChange={(e) => setWorkoutDays(e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black bg-white"
-                >
-                  <option value="">Select</option>
-                  <option value="1">1 day</option>
-                  <option value="2">2 days</option>
-                  <option value="3">3 days</option>
-                  <option value="4">4 days</option>
-                  <option value="5">5 days</option>
-                  <option value="6">6 days</option>
-                  <option value="7">7 days</option>
-                </select>
-              </div>
+              <SelectField
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Workout Duration
-                </label>
+                label="Workout Days Per Week"
 
-                <input
-                  type="number"
-                  value={workoutDuration}
-                  onChange={(e) =>
-                    setWorkoutDuration(e.target.value)
-                  }
-                  placeholder="60"
-                  min="10"
-                  max="180"
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
+                value={
+                  workoutDays
+                }
 
-                <p className="text-xs text-gray-400 mt-1">
-                  Minutes per workout
-                </p>
-              </div>
+                onChange={
+                  setWorkoutDays
+                }
+
+                options={[
+                  [
+                    "",
+                    "Select"
+                  ],
+                  [
+                    "1",
+                    "1 day"
+                  ],
+                  [
+                    "2",
+                    "2 days"
+                  ],
+                  [
+                    "3",
+                    "3 days"
+                  ],
+                  [
+                    "4",
+                    "4 days"
+                  ],
+                  [
+                    "5",
+                    "5 days"
+                  ],
+                  [
+                    "6",
+                    "6 days"
+                  ],
+                  [
+                    "7",
+                    "7 days"
+                  ],
+                ]}
+
+                required
+
+              />
+
+
+              <InputField
+                label="Workout Duration (minutes)"
+                type="number"
+                value={workoutDuration}
+                onChange={setWorkoutDuration}
+                placeholder="60"
+                min="10"
+                max="180"
+                required
+              />
+
 
             </div>
+
+
           </section>
 
-          {/* NUTRITION */}
+
+          {/* =================================================
+              NUTRITION
+          ================================================= */}
 
           <section className="mt-12">
+
+
             <h2 className="text-2xl font-semibold text-black">
+
               Nutrition
+
             </h2>
 
+
             <p className="text-gray-500 mt-1 mb-6">
-              This information will help personalize your future
-              nutrition plan.
+
+              These preferences will be used when generating your nutrition plan.
+
             </p>
+
 
             <div className="space-y-5">
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Diet Preference
-                </label>
 
-                <select
-                  value={dietPreference}
-                  onChange={(e) =>
-                    setDietPreference(e.target.value)
-                  }
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black bg-white"
-                >
-                  <option value="">Select</option>
+              <SelectField
 
-                  <option value="no_preference">
-                    No Specific Preference
-                  </option>
+                label="Diet Preference"
 
-                  <option value="vegetarian">
-                    Vegetarian
-                  </option>
+                value={
+                  dietPreference
+                }
 
-                  <option value="vegan">
-                    Vegan
-                  </option>
+                onChange={
+                  setDietPreference
+                }
 
-                  <option value="pescatarian">
-                    Pescatarian
-                  </option>
+                options={[
+                  [
+                    "",
+                    "Select"
+                  ],
+                  [
+                    "no_preference",
+                    "No Specific Preference"
+                  ],
+                  [
+                    "vegetarian",
+                    "Vegetarian"
+                  ],
+                  [
+                    "vegan",
+                    "Vegan"
+                  ],
+                  [
+                    "pescatarian",
+                    "Pescatarian"
+                  ],
+                  [
+                    "high_protein",
+                    "High Protein"
+                  ],
+                ]}
 
-                  <option value="high_protein">
-                    High Protein
-                  </option>
-                </select>
-              </div>
+                required
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Foods You Enjoy
-                </label>
+              />
 
-                <textarea
-                  value={favoriteFoods}
-                  onChange={(e) =>
-                    setFavoriteFoods(e.target.value)
-                  }
-                  placeholder="Chicken, fish, rice, avocado, eggs..."
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Foods You Avoid
-                </label>
+              <TextAreaField
+                label="Foods You Enjoy"
+                value={favoriteFoods}
+                onChange={setFavoriteFoods}
+                placeholder="Chicken, fish, rice, avocado, eggs..."
+              />
 
-                <textarea
-                  value={avoidedFoods}
-                  onChange={(e) =>
-                    setAvoidedFoods(e.target.value)
-                  }
-                  placeholder="Foods you dislike or prefer not to eat..."
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Food Allergies
-                </label>
+              <TextAreaField
+                label="Foods You Avoid"
+                value={avoidedFoods}
+                onChange={setAvoidedFoods}
+                placeholder="Foods you dislike or prefer not to eat..."
+              />
 
-                <textarea
-                  value={allergies}
-                  onChange={(e) => setAllergies(e.target.value)}
-                  placeholder="Enter allergies, or leave blank if none"
-                  rows={2}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
+
+              <TextAreaField
+                label="Food Allergies"
+                value={allergies}
+                onChange={setAllergies}
+                placeholder="Enter allergies, or leave blank if none"
+              />
+
 
             </div>
+
+
           </section>
 
-          {/* SLEEP */}
+
+          {/* =================================================
+              SLEEP
+          ================================================= */}
 
           <section className="mt-12">
+
+
             <h2 className="text-2xl font-semibold text-black">
+
               Sleep
+
             </h2>
 
+
             <p className="text-gray-500 mt-1 mb-6">
-              Your sleep schedule can influence your daily wellness
-              plan.
+
+              Your normal schedule helps the Coach understand your routine.
+
             </p>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Typical Sleep Time
-                </label>
 
-                <input
-                  type="time"
-                  value={sleepTime}
-                  onChange={(e) => setSleepTime(e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
+              <InputField
+                label="Typical Sleep Time"
+                type="time"
+                value={sleepTime}
+                onChange={setSleepTime}
+                required
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Typical Wake-up Time
-                </label>
 
-                <input
-                  type="time"
-                  value={wakeTime}
-                  onChange={(e) => setWakeTime(e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                />
-              </div>
+              <InputField
+                label="Typical Wake-up Time"
+                type="time"
+                value={wakeTime}
+                onChange={setWakeTime}
+                required
+              />
+
 
             </div>
+
+
           </section>
 
-          {/* SUBMIT */}
+
+          {/* =================================================
+              SAVE
+          ================================================= */}
 
           <button
+
             type="submit"
-            disabled={saving}
-            className="mt-12 w-full bg-black text-white rounded-xl px-6 py-4 font-semibold text-lg hover:bg-gray-800 disabled:opacity-50"
+
+            disabled={
+              saving
+            }
+
+            className="
+              mt-12
+              w-full
+              bg-black
+              text-white
+              rounded-xl
+              px-6
+              py-4
+              font-semibold
+              text-lg
+              hover:bg-gray-800
+              disabled:opacity-50
+              disabled:cursor-not-allowed
+              cursor-pointer
+            "
+
           >
-            {saving
-              ? "Saving your profile..."
-              : "Complete Setup"}
+
+            {
+              saving
+
+                ? "Creating your wellness profile..."
+
+                : "Complete Setup"
+            }
+
           </button>
 
-          {message && (
-            <p className="mt-5 text-center text-sm text-gray-600">
-              {message}
-            </p>
-          )}
+
+          {
+            message && (
+
+              <div className="mt-5 bg-green-50 border border-green-200 rounded-xl p-4">
+
+                <p className="text-green-700 text-sm">
+
+                  {
+                    message
+                  }
+
+                </p>
+
+              </div>
+
+            )
+          }
+
+
+          {
+            errorMessage && (
+
+              <div className="mt-5 bg-red-50 border border-red-200 rounded-xl p-4">
+
+                <p className="text-red-700 text-sm">
+
+                  {
+                    errorMessage
+                  }
+
+                </p>
+
+              </div>
+
+            )
+          }
+
 
         </form>
 
+
       </div>
+
+
     </main>
+
   );
+
+}
+
+
+// =========================================================
+// INPUT FIELD
+// =========================================================
+
+function InputField({
+
+  label,
+
+  type,
+
+  value,
+
+  onChange,
+
+  placeholder,
+
+  min,
+
+  max,
+
+  step,
+
+  required,
+
+}: {
+
+  label: string;
+
+  type: string;
+
+  value: string;
+
+  onChange:
+    (
+      value: string
+    ) =>
+      void;
+
+  placeholder?: string;
+
+  min?: string;
+
+  max?: string;
+
+  step?: string;
+
+  required?: boolean;
+
+}) {
+
+  return (
+
+    <div>
+
+
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+
+        {
+          label
+        }
+
+      </label>
+
+
+      <input
+
+        type={
+          type
+        }
+
+        value={
+          value
+        }
+
+        onChange={
+          event =>
+            onChange(
+              event.target.value
+            )
+        }
+
+        placeholder={
+          placeholder
+        }
+
+        min={
+          min
+        }
+
+        max={
+          max
+        }
+
+        step={
+          step
+        }
+
+        required={
+          required
+        }
+
+        className="
+          w-full
+          border
+          border-gray-300
+          rounded-xl
+          px-4
+          py-3
+          text-black
+          outline-none
+          focus:ring-2
+          focus:ring-black
+        "
+
+      />
+
+
+    </div>
+
+  );
+
+}
+
+
+// =========================================================
+// SELECT FIELD
+// =========================================================
+
+function SelectField({
+
+  label,
+
+  value,
+
+  onChange,
+
+  options,
+
+  required,
+
+}: {
+
+  label: string;
+
+  value: string;
+
+  onChange:
+    (
+      value: string
+    ) =>
+      void;
+
+  options:
+    [
+      string,
+      string
+    ][];
+
+  required?: boolean;
+
+}) {
+
+  return (
+
+    <div>
+
+
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+
+        {
+          label
+        }
+
+      </label>
+
+
+      <select
+
+        value={
+          value
+        }
+
+        onChange={
+          event =>
+            onChange(
+              event.target.value
+            )
+        }
+
+        required={
+          required
+        }
+
+        className="
+          w-full
+          border
+          border-gray-300
+          rounded-xl
+          px-4
+          py-3
+          text-black
+          bg-white
+          outline-none
+          focus:ring-2
+          focus:ring-black
+        "
+
+      >
+
+        {
+          options.map(
+            (
+              [
+                optionValue,
+                label
+              ]
+            ) => (
+
+              <option
+                key={
+                  `${optionValue}-${label}`
+                }
+                value={
+                  optionValue
+                }
+              >
+
+                {
+                  label
+                }
+
+              </option>
+
+            )
+          )
+        }
+
+      </select>
+
+
+    </div>
+
+  );
+
+}
+
+
+// =========================================================
+// TEXTAREA
+// =========================================================
+
+function TextAreaField({
+
+  label,
+
+  value,
+
+  onChange,
+
+  placeholder,
+
+}: {
+
+  label: string;
+
+  value: string;
+
+  onChange:
+    (
+      value: string
+    ) =>
+      void;
+
+  placeholder: string;
+
+}) {
+
+  return (
+
+    <div>
+
+
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+
+        {
+          label
+        }
+
+      </label>
+
+
+      <textarea
+
+        value={
+          value
+        }
+
+        onChange={
+          event =>
+            onChange(
+              event.target.value
+            )
+        }
+
+        placeholder={
+          placeholder
+        }
+
+        rows={
+          3
+        }
+
+        className="
+          w-full
+          border
+          border-gray-300
+          rounded-xl
+          px-4
+          py-3
+          text-black
+          outline-none
+          focus:ring-2
+          focus:ring-black
+        "
+
+      />
+
+
+    </div>
+
+  );
+
 }
