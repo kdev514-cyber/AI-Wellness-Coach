@@ -24,15 +24,15 @@ app = FastAPI(
 # CORS
 # =========================================================
 #
-# CORS controls which frontend websites are allowed
-# to communicate with this FastAPI backend.
+# Local development:
+#   http://localhost:3000
+#   http://127.0.0.1:3000
 #
-# We allow:
+# Production:
+#   Any Vercel deployment under *.vercel.app
 #
-# 1. Local Next.js development
-# 2. Local 127.0.0.1 development
-# 3. Your local network address
-# 4. Your deployed Vercel frontend
+# This avoids having to update CORS every time
+# Vercel generates a new deployment URL.
 #
 # =========================================================
 
@@ -42,10 +42,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "http://10.1.47.203:3000",
-
-        "https://ai-wellness-coach-7z2h-jaj3upidl-drk12.vercel.app",
     ],
+
+    allow_origin_regex=r"https://.*\.vercel\.app",
 
     allow_credentials=True,
 
@@ -73,13 +72,9 @@ class WorkoutRequest(BaseModel):
 
 class CoachRequest(BaseModel):
     question: str
-
     profile: dict
-
     nutrition_plan: Any = None
-
     workout_plan: Any = None
-
     tracker_history: Any = None
 
 
