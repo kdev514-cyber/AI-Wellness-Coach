@@ -23,7 +23,6 @@ groq_api_key = os.getenv(
 
 
 if not groq_api_key:
-
     raise ValueError(
         "GROQ_API_KEY was not found. "
         "Check backend/.env or Railway variables."
@@ -48,7 +47,6 @@ def safe_number(
 ) -> float | None:
 
     try:
-
         if value is None:
             return None
 
@@ -60,7 +58,6 @@ def safe_number(
         TypeError,
         ValueError
     ):
-
         return None
 
 
@@ -120,7 +117,6 @@ def build_tracker_summary(
         tracker_history,
         list
     ):
-
         tracker_history = []
 
 
@@ -129,49 +125,30 @@ def build_tracker_summary(
     ) == 0:
 
         return {
+            "tracked_days": 0,
 
-            "tracked_days":
-                0,
+            "meal_adherence_percent": None,
+            "completed_meals": 0,
+            "total_meals": 0,
 
-            "meal_adherence_percent":
-                None,
+            "workout_adherence_percent": None,
+            "completed_workouts": 0,
 
-            "workout_adherence_percent":
-                None,
+            "average_water_litres": None,
+            "average_steps": None,
+            "average_sleep_hours": None,
 
-            "average_water_litres":
-                None,
+            "average_mood": None,
+            "average_energy": None,
 
-            "average_steps":
-                None,
+            "latest_weight_kg": None,
+            "weight_change_kg": None,
 
-            "average_sleep_hours":
-                None,
+            "days_water_target_met": 0,
+            "days_steps_target_met": 0,
+            "days_sleep_target_met": 0,
 
-            "average_mood":
-                None,
-
-            "average_energy":
-                None,
-
-            "latest_weight_kg":
-                None,
-
-            "weight_change_kg":
-                None,
-
-            "days_water_target_met":
-                0,
-
-            "days_steps_target_met":
-                0,
-
-            "days_sleep_target_met":
-                0,
-
-            "overall_consistency_percent":
-                None,
-
+            "overall_consistency_percent": None,
         }
 
 
@@ -200,15 +177,15 @@ def build_tracker_summary(
 
 
     # =====================================================
-    # VALUES
+    # DAILY VALUES
     # =====================================================
 
-    water_values = []
-    step_values = []
-    sleep_values = []
-    mood_values = []
-    energy_values = []
-    weight_values = []
+    water_values: list[float] = []
+    step_values: list[float] = []
+    sleep_values: list[float] = []
+    mood_values: list[float] = []
+    energy_values: list[float] = []
+    weight_values: list[float] = []
 
 
     water_target_days = 0
@@ -216,8 +193,12 @@ def build_tracker_summary(
     sleep_target_days = 0
 
 
-    daily_consistency_scores = []
+    daily_consistency_scores: list[float] = []
 
+
+    # =====================================================
+    # PROCESS TRACKER RECORDS
+    # =====================================================
 
     for record in tracker_history:
 
@@ -225,7 +206,6 @@ def build_tracker_summary(
             record,
             dict
         ):
-
             continue
 
 
@@ -240,12 +220,14 @@ def build_tracker_summary(
             )
         )
 
+
         lunch_completed = bool(
             record.get(
                 "lunch_completed",
                 False
             )
         )
+
 
         dinner_completed = bool(
             record.get(
@@ -258,8 +240,10 @@ def build_tracker_summary(
         if breakfast_completed:
             completed_meals += 1
 
+
         if lunch_completed:
             completed_meals += 1
+
 
         if dinner_completed:
             completed_meals += 1
@@ -298,6 +282,7 @@ def build_tracker_summary(
                 water
             )
 
+
             if water >= 2:
                 water_target_days += 1
 
@@ -318,6 +303,7 @@ def build_tracker_summary(
             step_values.append(
                 steps
             )
+
 
             if steps >= 7000:
                 step_target_days += 1
@@ -340,6 +326,7 @@ def build_tracker_summary(
                 sleep
             )
 
+
             if sleep >= 7:
                 sleep_target_days += 1
 
@@ -356,7 +343,6 @@ def build_tracker_summary(
 
 
         if mood is not None:
-
             mood_values.append(
                 mood
             )
@@ -374,7 +360,6 @@ def build_tracker_summary(
 
 
         if energy is not None:
-
             energy_values.append(
                 energy
             )
@@ -392,7 +377,6 @@ def build_tracker_summary(
 
 
         if weight is not None:
-
             weight_values.append(
                 weight
             )
@@ -403,13 +387,9 @@ def build_tracker_summary(
         # -------------------------------------------------
 
         daily_targets = [
-
             breakfast_completed,
-
             lunch_completed,
-
             dinner_completed,
-
             workout_completed,
 
             water is not None
@@ -420,20 +400,17 @@ def build_tracker_summary(
 
             sleep is not None
             and sleep >= 7,
-
         ]
 
 
         completed_targets = sum(
             1
-            for target
-            in daily_targets
+            for target in daily_targets
             if target
         )
 
 
         daily_consistency_scores.append(
-
             (
                 completed_targets /
                 len(
@@ -441,12 +418,11 @@ def build_tracker_summary(
                 )
             ) *
             100
-
         )
 
 
     # =====================================================
-    # WEIGHT CHANGE
+    # WEIGHT
     # =====================================================
 
     latest_weight = None
@@ -454,7 +430,6 @@ def build_tracker_summary(
 
 
     if weight_values:
-
         latest_weight = (
             weight_values[-1]
         )
@@ -465,11 +440,38 @@ def build_tracker_summary(
     ) >= 2:
 
         weight_change = (
-
             weight_values[-1] -
             weight_values[0]
-
         )
+
+
+    # =====================================================
+    # SUMMARY VALUES
+    # =====================================================
+
+    average_water = average(
+        water_values
+    )
+
+    average_steps = average(
+        step_values
+    )
+
+    average_sleep = average(
+        sleep_values
+    )
+
+    average_mood = average(
+        mood_values
+    )
+
+    average_energy = average(
+        energy_values
+    )
+
+    average_consistency = average(
+        daily_consistency_scores
+    )
 
 
     # =====================================================
@@ -480,6 +482,7 @@ def build_tracker_summary(
 
         "tracked_days":
             tracked_days,
+
 
         "meal_adherence_percent":
             percentage(
@@ -493,6 +496,7 @@ def build_tracker_summary(
         "total_meals":
             total_meals,
 
+
         "workout_adherence_percent":
             percentage(
                 completed_workouts,
@@ -502,49 +506,42 @@ def build_tracker_summary(
         "completed_workouts":
             completed_workouts,
 
+
         "average_water_litres":
             round_optional(
-                average(
-                    water_values
-                ),
+                average_water,
                 1
             ),
 
+
         "average_steps":
-
             round(
-                average(
-                    step_values
-                )
+                average_steps
             )
-
-            if step_values
-
+            if average_steps is not None
             else None,
+
 
         "average_sleep_hours":
             round_optional(
-                average(
-                    sleep_values
-                ),
+                average_sleep,
                 1
             ),
+
 
         "average_mood":
             round_optional(
-                average(
-                    mood_values
-                ),
+                average_mood,
                 1
             ),
 
+
         "average_energy":
             round_optional(
-                average(
-                    energy_values
-                ),
+                average_energy,
                 1
             ),
+
 
         "latest_weight_kg":
             round_optional(
@@ -552,31 +549,31 @@ def build_tracker_summary(
                 1
             ),
 
+
         "weight_change_kg":
             round_optional(
                 weight_change,
                 1
             ),
 
+
         "days_water_target_met":
             water_target_days,
+
 
         "days_steps_target_met":
             step_target_days,
 
+
         "days_sleep_target_met":
             sleep_target_days,
 
+
         "overall_consistency_percent":
-
             round(
-                average(
-                    daily_consistency_scores
-                )
+                average_consistency
             )
-
-            if daily_consistency_scores
-
+            if average_consistency is not None
             else None,
 
     }
@@ -619,13 +616,12 @@ def build_coach_response(
 ):
 
     # =====================================================
-    # CALCULATE REAL TRACKER STATISTICS
+    # CALCULATE TRACKER STATISTICS
     # =====================================================
 
-    tracker_summary =
-        build_tracker_summary(
-            tracker_history
-        )
+    tracker_summary = build_tracker_summary(
+        tracker_history
+    )
 
 
     # =====================================================
@@ -667,19 +663,17 @@ statistics such as:
 
 Use those values directly.
 
-Never recalculate statistics unless absolutely necessary.
-
 Never invent values.
 
-Never state that the user completed something unless the
-provided data supports it.
+Never claim that the user completed something unless
+the provided data supports it.
 
 If tracked_days is 0, clearly say that there is not enough
 tracked progress data yet.
 
 Distinguish clearly between:
 
-- something actually observed from tracker data
+- something observed from tracker data
 - something contained in the user's plan
 - a general recommendation
 
@@ -699,8 +693,8 @@ SAFETY RULES
    restriction, unsafe dehydration or dangerous exercise.
 
 6. If the user describes severe symptoms, injury, severe
-   pain, medication issues, or asks for medical treatment,
-   recommend seeking appropriate professional medical care.
+   pain, medication issues or asks for medical treatment,
+   recommend appropriate professional medical care.
 
 7. Respect dietary preferences, restrictions and allergies
    provided in the user's data.
@@ -725,30 +719,29 @@ Use their real tracked data whenever relevant.
 
 Keep the response clear and practical.
 
-When the user asks about their progress, week, consistency,
+When the user asks about progress, consistency, their week,
 or what they should improve, prefer this structure:
 
 WEEKLY SNAPSHOT
 
-Provide the most relevant tracked statistics.
+Give the most relevant tracked statistics.
 
 WHAT'S GOING WELL
 
-Mention 1-3 strengths supported by their data.
+Mention 1-3 strengths supported by data.
 
 WHAT TO IMPROVE
 
-Mention 1-3 opportunities supported by their data.
+Mention 1-3 opportunities supported by data.
 
 NEXT ACTIONS
 
 Give 2-4 realistic actions.
 
 If the user asks a simple specific question, do not force
-the full weekly structure. Answer naturally and concisely.
+the full weekly structure.
 
-Avoid excessive disclaimers. Only mention medical
-limitations when relevant.
+Avoid unnecessary medical disclaimers.
 """
 
 
@@ -819,42 +812,31 @@ USER QUESTION
     # AI REQUEST
     # =====================================================
 
-    response =
-        client.chat.completions.create(
+    response = client.chat.completions.create(
 
-            model=
-                "qwen/qwen3.6-27b",
+        model="qwen/qwen3.6-27b",
 
-            messages=[
+        messages=[
 
-                {
-                    "role":
-                        "system",
+            {
+                "role": "system",
+                "content": system_prompt,
+            },
 
-                    "content":
-                        system_prompt,
-                },
+            {
+                "role": "user",
+                "content": context,
+            },
 
-                {
-                    "role":
-                        "user",
+        ],
 
-                    "content":
-                        context,
-                },
+        reasoning_effort="none",
 
-            ],
+        temperature=0.35,
 
-            reasoning_effort=
-                "none",
+        max_completion_tokens=1800,
 
-            temperature=
-                0.35,
-
-            max_completion_tokens=
-                1800,
-
-        )
+    )
 
 
     # =====================================================
@@ -862,12 +844,10 @@ USER QUESTION
     # =====================================================
 
     content = (
-
         response
         .choices[0]
         .message
         .content
-
     )
 
 
@@ -877,6 +857,10 @@ USER QUESTION
             "AI Coach returned an empty response."
         )
 
+
+    # =====================================================
+    # LOG RESPONSE
+    # =====================================================
 
     print(
         "\n===================================="
