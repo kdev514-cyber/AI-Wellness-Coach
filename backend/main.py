@@ -23,18 +23,6 @@ app = FastAPI(
 # =========================================================
 # CORS
 # =========================================================
-#
-# Local development:
-#   http://localhost:3000
-#   http://127.0.0.1:3000
-#
-# Production:
-#   Any Vercel deployment under *.vercel.app
-#
-# This avoids having to update CORS every time
-# Vercel generates a new deployment URL.
-#
-# =========================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,8 +30,12 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+
+        # Stable Vercel production domain
+        "https://ai-wellness-coach-ekxr.vercel.app",
     ],
 
+    # Also allow Vercel preview/deployment URLs
     allow_origin_regex=r"https://.*\.vercel\.app",
 
     allow_credentials=True,
@@ -155,9 +147,7 @@ def nutrition_plan(
         )
 
         print(
-            repr(
-                error
-            )
+            repr(error)
         )
 
         return {
@@ -165,9 +155,7 @@ def nutrition_plan(
                 False,
 
             "error":
-                str(
-                    error
-                )
+                str(error)
         }
 
 
@@ -222,9 +210,7 @@ def workout_plan(
         )
 
         print(
-            repr(
-                error
-            )
+            repr(error)
         )
 
         return {
@@ -232,9 +218,7 @@ def workout_plan(
                 False,
 
             "error":
-                str(
-                    error
-                )
+                str(error)
         }
 
 
@@ -288,7 +272,6 @@ def coach(
 
             tracker_history=
                 request.tracker_history,
-
         )
 
 
@@ -316,9 +299,7 @@ def coach(
         )
 
         print(
-            repr(
-                error
-            )
+            repr(error)
         )
 
         return {
@@ -326,7 +307,5 @@ def coach(
                 False,
 
             "error":
-                str(
-                    error
-                )
+                str(error)
         }
