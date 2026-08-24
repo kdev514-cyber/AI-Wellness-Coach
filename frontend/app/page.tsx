@@ -7,31 +7,52 @@ export default function Home() {
   const [connected, setConnected] = useState(false);
 
   // =====================================================
-  // RAILWAY BACKEND URL
-  // =====================================================
-
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "http://127.0.0.1:8000";
-
-  // =====================================================
-  // CHECK BACKEND
+  // BACKEND HEALTH CHECK
   // =====================================================
 
   useEffect(() => {
     async function checkBackend() {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL;
+
+      // Make sure the Vercel environment variable exists
+      if (!apiBaseUrl) {
+        console.error(
+          "NEXT_PUBLIC_API_BASE_URL is missing."
+        );
+
+        setStatus("Backend URL not configured");
+        setConnected(false);
+
+        return;
+      }
+
       try {
+        console.log(
+          "Checking backend:",
+          `${apiBaseUrl}/health`
+        );
+
         const response = await fetch(
-          `${API_BASE_URL}/health`
+          `${apiBaseUrl}/health`,
+          {
+            method: "GET",
+          }
         );
 
         if (!response.ok) {
           throw new Error(
-            `Backend returned ${response.status}`
+            `Backend returned HTTP ${response.status}`
           );
         }
 
-        const data = await response.json();
+        const data =
+          await response.json();
+
+        console.log(
+          "Backend health response:",
+          data
+        );
 
         if (data.status === "healthy") {
           setStatus("Backend connected");
@@ -52,7 +73,7 @@ export default function Home() {
     }
 
     checkBackend();
-  }, [API_BASE_URL]);
+  }, []);
 
   // =====================================================
   // PAGE
@@ -78,13 +99,19 @@ export default function Home() {
           </p>
 
           <p
-            className={`mt-2 text-xl font-semibold ${
-              connected
-                ? "text-green-600"
-                : status === "Connecting..."
-                  ? "text-gray-500"
-                  : "text-red-600"
-            }`}
+            className={`
+              mt-2
+              text-xl
+              font-semibold
+
+              ${
+                connected
+                  ? "text-green-600"
+                  : status === "Connecting..."
+                    ? "text-gray-500"
+                    : "text-red-600"
+              }
+            `}
           >
             {status}
           </p>
