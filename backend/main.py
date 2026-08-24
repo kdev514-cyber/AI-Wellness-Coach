@@ -23,6 +23,18 @@ app = FastAPI(
 # =========================================================
 # CORS
 # =========================================================
+#
+# CORS controls which frontend websites are allowed
+# to communicate with this FastAPI backend.
+#
+# We allow:
+#
+# 1. Local Next.js development
+# 2. Local 127.0.0.1 development
+# 3. Your local network address
+# 4. Your deployed Vercel frontend
+#
+# =========================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,6 +43,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://10.1.47.203:3000",
+
+        "https://ai-wellness-coach-7z2h-jaj3upidl-drk12.vercel.app",
     ],
 
     allow_credentials=True,
@@ -50,17 +64,14 @@ app.add_middleware(
 # =========================================================
 
 class NutritionRequest(BaseModel):
-
     profile: dict
 
 
 class WorkoutRequest(BaseModel):
-
     profile: dict
 
 
 class CoachRequest(BaseModel):
-
     question: str
 
     profile: dict
@@ -80,10 +91,8 @@ class CoachRequest(BaseModel):
 def root():
 
     return {
-
         "message":
             "AI Wellness Coach API is running!"
-
     }
 
 
@@ -95,10 +104,8 @@ def root():
 def health_check():
 
     return {
-
         "status":
             "healthy"
-
     }
 
 
@@ -125,20 +132,16 @@ def nutrition_plan(
             "===================================="
         )
 
-
         plan = build_nutrition_plan(
             request.profile
         )
 
-
         return {
-
             "success":
                 True,
 
             "plan":
                 plan
-
         }
 
 
@@ -162,9 +165,7 @@ def nutrition_plan(
             )
         )
 
-
         return {
-
             "success":
                 False,
 
@@ -172,7 +173,6 @@ def nutrition_plan(
                 str(
                     error
                 )
-
         }
 
 
@@ -199,20 +199,16 @@ def workout_plan(
             "===================================="
         )
 
-
         plan = build_workout_plan(
             request.profile
         )
 
-
         return {
-
             "success":
                 True,
 
             "plan":
                 plan
-
         }
 
 
@@ -236,9 +232,7 @@ def workout_plan(
             )
         )
 
-
         return {
-
             "success":
                 False,
 
@@ -246,7 +240,6 @@ def workout_plan(
                 str(
                     error
                 )
-
         }
 
 
@@ -273,17 +266,14 @@ def coach(
             "===================================="
         )
 
-
         if not request.question.strip():
 
             return {
-
                 "success":
                     False,
 
                 "error":
                     "Please enter a question."
-
             }
 
 
@@ -308,13 +298,11 @@ def coach(
 
 
         return {
-
             "success":
                 True,
 
             "answer":
                 answer
-
         }
 
 
@@ -338,9 +326,7 @@ def coach(
             )
         )
 
-
         return {
-
             "success":
                 False,
 
@@ -348,5 +334,4 @@ def coach(
                 str(
                     error
                 )
-
         }
