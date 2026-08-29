@@ -6,23 +6,25 @@ import { supabase } from "./supabase";
 // =========================================================
 
 export type AuthFlowResult = {
+  user: {
+    id: string;
+  } | null;
+
   userId: string | null;
+
   isLoggedIn: boolean;
+
   hasProfile: boolean;
 };
 
 
 // =========================================================
-// GET AUTH FLOW STATUS
+// MAIN AUTH FLOW CHECK
 // =========================================================
 
 export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
 
   try {
-
-    // =====================================================
-    // GET CURRENT USER
-    // =====================================================
 
     const {
       data: {
@@ -32,10 +34,6 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
     } = await supabase.auth.getUser();
 
 
-    // =====================================================
-    // AUTH ERROR
-    // =====================================================
-
     if (userError) {
 
       console.log(
@@ -43,7 +41,9 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
         userError.message
       );
 
+
       return {
+        user: null,
         userId: null,
         isLoggedIn: false,
         hasProfile: false,
@@ -51,14 +51,11 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
 
     }
 
-
-    // =====================================================
-    // NO USER
-    // =====================================================
 
     if (!user) {
 
       return {
+        user: null,
         userId: null,
         isLoggedIn: false,
         hasProfile: false,
@@ -66,10 +63,6 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
 
     }
 
-
-    // =====================================================
-    // CHECK WHETHER PROFILE EXISTS
-    // =====================================================
 
     const {
       data: profile,
@@ -80,10 +73,6 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
       .eq("id", user.id)
       .maybeSingle();
 
-
-    // =====================================================
-    // PROFILE QUERY ERROR
-    // =====================================================
 
     if (profileError) {
 
@@ -109,45 +98,34 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
 
 
       return {
+        user: {
+          id: user.id,
+        },
+
         userId: user.id,
+
         isLoggedIn: true,
+
         hasProfile: false,
       };
 
     }
 
 
-    // =====================================================
-    // PROFILE EXISTS
-    // =====================================================
-
-    if (profile) {
-
-      return {
-        userId: user.id,
-        isLoggedIn: true,
-        hasProfile: true,
-      };
-
-    }
-
-
-    // =====================================================
-    // USER EXISTS BUT PROFILE DOES NOT
-    // =====================================================
-
     return {
+      user: {
+        id: user.id,
+      },
+
       userId: user.id,
+
       isLoggedIn: true,
-      hasProfile: false,
+
+      hasProfile: Boolean(profile),
     };
 
 
   } catch (error) {
-
-    // =====================================================
-    // UNEXPECTED ERROR
-    // =====================================================
 
     if (error instanceof Error) {
 
@@ -167,6 +145,7 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
 
 
     return {
+      user: null,
       userId: null,
       isLoggedIn: false,
       hasProfile: false,
@@ -178,7 +157,18 @@ export async function getAuthFlowStatus(): Promise<AuthFlowResult> {
 
 
 // =========================================================
-// CHECK IF USER IS LOGGED IN
+// COMPATIBILITY EXPORT
+// =========================================================
+
+export async function getUserFlowState(): Promise<AuthFlowResult> {
+
+  return await getAuthFlowStatus();
+
+}
+
+
+// =========================================================
+// LOGGED-IN CHECK
 // =========================================================
 
 export async function isUserLoggedIn(): Promise<boolean> {
@@ -193,7 +183,7 @@ export async function isUserLoggedIn(): Promise<boolean> {
 
 
 // =========================================================
-// CHECK IF USER HAS COMPLETED ONBOARDING
+// ONBOARDING CHECK
 // =========================================================
 
 export async function hasCompletedOnboarding(): Promise<boolean> {

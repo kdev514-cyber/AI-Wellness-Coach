@@ -1,6 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+
+import {
+  Coffee,
+  Utensils,
+  Droplets,
+  Footprints,
+  Moon,
+  Scale,
+  Smile,
+  Zap,
+  Dumbbell,
+  HeartPulse,
+  Check,
+} from "lucide-react";
 
 import AppSidebar from "../../components/AppSidebar";
 import { supabase } from "../../lib/supabase";
@@ -1277,7 +1292,13 @@ export default function TrackerPage() {
 
                         <MealTrackerCard
 
-                          emoji="🍳"
+                          icon={
+                            <Coffee
+                              size={24}
+                              strokeWidth={2}
+                              className="text-current"
+                            />
+                          }
 
                           fallbackTitle="Breakfast"
 
@@ -1298,7 +1319,13 @@ export default function TrackerPage() {
 
                         <MealTrackerCard
 
-                          emoji="🥗"
+                          icon={
+                            <Utensils
+                              size={24}
+                              strokeWidth={2}
+                              className="text-current"
+                            />
+                          }
 
                           fallbackTitle="Lunch"
 
@@ -1319,7 +1346,13 @@ export default function TrackerPage() {
 
                         <MealTrackerCard
 
-                          emoji="🍽️"
+                          icon={
+                            <Utensils
+                              size={24}
+                              strokeWidth={2}
+                              className="text-current"
+                            />
+                          }
 
                           fallbackTitle="Dinner"
 
@@ -1396,11 +1429,15 @@ export default function TrackerPage() {
 
                           <div>
 
-                            <span className="text-4xl">
+                            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
 
-                              🧘
+                              <HeartPulse
+                                size={25}
+                                strokeWidth={2}
+                                className="text-black"
+                              />
 
-                            </span>
+                            </div>
 
 
                             <h3 className="text-xl font-bold text-black mt-4">
@@ -1496,11 +1533,25 @@ export default function TrackerPage() {
 
                           <div>
 
-                            <span className="text-4xl">
+                            <div
+                              className={
+                                workoutCompleted
+                                  ? "w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center"
+                                  : "w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center"
+                              }
+                            >
 
-                              🏋️
+                              <Dumbbell
+                                size={25}
+                                strokeWidth={2}
+                                className={
+                                  workoutCompleted
+                                    ? "text-white"
+                                    : "text-black"
+                                }
+                              />
 
-                            </span>
+                            </div>
 
 
                             <h3 className="text-2xl font-bold mt-4">
@@ -1697,7 +1748,13 @@ export default function TrackerPage() {
 
                       title="Water"
 
-                      emoji="💧"
+                      icon={
+                        <Droplets
+                          size={24}
+                          strokeWidth={2}
+                          className="text-black"
+                        />
+                      }
 
                       value={
                         water
@@ -1718,7 +1775,13 @@ export default function TrackerPage() {
 
                       title="Steps"
 
-                      emoji="🚶"
+                      icon={
+                        <Footprints
+                          size={24}
+                          strokeWidth={2}
+                          className="text-black"
+                        />
+                      }
 
                       value={
                         steps
@@ -1739,7 +1802,13 @@ export default function TrackerPage() {
 
                       title="Sleep"
 
-                      emoji="😴"
+                      icon={
+                        <Moon
+                          size={24}
+                          strokeWidth={2}
+                          className="text-black"
+                        />
+                      }
 
                       value={
                         sleep
@@ -1760,7 +1829,13 @@ export default function TrackerPage() {
 
                       title="Weight"
 
-                      emoji="⚖️"
+                      icon={
+                        <Scale
+                          size={24}
+                          strokeWidth={2}
+                          className="text-black"
+                        />
+                      }
 
                       value={
                         weight
@@ -1802,7 +1877,13 @@ export default function TrackerPage() {
 
                       title="Mood"
 
-                      emoji="🙂"
+                      icon={
+                        <Smile
+                          size={24}
+                          strokeWidth={2}
+                          className="text-black"
+                        />
+                      }
 
                       value={
                         mood
@@ -1819,7 +1900,13 @@ export default function TrackerPage() {
 
                       title="Energy"
 
-                      emoji="⚡"
+                      icon={
+                        <Zap
+                          size={24}
+                          strokeWidth={2}
+                          className="text-black"
+                        />
+                      }
 
                       value={
                         energy
@@ -1939,13 +2026,18 @@ export default function TrackerPage() {
 
                       <div className="mt-5 bg-green-50 border border-green-200 rounded-xl p-4">
 
-                        <p className="text-green-700">
+                        <div className="flex items-center gap-2 text-green-700">
 
-                          ✓ {
-                            message
-                          }
+                          <Check
+                            size={18}
+                            strokeWidth={2}
+                          />
 
-                        </p>
+                          <p>
+                            {message}
+                          </p>
+
+                        </div>
 
                       </div>
 
@@ -1997,7 +2089,7 @@ export default function TrackerPage() {
 
 function MealTrackerCard({
 
-  emoji,
+  icon,
 
   fallbackTitle,
 
@@ -2009,8 +2101,8 @@ function MealTrackerCard({
 
 }: {
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   fallbackTitle:
     string;
@@ -2050,13 +2142,26 @@ function MealTrackerCard({
 
       <div className="flex justify-between items-start">
 
-        <span className="text-3xl">
+        <div
+          className={`
+            w-11
+            h-11
+            rounded-xl
+            flex
+            items-center
+            justify-center
 
-          {
-            emoji
-          }
+            ${
+              checked
+                ? "bg-gray-800 text-white"
+                : "bg-gray-100 text-black"
+            }
+          `}
+        >
 
-        </span>
+          {icon}
+
+        </div>
 
 
         <button
@@ -2227,7 +2332,7 @@ function NumberCard({
 
   title,
 
-  emoji,
+  icon,
 
   value,
 
@@ -2242,8 +2347,8 @@ function NumberCard({
   title:
     string;
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   value:
     string;
@@ -2267,13 +2372,11 @@ function NumberCard({
 
     <div className="bg-white border border-gray-200 rounded-2xl p-6">
 
-      <span className="text-3xl">
+      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
-        {
-          emoji
-        }
+        {icon}
 
-      </span>
+      </div>
 
 
       <p className="font-semibold text-black mt-4">
@@ -2348,7 +2451,7 @@ function RatingCard({
 
   title,
 
-  emoji,
+  icon,
 
   value,
 
@@ -2359,8 +2462,8 @@ function RatingCard({
   title:
     string;
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   value:
     number;
@@ -2380,13 +2483,11 @@ function RatingCard({
 
       <div className="flex items-center gap-3">
 
-        <span className="text-3xl">
+        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
-          {
-            emoji
-          }
+          {icon}
 
-        </span>
+        </div>
 
 
         <p className="font-semibold text-black text-lg">

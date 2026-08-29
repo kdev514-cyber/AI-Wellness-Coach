@@ -5,6 +5,18 @@ import {
   useMemo,
   useState,
 } from "react";
+import type { ReactNode } from "react";
+
+import {
+  Dumbbell,
+  Footprints,
+  Moon,
+  Salad,
+  Scale,
+  Smile,
+  Zap,
+  Droplets,
+} from "lucide-react";
 
 import AppSidebar from "../../components/AppSidebar";
 
@@ -1224,7 +1236,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    emoji="😴"
+                    icon={<Moon size={24} strokeWidth={2} className="text-black" />}
 
                     title="Average Sleep"
 
@@ -1247,7 +1259,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    emoji="💧"
+                    icon={<Droplets size={24} strokeWidth={2} className="text-black" />}
 
                     title="Average Water"
 
@@ -1270,7 +1282,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    emoji="🚶"
+                    icon={<Footprints size={24} strokeWidth={2} className="text-black" />}
 
                     title="Average Steps"
 
@@ -1291,7 +1303,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    emoji="⚖️"
+                    icon={<Scale size={24} strokeWidth={2} className="text-black" />}
 
                     title="Current Weight"
 
@@ -1340,7 +1352,7 @@ export default function ProgressPage() {
 
                     <PercentageCard
 
-                      emoji="🏋️"
+                      icon={<Dumbbell size={24} strokeWidth={2} className="text-black" />}
 
                       title="Workout Completion"
 
@@ -1357,7 +1369,7 @@ export default function ProgressPage() {
 
                     <PercentageCard
 
-                      emoji="🥗"
+                      icon={<Salad size={24} strokeWidth={2} className="text-black" />}
 
                       title="Meal Completion"
 
@@ -1660,7 +1672,7 @@ export default function ProgressPage() {
 
                     <StatCard
 
-                      emoji="🙂"
+                      icon={<Smile size={24} strokeWidth={2} className="text-black" />}
 
                       title="Average Mood"
 
@@ -1683,7 +1695,7 @@ export default function ProgressPage() {
 
                     <StatCard
 
-                      emoji="⚡"
+                      icon={<Zap size={24} strokeWidth={2} className="text-black" />}
 
                       title="Average Energy"
 
@@ -2031,7 +2043,7 @@ export default function ProgressPage() {
 
 function StatCard({
 
-  emoji,
+  icon,
 
   title,
 
@@ -2041,8 +2053,8 @@ function StatCard({
 
 }: {
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   title:
     string;
@@ -2059,13 +2071,11 @@ function StatCard({
 
     <div className="bg-white border border-gray-200 rounded-2xl p-6">
 
-      <span className="text-3xl">
+      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
-        {
-          emoji
-        }
+        {icon}
 
-      </span>
+      </div>
 
 
       <p className="text-sm text-gray-500 mt-4">
@@ -2113,7 +2123,7 @@ function StatCard({
 
 function PercentageCard({
 
-  emoji,
+  icon,
 
   title,
 
@@ -2123,8 +2133,8 @@ function PercentageCard({
 
 }: {
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   title:
     string;
@@ -2141,13 +2151,11 @@ function PercentageCard({
 
     <div className="bg-white border border-gray-200 rounded-2xl p-6">
 
-      <span className="text-3xl">
+      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
-        {
-          emoji
-        }
+        {icon}
 
-      </span>
+      </div>
 
 
       <p className="text-gray-500 mt-4">

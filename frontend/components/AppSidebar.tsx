@@ -7,6 +7,18 @@ import {
   useRouter,
 } from "next/navigation";
 
+import {
+  LayoutDashboard,
+  Salad,
+  Dumbbell,
+  ListChecks,
+  ChartNoAxesCombined,
+  Bot,
+  UserRound,
+  LogOut,
+  ArrowLeft,
+} from "lucide-react";
+
 import { supabase } from "../lib/supabase";
 
 
@@ -18,50 +30,52 @@ const navItems = [
   {
     name: "Dashboard",
     href: "/dashboard",
-    icon: "🏠",
+    icon: LayoutDashboard,
   },
   {
     name: "Nutrition",
     href: "/nutrition",
-    icon: "🥗",
+    icon: Salad,
   },
   {
     name: "Workout",
     href: "/workout",
-    icon: "🏋️",
+    icon: Dumbbell,
   },
   {
     name: "Daily Tracker",
     href: "/tracker",
-    icon: "✅",
+    icon: ListChecks,
   },
   {
     name: "Progress",
     href: "/progress",
-    icon: "📈",
+    icon: ChartNoAxesCombined,
   },
   {
     name: "AI Coach",
     href: "/coach",
-    icon: "🤖",
+    icon: Bot,
   },
   {
     name: "Profile",
     href: "/profile",
-    icon: "👤",
+    icon: UserRound,
   },
 ];
 
 
 // =========================================================
-// APP SIDEBAR
+// SIDEBAR
 // =========================================================
 
 export default function AppSidebar() {
 
-  const pathname = usePathname();
+  const pathname =
+    usePathname();
 
-  const router = useRouter();
+  const router =
+    useRouter();
 
 
   // =====================================================
@@ -72,7 +86,8 @@ export default function AppSidebar() {
 
     const {
       error,
-    } = await supabase.auth.signOut();
+    } =
+      await supabase.auth.signOut();
 
 
     if (error) {
@@ -83,19 +98,17 @@ export default function AppSidebar() {
       );
 
       return;
-
     }
 
 
     router.replace(
       "/login"
     );
-
   }
 
 
   // =====================================================
-  // PAGE
+  // UI
   // =====================================================
 
   return (
@@ -114,10 +127,7 @@ export default function AppSidebar() {
       "
     >
 
-
-      {/* ================================================
-          BRAND
-      ================================================ */}
+      {/* BRAND */}
 
       <div className="mb-10">
 
@@ -132,7 +142,6 @@ export default function AppSidebar() {
 
           </h1>
 
-
           <p className="text-sm text-gray-500 mt-1">
 
             Personal wellness
@@ -144,13 +153,14 @@ export default function AppSidebar() {
       </div>
 
 
-      {/* ================================================
-          MAIN NAVIGATION
-      ================================================ */}
+      {/* NAVIGATION */}
 
       <nav className="space-y-2 flex-1">
 
         {navItems.map((item) => {
+
+          const Icon =
+            item.icon;
 
           const isActive =
             pathname === item.href ||
@@ -163,9 +173,13 @@ export default function AppSidebar() {
 
             <Link
 
-              key={item.href}
+              key={
+                item.href
+              }
 
-              href={item.href}
+              href={
+                item.href
+              }
 
               className={`
                 flex
@@ -186,31 +200,28 @@ export default function AppSidebar() {
 
             >
 
-              <span className="text-lg">
-
-                {item.icon}
-
-              </span>
-
+              <Icon
+                size={20}
+                strokeWidth={1.8}
+              />
 
               <span className="font-medium">
 
-                {item.name}
+                {
+                  item.name
+                }
 
               </span>
 
             </Link>
 
           );
-
         })}
 
       </nav>
 
 
-      {/* ================================================
-          BOTTOM SECTION
-      ================================================ */}
+      {/* BOTTOM */}
 
       <div
         className="
@@ -220,9 +231,6 @@ export default function AppSidebar() {
           border-gray-200
         "
       >
-
-
-        {/* BACK TO DASHBOARD */}
 
         {pathname !== "/dashboard" && (
 
@@ -245,12 +253,10 @@ export default function AppSidebar() {
 
           >
 
-            <span className="text-lg">
-
-              ←
-
-            </span>
-
+            <ArrowLeft
+              size={20}
+              strokeWidth={1.8}
+            />
 
             <span className="font-medium">
 
@@ -263,13 +269,13 @@ export default function AppSidebar() {
         )}
 
 
-        {/* LOGOUT */}
-
         <button
 
           type="button"
 
-          onClick={handleLogout}
+          onClick={
+            handleLogout
+          }
 
           className="
             mt-2
@@ -288,12 +294,10 @@ export default function AppSidebar() {
 
         >
 
-          <span className="text-lg">
-
-            ↪
-
-          </span>
-
+          <LogOut
+            size={20}
+            strokeWidth={1.8}
+          />
 
           <span className="font-medium">
 
@@ -305,9 +309,7 @@ export default function AppSidebar() {
 
       </div>
 
-
     </aside>
 
   );
-
 }

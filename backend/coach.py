@@ -604,6 +604,82 @@ def format_json(
 
 
 # =========================================================
+# AI COACH SCOPE CONTROL
+# =========================================================
+
+OUT_OF_SCOPE_RESPONSE = (
+    "I’m your AI Wellness Coach, so I can help with your nutrition, "
+    "fitness, sleep, wellness progress, habits, and using this app. "
+    "Ask me something related to your wellness journey."
+)
+
+
+def classify_question_scope(question: str) -> str:
+    """Return WELLNESS, APP, or OUT_OF_SCOPE."""
+
+    clean_question = question.strip() if isinstance(question, str) else ""
+
+    if not clean_question:
+        return "OUT_OF_SCOPE"
+
+    classifier_prompt = """
+You are a strict scope classifier for an AI Wellness Coach application.
+
+Classify the user's message into EXACTLY ONE label:
+WELLNESS
+APP
+OUT_OF_SCOPE
+
+WELLNESS includes nutrition, food, calories, protein, hydration, exercise,
+workouts, fitness, activity, steps, sleep, recovery, body weight, healthy
+habits, wellness goals, general wellness mood/energy, adherence,
+consistency, progress, and questions about nutrition/workout/tracker data.
+
+Because this is a wellness coach, contextual questions such as
+"Am I doing well this week?", "What should I improve?", and
+"What should I focus on tomorrow?" are WELLNESS even without explicit
+wellness keywords.
+
+APP includes questions about using this wellness application: Daily Tracker,
+Progress, Nutrition, Workout, Profile, AI Coach, editing wellness profile
+information, recording wellness metrics, and generating/viewing plans.
+
+OUT_OF_SCOPE includes programming/coding, homework, assignments, politics,
+history, geography, entertainment, unrelated general knowledge, unrelated
+science/technology, unrelated mathematics, unrelated writing, finance,
+legal, business, and anything unrelated to wellness or this app.
+
+Classify intent, not isolated keywords. Do not answer the question.
+Output ONLY one exact label.
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="qwen/qwen3.6-27b",
+            messages=[
+                {"role": "system", "content": classifier_prompt},
+                {"role": "user", "content": clean_question},
+            ],
+            reasoning_effort="none",
+            temperature=0,
+            max_completion_tokens=20,
+        )
+
+        content = response.choices[0].message.content
+        label = content.strip().upper() if content else ""
+
+        if label in {"WELLNESS", "APP", "OUT_OF_SCOPE"}:
+            return label
+
+        print("Unexpected AI Coach scope label:", label)
+        return "OUT_OF_SCOPE"
+
+    except Exception as error:
+        print("AI Coach scope classification error:", error)
+        return "OUT_OF_SCOPE"
+
+
+# =========================================================
 # BUILD AI COACH RESPONSE
 # =========================================================
 
@@ -614,6 +690,18 @@ def build_coach_response(
     workout_plan,
     tracker_history
 ):
+
+    # =====================================================
+    # SCOPE CHECK
+    # =====================================================
+
+    scope = classify_question_scope(question)
+
+    print("AI COACH QUESTION SCOPE:", scope)
+
+    if scope == "OUT_OF_SCOPE":
+        return OUT_OF_SCOPE_RESPONSE
+
 
     # =====================================================
     # CALCULATE TRACKER STATISTICS
@@ -643,6 +731,13 @@ You receive:
 
 Your role is to provide useful, personalized GENERAL
 WELLNESS guidance.
+
+The question has already passed a scope classifier. You may answer only
+wellness questions or questions about using this wellness application.
+Do not drift into unrelated general-purpose assistance.
+
+If an apparently allowed question is actually unrelated, respond exactly:
+I’m your AI Wellness Coach, so I can help with your nutrition, fitness, sleep, wellness progress, habits, and using this app. Ask me something related to your wellness journey.
 
 =========================================================
 DATA RULES

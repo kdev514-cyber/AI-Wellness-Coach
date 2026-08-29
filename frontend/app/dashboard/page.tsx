@@ -1,6 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+
+import {
+  Bot,
+  Check,
+  Coffee,
+  Droplets,
+  Dumbbell,
+  Footprints,
+  HeartPulse,
+  ListChecks,
+  LogOut,
+  Moon,
+  Salad,
+  Scale,
+  Smile,
+  TrendingUp,
+  Utensils,
+  Zap,
+} from "lucide-react";
 
 import AppSidebar from "../../components/AppSidebar";
 
@@ -839,7 +859,7 @@ export default function Dashboard() {
                 Welcome back, {
                   profile?.full_name ||
                   "there"
-                } 👋
+                }
 
               </h1>
 
@@ -877,7 +897,10 @@ export default function Dashboard() {
 
             >
 
-              Logout
+              <span className="inline-flex items-center gap-2">
+                <LogOut size={17} strokeWidth={2} />
+                Logout
+              </span>
 
             </button>
 
@@ -1009,7 +1032,7 @@ export default function Dashboard() {
                   : ""
               }
 
-              emoji="⚖️"
+              icon={<Scale size={24} strokeWidth={2} className="text-black" />}
 
             />
 
@@ -1025,7 +1048,7 @@ export default function Dashboard() {
 
               unit="L"
 
-              emoji="💧"
+              icon={<Droplets size={24} strokeWidth={2} className="text-black" />}
 
             />
 
@@ -1041,7 +1064,7 @@ export default function Dashboard() {
 
               unit=""
 
-              emoji="🚶"
+              icon={<Footprints size={24} strokeWidth={2} className="text-black" />}
 
             />
 
@@ -1057,7 +1080,7 @@ export default function Dashboard() {
 
               unit="hrs"
 
-              emoji="😴"
+              icon={<Moon size={24} strokeWidth={2} className="text-black" />}
 
             />
 
@@ -1117,7 +1140,7 @@ export default function Dashboard() {
 
                     <MealCard
 
-                      emoji="🍳"
+                      icon={<Coffee size={24} strokeWidth={2} className="text-black" />}
 
                       fallbackTitle="Breakfast"
 
@@ -1135,7 +1158,7 @@ export default function Dashboard() {
 
                     <MealCard
 
-                      emoji="🥗"
+                      icon={<Salad size={24} strokeWidth={2} className="text-black" />}
 
                       fallbackTitle="Lunch"
 
@@ -1153,7 +1176,7 @@ export default function Dashboard() {
 
                     <MealCard
 
-                      emoji="🍽️"
+                      icon={<Utensils size={24} strokeWidth={2} className="text-black" />}
 
                       fallbackTitle="Dinner"
 
@@ -1251,11 +1274,15 @@ export default function Dashboard() {
 
                           <div>
 
-                            <span className="text-4xl">
+                            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
 
-                              🧘
+                              <HeartPulse
+                                size={25}
+                                strokeWidth={2}
+                                className="text-black"
+                              />
 
-                            </span>
+                            </div>
 
 
                             <h3 className="text-2xl font-bold text-black mt-4">
@@ -1325,11 +1352,15 @@ export default function Dashboard() {
 
                           <div>
 
-                            <span className="text-4xl">
+                            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
 
-                              🏋️
+                              <Dumbbell
+                                size={25}
+                                strokeWidth={2}
+                                className="text-black"
+                              />
 
-                            </span>
+                            </div>
 
 
                             <h3 className="text-2xl font-bold text-black mt-4">
@@ -1374,7 +1405,12 @@ export default function Dashboard() {
                             {
                               tracker?.workout_completed
 
-                                ? "✓ Completed"
+                                ? (
+                                  <span className="inline-flex items-center gap-1.5">
+                                    <Check size={15} strokeWidth={2.2} />
+                                    Completed
+                                  </span>
+                                )
 
                                 : "Not completed"
                             }
@@ -1490,7 +1526,7 @@ export default function Dashboard() {
 
               <WellbeingCard
 
-                emoji="🙂"
+                icon={<Smile size={24} strokeWidth={2} className="text-black" />}
 
                 title="Mood"
 
@@ -1504,7 +1540,7 @@ export default function Dashboard() {
 
               <WellbeingCard
 
-                emoji="⚡"
+                icon={<Zap size={24} strokeWidth={2} className="text-black" />}
 
                 title="Energy"
 
@@ -1544,7 +1580,7 @@ export default function Dashboard() {
 
                 description="View or regenerate your meal plan."
 
-                icon="🥗"
+                icon={<Salad size={24} strokeWidth={2} />}
 
                 href="/nutrition"
 
@@ -1557,7 +1593,7 @@ export default function Dashboard() {
 
                 description="See your weekly training plan."
 
-                icon="🏋️"
+                icon={<Dumbbell size={24} strokeWidth={2} />}
 
                 href="/workout"
 
@@ -1570,7 +1606,7 @@ export default function Dashboard() {
 
                 description="Record today's habits and metrics."
 
-                icon="✅"
+                icon={<ListChecks size={24} strokeWidth={2} />}
 
                 href="/tracker"
 
@@ -1583,7 +1619,7 @@ export default function Dashboard() {
 
                 description="Review trends and consistency."
 
-                icon="📈"
+                icon={<TrendingUp size={24} strokeWidth={2} />}
 
                 href="/progress"
 
@@ -1596,7 +1632,7 @@ export default function Dashboard() {
 
                 description="Ask questions about your progress."
 
-                icon="🤖"
+                icon={<Bot size={24} strokeWidth={2} />}
 
                 href="/coach"
 
@@ -1740,7 +1776,7 @@ function StatCard({
 
   unit,
 
-  emoji,
+  icon,
 
 }: {
 
@@ -1753,8 +1789,8 @@ function StatCard({
   unit:
     string;
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
 }) {
 
@@ -1763,13 +1799,13 @@ function StatCard({
     <div className="bg-white border border-gray-200 rounded-2xl p-6">
 
 
-      <span className="text-3xl">
+      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
         {
-          emoji
+          icon
         }
 
-      </span>
+      </div>
 
 
       <p className="text-sm text-gray-500 mt-4">
@@ -1817,7 +1853,7 @@ function StatCard({
 
 function MealCard({
 
-  emoji,
+  icon,
 
   fallbackTitle,
 
@@ -1827,8 +1863,8 @@ function MealCard({
 
 }: {
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   fallbackTitle:
     string;
@@ -1849,13 +1885,13 @@ function MealCard({
       <div className="flex items-start justify-between gap-4">
 
 
-        <span className="text-3xl">
+        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
           {
-            emoji
+            icon
           }
 
-        </span>
+        </div>
 
 
         <span className={`
@@ -1877,7 +1913,12 @@ function MealCard({
           {
             completed
 
-              ? "✓ Completed"
+              ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check size={14} strokeWidth={2.2} />
+                    Completed
+                  </span>
+                )
 
               : "Pending"
           }
@@ -1890,8 +1931,12 @@ function MealCard({
       <h3 className="text-xl font-bold text-black mt-5">
 
         {
-          meal?.name ||
-          fallbackTitle
+          meal
+            ? cleanMealName(
+                meal.name,
+                fallbackTitle
+              )
+            : fallbackTitle
         }
 
       </h3>
@@ -2004,7 +2049,7 @@ function DashboardCard({
     string;
 
   icon:
-    string;
+    ReactNode;
 
   href:
     string;
@@ -2033,7 +2078,7 @@ function DashboardCard({
 
     >
 
-      <div className="text-3xl">
+      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-black">
 
         {
           icon
@@ -2072,7 +2117,7 @@ function DashboardCard({
 
 function WellbeingCard({
 
-  emoji,
+  icon,
 
   title,
 
@@ -2080,8 +2125,8 @@ function WellbeingCard({
 
 }: {
 
-  emoji:
-    string;
+  icon:
+    ReactNode;
 
   title:
     string;
@@ -2098,13 +2143,13 @@ function WellbeingCard({
 
       <div className="flex items-center gap-3">
 
-        <span className="text-3xl">
+        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
           {
-            emoji
+            icon
           }
 
-        </span>
+        </div>
 
 
         <div>
@@ -2261,6 +2306,57 @@ function ProfileItem({
 
     </div>
 
+  );
+
+}
+
+
+// =========================================================
+// CLEAN MEAL NAME
+// =========================================================
+
+function cleanMealName(
+  mealName:
+    string,
+  fallbackTitle:
+    string
+) {
+
+  const lower =
+    mealName.toLowerCase();
+
+  if (
+    lower.includes(
+      "breakfast"
+    )
+  ) {
+    return "Breakfast";
+  }
+
+  if (
+    lower.includes(
+      "lunch"
+    )
+  ) {
+    return "Lunch";
+  }
+
+  if (
+    lower.includes(
+      "dinner"
+    )
+  ) {
+    return "Dinner";
+  }
+
+  return (
+    mealName
+      .replace(
+        /^[^\p{L}\p{N}]+/u,
+        ""
+      )
+      .trim() ||
+    fallbackTitle
   );
 
 }
