@@ -1080,14 +1080,14 @@ export default function TrackerPage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 flex">
+    <main className="min-h-screen bg-gray-50 lg:flex">
 
       <AppSidebar />
 
 
-      <section className="flex-1 p-10">
+      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
-        <div className="max-w-6xl">
+        <div className="mx-auto w-full max-w-6xl min-w-0">
 
 
           {/* HEADER */}
@@ -1099,14 +1099,14 @@ export default function TrackerPage() {
           </p>
 
 
-          <h1 className="text-4xl font-bold text-black mt-2">
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
 
             Daily Tracker
 
           </h1>
 
 
-          <p className="text-gray-600 mt-3">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
 
             Follow your personalized plan and track your daily wellness.
 
@@ -1115,7 +1115,7 @@ export default function TrackerPage() {
 
           {/* DATE */}
 
-          <div className="mt-8 bg-white border border-gray-200 rounded-2xl p-6">
+          <div className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
             <label className="block text-sm font-medium text-gray-600">
 
@@ -1124,7 +1124,7 @@ export default function TrackerPage() {
             </label>
 
 
-            <div className="flex flex-wrap items-center gap-5 mt-3">
+            <div className="mt-3 flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
 
               <input
 
@@ -1144,12 +1144,15 @@ export default function TrackerPage() {
                 }
 
                 className="
+                  w-full
+                  min-w-0
+                  rounded-xl
                   border
                   border-gray-300
-                  rounded-xl
                   px-4
                   py-3
                   text-black
+                  sm:w-auto
                 "
 
               />
@@ -1173,7 +1176,7 @@ export default function TrackerPage() {
           {
             loading && (
 
-              <div className="mt-6 bg-white border border-gray-200 rounded-2xl p-8">
+              <div className="mt-6 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-8">
 
                 <p className="text-gray-500">
 
@@ -1195,7 +1198,7 @@ export default function TrackerPage() {
 
                 {/* DAILY SCORE */}
 
-                <div className="mt-8 bg-black text-white rounded-2xl p-8">
+                <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-black p-5 text-white sm:p-8">
 
                   <p className="text-gray-300 text-sm">
 
@@ -1204,7 +1207,7 @@ export default function TrackerPage() {
                   </p>
 
 
-                  <p className="text-5xl font-bold mt-2">
+                  <p className="mt-2 text-4xl font-bold sm:text-5xl">
 
                     {
                       completionPercentage
@@ -1256,7 +1259,7 @@ export default function TrackerPage() {
 
                     </p>
 
-                    <h2 className="text-2xl font-bold text-black mt-1">
+                    <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
 
                       Nutrition
 
@@ -1268,7 +1271,7 @@ export default function TrackerPage() {
                   {
                     !nutritionDay && (
 
-                      <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
+                      <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                         <p className="text-gray-500">
 
@@ -1287,7 +1290,7 @@ export default function TrackerPage() {
                   {
                     nutritionDay && (
 
-                      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mt-5">
+                      <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-3">
 
 
                         <MealTrackerCard
@@ -1392,7 +1395,7 @@ export default function TrackerPage() {
                   </p>
 
 
-                  <h2 className="text-2xl font-bold text-black mt-1">
+                  <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
 
                     Workout
 
@@ -1402,7 +1405,7 @@ export default function TrackerPage() {
                   {
                     !workoutDay && (
 
-                      <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
+                      <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                         <p className="text-gray-500">
 
@@ -1423,9 +1426,9 @@ export default function TrackerPage() {
                     workoutDay.type ===
                       "rest" && (
 
-                      <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-7">
+                      <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-7">
 
-                        <div className="flex justify-between gap-5">
+                        <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:justify-between sm:gap-5">
 
                           <div>
 
@@ -1447,7 +1450,7 @@ export default function TrackerPage() {
                             </h3>
 
 
-                            <p className="text-gray-500 mt-2">
+                            <p className="mt-2 break-words text-gray-500">
 
                               {
                                 workoutDay.focus
@@ -1479,7 +1482,7 @@ export default function TrackerPage() {
                               </p>
 
 
-                              <p className="text-black mt-2">
+                              <p className="mt-2 break-words text-black">
 
                                 {
                                   workoutDay.cardio.activity
@@ -1514,9 +1517,11 @@ export default function TrackerPage() {
 
                       <div className={`
                         mt-5
+                        min-w-0
                         border
                         rounded-2xl
-                        p-7
+                        p-5
+                        sm:p-7
                         transition
 
                         ${
@@ -1529,7 +1534,7 @@ export default function TrackerPage() {
                       `}>
 
 
-                        <div className="flex justify-between items-start gap-5">
+                        <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
 
                           <div>
 
@@ -1554,7 +1559,7 @@ export default function TrackerPage() {
                             </div>
 
 
-                            <h3 className="text-2xl font-bold mt-4">
+                            <h3 className="mt-4 break-words text-xl font-bold sm:text-2xl">
 
                               {
                                 workoutDay.focus
@@ -1592,11 +1597,13 @@ export default function TrackerPage() {
                             }
 
                             className={`
+                              w-full
+                              rounded-xl
                               px-5
                               py-3
-                              rounded-xl
                               font-semibold
                               cursor-pointer
+                              sm:w-auto
 
                               ${
                                 workoutCompleted
@@ -1657,7 +1664,7 @@ export default function TrackerPage() {
                               </p>
 
 
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
 
                                 {
                                   workoutDay.exercises.map(
@@ -1682,7 +1689,7 @@ export default function TrackerPage() {
 
                                       >
 
-                                        <p className="font-semibold">
+                                        <p className="break-words font-semibold">
 
                                           {
                                             exercise.name
@@ -1734,14 +1741,14 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-xl font-bold text-black sm:text-2xl">
 
                     Daily Metrics
 
                   </h2>
 
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+                  <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
 
 
                     <NumberCard
@@ -1863,14 +1870,14 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-xl font-bold text-black sm:text-2xl">
 
                     How Do You Feel?
 
                   </h2>
 
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                  <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
 
 
                     <RatingCard
@@ -1930,7 +1937,7 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-xl font-bold text-black sm:text-2xl">
 
                     Notes
 
@@ -1996,16 +2003,18 @@ export default function TrackerPage() {
                     }
 
                     className="
+                      w-full
+                      rounded-xl
                       bg-black
-                      text-white
                       px-8
                       py-4
-                      rounded-xl
                       font-semibold
+                      text-white
                       hover:bg-gray-800
-                      disabled:bg-gray-400
                       disabled:cursor-not-allowed
+                      disabled:bg-gray-400
                       cursor-pointer
+                      sm:w-auto
                     "
 
                   >
@@ -2125,9 +2134,11 @@ function MealTrackerCard({
   return (
 
     <div className={`
+      min-w-0
       border
       rounded-2xl
-      p-6
+      p-5
+      sm:p-6
       transition
 
       ${
@@ -2140,7 +2151,7 @@ function MealTrackerCard({
     `}>
 
 
-      <div className="flex justify-between items-start">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 
         <div
           className={`
@@ -2176,12 +2187,14 @@ function MealTrackerCard({
           }
 
           className={`
+            w-full
+            rounded-xl
             px-4
             py-2
-            rounded-xl
             text-sm
             font-semibold
             cursor-pointer
+            sm:w-auto
 
             ${
               checked
@@ -2370,7 +2383,7 @@ function NumberCard({
 
   return (
 
-    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
       <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
@@ -2479,7 +2492,7 @@ function RatingCard({
 
   return (
 
-    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
       <div className="flex items-center gap-3">
 
@@ -2501,7 +2514,7 @@ function RatingCard({
       </div>
 
 
-      <div className="flex gap-2 mt-6">
+      <div className="mt-6 grid grid-cols-5 gap-2">
 
         {
           [
@@ -2532,8 +2545,9 @@ function RatingCard({
                 }
 
                 className={`
-                  w-11
                   h-11
+                  min-w-0
+                  w-full
                   rounded-xl
                   font-semibold
                   cursor-pointer

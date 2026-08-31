@@ -721,16 +721,16 @@ export default function CoachPage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 flex">
+    <main className="min-h-screen bg-gray-50 lg:flex">
 
 
       <AppSidebar />
 
 
-      <section className="flex-1 p-10">
+      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
 
-        <div className="max-w-5xl mx-auto">
+        <div className="mx-auto w-full max-w-5xl min-w-0">
 
 
           {/* ============================================
@@ -744,14 +744,14 @@ export default function CoachPage() {
           </p>
 
 
-          <h1 className="text-4xl font-bold text-black mt-2">
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
 
             AI Coach
 
           </h1>
 
 
-          <p className="text-gray-600 mt-3 max-w-2xl">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
 
             Ask questions about your wellness plan and recent
             progress. Your coach can use your profile, nutrition,
@@ -764,10 +764,10 @@ export default function CoachPage() {
               CONTEXT
           ============================================ */}
 
-          <div className="mt-8 bg-black text-white rounded-2xl p-6">
+          <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-black p-5 text-white sm:p-6">
 
 
-            <div className="flex gap-4">
+            <div className="flex min-w-0 gap-3 sm:gap-4">
 
 
               <div className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center shrink-0">
@@ -791,7 +791,7 @@ export default function CoachPage() {
                 </h2>
 
 
-                <p className="text-sm text-gray-300 mt-2">
+                <p className="mt-2 break-words text-sm leading-6 text-gray-300">
 
                   The coach analyzes your recent tracked data before
                   answering so that guidance can reflect your actual
@@ -834,7 +834,7 @@ export default function CoachPage() {
                 </p>
 
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
 
 
                   {
@@ -890,7 +890,7 @@ export default function CoachPage() {
                           </p>
 
 
-                          <p className="text-sm text-gray-500 mt-1">
+                          <p className="mt-1 break-words text-sm leading-6 text-gray-500">
 
                             {
                               item.question
@@ -922,7 +922,7 @@ export default function CoachPage() {
           <section className="mt-10">
 
 
-            <div className="space-y-5">
+            <div className="min-w-0 space-y-5">
 
 
               {
@@ -996,7 +996,7 @@ export default function CoachPage() {
                         }
 
 
-                        <p className="whitespace-pre-wrap leading-7">
+                        <p className="whitespace-pre-wrap break-words [overflow-wrap:anywhere] leading-7">
 
                           {
                             message.content
@@ -1025,7 +1025,7 @@ export default function CoachPage() {
                   <div className="flex justify-start">
 
 
-                    <div className="bg-white border border-gray-200 rounded-2xl px-6 py-5">
+                    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white px-4 py-4 sm:px-6 sm:py-5">
 
 
                       <p className="text-xs font-semibold text-gray-400">
@@ -1064,7 +1064,7 @@ export default function CoachPage() {
           {
             error && (
 
-              <div className="mt-6 bg-red-50 border border-red-200 rounded-xl p-4">
+              <div className="mt-6 min-w-0 rounded-xl border border-red-200 bg-red-50 p-4">
 
 
                 <p className="text-red-700 font-semibold">
@@ -1099,12 +1099,12 @@ export default function CoachPage() {
               askCoach
             }
 
-            className="mt-8 mb-10"
+            className="mb-10 mt-8 min-w-0"
 
           >
 
 
-            <div className="bg-white border border-gray-200 rounded-2xl p-4">
+            <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-4">
 
 
               <textarea

@@ -837,14 +837,14 @@ export default function NutritionPage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 flex">
+    <main className="min-h-screen bg-gray-50 lg:flex">
 
       <AppSidebar />
 
 
-      <section className="flex-1 p-10">
+      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
-        <div className="max-w-6xl">
+        <div className="mx-auto w-full max-w-6xl min-w-0">
 
 
           {/* HEADER */}
@@ -856,14 +856,14 @@ export default function NutritionPage() {
           </p>
 
 
-          <h1 className="text-4xl font-bold text-black mt-2">
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
 
             Nutrition
 
           </h1>
 
 
-          <p className="text-gray-600 mt-3">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
 
             Your personalized AI-powered weekly nutrition plan.
 
@@ -874,7 +874,7 @@ export default function NutritionPage() {
 
           {loadingSavedPlan && (
 
-            <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+            <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
 
               <div className="flex items-center gap-3">
 
@@ -904,7 +904,7 @@ export default function NutritionPage() {
             errorMessage &&
             !plan && (
 
-              <div className="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
+              <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-5 sm:p-6">
 
                 <p className="font-semibold text-red-700">
 
@@ -929,7 +929,7 @@ export default function NutritionPage() {
           {!loadingSavedPlan &&
             !plan && (
 
-              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+              <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
 
                 <div className="flex items-center gap-3">
 
@@ -954,7 +954,7 @@ export default function NutritionPage() {
                   </div>
 
 
-                  <h2 className="text-2xl font-semibold text-black">
+                  <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                     Create Your Weekly Nutrition Plan
 
@@ -985,19 +985,22 @@ export default function NutritionPage() {
                   className="
                     mt-6
                     flex
+                    w-full
                     items-center
+                    justify-center
                     gap-2
+                    rounded-xl
                     bg-black
-                    text-white
                     px-6
                     py-3
-                    rounded-xl
                     font-semibold
-                    hover:bg-gray-800
-                    disabled:bg-gray-400
-                    disabled:cursor-not-allowed
-                    cursor-pointer
+                    text-white
                     transition
+                    hover:bg-gray-800
+                    disabled:cursor-not-allowed
+                    disabled:bg-gray-400
+                    cursor-pointer
+                    sm:w-auto
                   "
                 >
 
@@ -1060,7 +1063,7 @@ export default function NutritionPage() {
 
                 {/* DAILY TARGETS */}
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+                <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 md:grid-cols-3 md:gap-5">
 
                   <TargetCard
                     title="Daily Calories"
@@ -1114,9 +1117,9 @@ export default function NutritionPage() {
 
                 {/* DAY SELECTOR */}
 
-                <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-4">
+                <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-200 bg-white p-3 sm:mt-10 sm:p-4">
 
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex min-w-max gap-2 sm:min-w-0 sm:flex-wrap">
 
                     {plan.days.map(
                       (
@@ -1174,7 +1177,7 @@ export default function NutritionPage() {
 
                   <section className="mt-8">
 
-                    <div className="flex justify-between items-center gap-6">
+                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
 
                       <div>
 
@@ -1185,7 +1188,7 @@ export default function NutritionPage() {
                         </p>
 
 
-                        <h2 className="text-3xl font-bold text-black mt-1">
+                        <h2 className="mt-1 text-2xl font-bold text-black sm:text-3xl">
 
                           {currentDay.day}
 
@@ -1203,13 +1206,15 @@ export default function NutritionPage() {
 
                         className="
                           flex
+                          w-fit
                           items-center
                           gap-2
+                          text-left
                           text-sm
                           text-gray-500
+                          transition
                           hover:text-black
                           cursor-pointer
-                          transition
                         "
                       >
 
@@ -1228,7 +1233,7 @@ export default function NutritionPage() {
 
                     {/* MEALS */}
 
-                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+                    <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-3 xl:gap-6">
 
                       {Array.isArray(
                         currentDay.meals
@@ -1243,13 +1248,15 @@ export default function NutritionPage() {
                               key={`${meal.name}-${index}`}
 
                               className="
-                                bg-white
+                                min-w-0
+                                rounded-2xl
                                 border
                                 border-gray-200
-                                rounded-2xl
-                                p-6
-                                hover:shadow-sm
+                                bg-white
+                                p-5
                                 transition
+                                hover:shadow-sm
+                                sm:p-6
                               "
                             >
 
@@ -1278,7 +1285,7 @@ export default function NutritionPage() {
                                 </div>
 
 
-                                <h3 className="text-xl font-bold text-black">
+                                <h3 className="break-words text-lg font-bold text-black sm:text-xl">
 
                                   {meal.name}
 
@@ -1369,7 +1376,7 @@ export default function NutritionPage() {
                                           />
 
 
-                                          <p className="text-gray-700 leading-relaxed">
+                                          <p className="min-w-0 break-words text-gray-700 leading-relaxed">
 
                                             {food}
 
@@ -1398,7 +1405,7 @@ export default function NutritionPage() {
                                   </p>
 
 
-                                  <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                                  <p className="mt-2 break-words text-sm leading-relaxed text-gray-600">
 
                                     {meal.reason}
 
@@ -1452,15 +1459,17 @@ function TargetCard({
 
     <div
       className="
-        bg-white
-        border
-        border-gray-200
-        rounded-2xl
-        p-6
         flex
+        min-w-0
         items-start
         justify-between
         gap-4
+        rounded-2xl
+        border
+        border-gray-200
+        bg-white
+        p-5
+        sm:p-6
       "
     >
 
@@ -1473,7 +1482,7 @@ function TargetCard({
         </p>
 
 
-        <p className="text-3xl font-bold text-black mt-2">
+        <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
 
           {value}
 

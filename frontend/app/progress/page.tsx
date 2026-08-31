@@ -906,21 +906,21 @@ export default function ProgressPage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 flex">
+    <main className="min-h-screen bg-gray-50 lg:flex">
 
       <AppSidebar />
 
 
-      <section className="flex-1 p-10">
+      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
-        <div className="max-w-7xl">
+        <div className="mx-auto w-full max-w-7xl min-w-0">
 
 
           {/* ============================================
               HEADER
           ============================================ */}
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="flex min-w-0 flex-col gap-5 md:flex-row md:items-center md:justify-between">
 
 
             <div>
@@ -932,14 +932,14 @@ export default function ProgressPage() {
               </p>
 
 
-              <h1 className="text-4xl font-bold text-black mt-2">
+              <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
 
                 Progress
 
               </h1>
 
 
-              <p className="text-gray-600 mt-3">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
 
                 Understand your habits and track how consistently
                 you&apos;re following your wellness routine.
@@ -951,7 +951,7 @@ export default function ProgressPage() {
 
             {/* RANGE */}
 
-            <div className="bg-white border border-gray-200 rounded-xl p-1 flex">
+            <div className="flex w-full rounded-xl border border-gray-200 bg-white p-1 sm:w-auto">
 
 
               <button
@@ -966,11 +966,14 @@ export default function ProgressPage() {
                 }
 
                 className={`
-                  px-5
-                  py-2
+                  flex-1
                   rounded-lg
+                  px-4
+                  py-2
                   font-medium
                   cursor-pointer
+                  sm:flex-none
+                  sm:px-5
 
                   ${
                     range ===
@@ -1001,11 +1004,14 @@ export default function ProgressPage() {
                 }
 
                 className={`
-                  px-5
-                  py-2
+                  flex-1
                   rounded-lg
+                  px-4
+                  py-2
                   font-medium
                   cursor-pointer
+                  sm:flex-none
+                  sm:px-5
 
                   ${
                     range ===
@@ -1036,7 +1042,7 @@ export default function ProgressPage() {
           {
             loading && (
 
-              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+              <div className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
 
                 <p className="text-gray-500">
 
@@ -1058,7 +1064,7 @@ export default function ProgressPage() {
             !loading &&
             error && (
 
-              <div className="mt-10 bg-red-50 border border-red-200 rounded-2xl p-6">
+              <div className="mt-8 min-w-0 rounded-2xl border border-red-200 bg-red-50 p-5 sm:mt-10 sm:p-6">
 
                 <p className="text-red-700">
 
@@ -1084,9 +1090,9 @@ export default function ProgressPage() {
             records.length ===
               0 && (
 
-              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-10">
+              <div className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-10">
 
-                <h2 className="text-2xl font-semibold text-black">
+                <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                   No progress data yet
 
@@ -1105,7 +1111,7 @@ export default function ProgressPage() {
 
                   href="/tracker"
 
-                  className="inline-block mt-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
+                  className="mt-6 inline-block w-full rounded-xl bg-black px-6 py-3 text-center font-semibold text-white sm:w-auto"
 
                 >
 
@@ -1136,9 +1142,9 @@ export default function ProgressPage() {
                     CONSISTENCY
                 ======================================== */}
 
-                <div className="mt-10 bg-black text-white rounded-2xl p-8">
+                <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-black p-5 text-white sm:mt-10 sm:p-8">
 
-                  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                  <div className="flex min-w-0 flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
                     <div>
 
@@ -1151,7 +1157,7 @@ export default function ProgressPage() {
 
                       <div className="flex items-end gap-3 mt-2">
 
-                        <p className="text-6xl font-bold">
+                        <p className="text-5xl font-bold sm:text-6xl">
 
                           {
                             stats.consistencyScore
@@ -1231,7 +1237,7 @@ export default function ProgressPage() {
                     SUMMARY CARDS
                 ======================================== */}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mt-8">
+                <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
 
 
                   <StatCard
@@ -1333,21 +1339,21 @@ export default function ProgressPage() {
 
                 <section className="mt-8">
 
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-xl font-bold text-black sm:text-2xl">
 
                     Plan Adherence
 
                   </h2>
 
 
-                  <p className="text-gray-500 mt-1">
+                  <p className="mt-1 break-words text-sm leading-6 text-gray-500 sm:text-base">
 
                     How consistently you followed your meals and training.
 
                   </p>
 
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                  <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
 
 
                     <PercentageCard
@@ -1397,7 +1403,7 @@ export default function ProgressPage() {
                   stats.weightChange !==
                     null && (
 
-                    <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
+                    <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                       <p className="text-sm text-gray-500">
 
@@ -1406,7 +1412,7 @@ export default function ProgressPage() {
                       </p>
 
 
-                      <p className="text-3xl font-bold text-black mt-2">
+                      <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
 
                         {
                           stats.weightChange >
@@ -1660,14 +1666,14 @@ export default function ProgressPage() {
 
                 <section className="mt-8">
 
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-xl font-bold text-black sm:text-2xl">
 
                     Wellbeing
 
                   </h2>
 
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                  <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
 
 
                     <StatCard
@@ -1801,67 +1807,67 @@ export default function ProgressPage() {
 
                 <section className="mt-10 mb-10">
 
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-xl font-bold text-black sm:text-2xl">
 
                     Recent Activity
 
                   </h2>
 
 
-                  <p className="text-gray-500 mt-1">
+                  <p className="mt-1 break-words text-sm leading-6 text-gray-500 sm:text-base">
 
                     Your most recent Daily Tracker entries.
 
                   </p>
 
 
-                  <div className="mt-5 bg-white border border-gray-200 rounded-2xl overflow-hidden">
+                  <div className="mt-5 min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white">
 
                     <div className="overflow-x-auto">
 
-                      <table className="w-full">
+                      <table className="w-full min-w-[760px]">
 
                         <thead className="bg-gray-50">
 
                           <tr>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Date
 
                             </th>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Meals
 
                             </th>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Workout
 
                             </th>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Water
 
                             </th>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Steps
 
                             </th>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Sleep
 
                             </th>
 
-                            <th className="text-left px-6 py-4 text-sm text-gray-500">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
 
                               Mood
 
@@ -1909,7 +1915,7 @@ export default function ProgressPage() {
 
                                     >
 
-                                      <td className="px-6 py-4 font-medium text-black">
+                                      <td className="whitespace-nowrap px-4 py-4 font-medium text-black sm:px-6">
 
                                         {
                                           formatReadableDate(
@@ -1920,7 +1926,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="px-6 py-4 text-gray-600">
+                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
                                           mealsCompleted
@@ -1929,7 +1935,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="px-6 py-4 text-gray-600">
+                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
                                           record.workout_completed
@@ -1940,7 +1946,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="px-6 py-4 text-gray-600">
+                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
                                           record.water_litres !==
@@ -1956,7 +1962,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="px-6 py-4 text-gray-600">
+                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
                                           record.steps !==
@@ -1972,7 +1978,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="px-6 py-4 text-gray-600">
+                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
                                           record.sleep_hours !==
@@ -1988,7 +1994,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="px-6 py-4 text-gray-600">
+                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
                                           record.mood !==
@@ -2069,7 +2075,7 @@ function StatCard({
 
   return (
 
-    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
       <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
@@ -2087,7 +2093,7 @@ function StatCard({
       </p>
 
 
-      <p className="text-3xl font-bold text-black mt-2">
+      <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
 
         {
           value
@@ -2149,7 +2155,7 @@ function PercentageCard({
 
   return (
 
-    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
       <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
@@ -2167,7 +2173,7 @@ function PercentageCard({
       </p>
 
 
-      <p className="text-3xl font-bold text-black mt-2">
+      <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
 
         {
           percentage
@@ -2236,9 +2242,9 @@ function ChartCard({
 
   return (
 
-    <section className="mt-8 bg-white border border-gray-200 rounded-2xl p-6">
+    <section className="mt-8 min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
 
-      <h2 className="text-2xl font-bold text-black">
+      <h2 className="text-xl font-bold text-black sm:text-2xl">
 
         {
           title
@@ -2247,7 +2253,7 @@ function ChartCard({
       </h2>
 
 
-      <p className="text-gray-500 mt-1 mb-6">
+      <p className="mb-5 mt-1 break-words text-sm leading-6 text-gray-500 sm:mb-6 sm:text-base">
 
         {
           description

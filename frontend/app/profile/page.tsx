@@ -567,11 +567,11 @@ export default function ProfilePage() {
 
     return (
 
-      <main className="min-h-screen bg-gray-50 flex">
+      <main className="min-h-screen bg-gray-50 lg:flex">
 
         <AppSidebar />
 
-        <section className="flex-1 flex items-center justify-center">
+        <section className="flex min-w-0 flex-1 items-center justify-center px-4 pb-8 pt-20 sm:px-6 lg:pt-0">
 
           <p className="text-gray-500">
 
@@ -594,14 +594,14 @@ export default function ProfilePage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 flex">
+    <main className="min-h-screen bg-gray-50 lg:flex">
 
       <AppSidebar />
 
 
-      <section className="flex-1 p-10">
+      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
-        <div className="max-w-4xl">
+        <div className="mx-auto w-full max-w-4xl min-w-0">
 
 
           {/* HEADER */}
@@ -613,14 +613,14 @@ export default function ProfilePage() {
           </p>
 
 
-          <h1 className="text-4xl font-bold text-black mt-2">
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
 
             Profile
 
           </h1>
 
 
-          <p className="text-gray-600 mt-3">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
 
             Update the information used to personalize your wellness experience.
 
@@ -629,7 +629,7 @@ export default function ProfilePage() {
 
           {/* IMPORTANT NOTE */}
 
-          <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-2xl p-5">
+          <div className="mt-8 min-w-0 rounded-2xl border border-yellow-200 bg-yellow-50 p-4 sm:p-5">
 
             <p className="font-semibold text-yellow-800">
 
@@ -637,7 +637,7 @@ export default function ProfilePage() {
 
             </p>
 
-            <p className="text-sm text-yellow-700 mt-1">
+            <p className="mt-1 break-words text-sm leading-6 text-yellow-700">
 
               Updating your profile changes the information used for future AI guidance.
               Existing nutrition and workout plans stay unchanged until you generate a new plan.
@@ -655,7 +655,7 @@ export default function ProfilePage() {
               handleSave
             }
 
-            className="mt-8 bg-white border border-gray-200 rounded-2xl p-8"
+            className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-8"
 
           >
 
@@ -664,14 +664,14 @@ export default function ProfilePage() {
 
             <section>
 
-              <h2 className="text-2xl font-semibold text-black">
+              <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                 Basic Information
 
               </h2>
 
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
 
 
                 <InputField
@@ -747,14 +747,14 @@ export default function ProfilePage() {
 
             <section className="mt-12">
 
-              <h2 className="text-2xl font-semibold text-black">
+              <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                 Goals
 
               </h2>
 
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
 
 
                 <SelectField
@@ -809,14 +809,14 @@ export default function ProfilePage() {
 
             <section className="mt-12">
 
-              <h2 className="text-2xl font-semibold text-black">
+              <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                 Fitness
 
               </h2>
 
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
 
 
                 <SelectField
@@ -863,14 +863,14 @@ export default function ProfilePage() {
 
             <section className="mt-12">
 
-              <h2 className="text-2xl font-semibold text-black">
+              <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                 Nutrition
 
               </h2>
 
 
-              <div className="space-y-5 mt-6">
+              <div className="mt-6 min-w-0 space-y-5">
 
 
                 <SelectField
@@ -925,14 +925,14 @@ export default function ProfilePage() {
 
             <section className="mt-12">
 
-              <h2 className="text-2xl font-semibold text-black">
+              <h2 className="text-xl font-semibold text-black sm:text-2xl">
 
                 Sleep
 
               </h2>
 
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
 
 
                 <InputField
@@ -969,17 +969,20 @@ export default function ProfilePage() {
               }
 
               className="
-                mt-12
+                mt-10
+                w-full
+                rounded-xl
                 bg-black
-                text-white
                 px-8
                 py-4
-                rounded-xl
                 font-semibold
+                text-white
                 hover:bg-gray-800
-                disabled:bg-gray-400
                 disabled:cursor-not-allowed
+                disabled:bg-gray-400
                 cursor-pointer
+                sm:mt-12
+                sm:w-auto
               "
 
             >
@@ -996,9 +999,9 @@ export default function ProfilePage() {
             {
               message && (
 
-                <div className="mt-5 bg-green-50 border border-green-200 rounded-xl p-4">
+                <div className="mt-5 min-w-0 rounded-xl border border-green-200 bg-green-50 p-4">
 
-                  <p className="text-green-700">
+                  <p className="break-words text-green-700">
 
                     ✓ {
                       message
@@ -1015,9 +1018,9 @@ export default function ProfilePage() {
             {
               errorMessage && (
 
-                <div className="mt-5 bg-red-50 border border-red-200 rounded-xl p-4">
+                <div className="mt-5 min-w-0 rounded-xl border border-red-200 bg-red-50 p-4">
 
-                  <p className="text-red-700">
+                  <p className="break-words text-red-700">
 
                     {
                       errorMessage
@@ -1075,7 +1078,7 @@ function InputField({
 
   return (
 
-    <div>
+    <div className="min-w-0">
 
       <label className="block text-sm font-medium text-gray-700 mb-2">
 
@@ -1106,7 +1109,9 @@ function InputField({
         required={required}
 
         className="
+          block
           w-full
+          min-w-0
           border
           border-gray-300
           rounded-xl
@@ -1151,7 +1156,7 @@ function SelectField({
 
   return (
 
-    <div>
+    <div className="min-w-0">
 
       <label className="block text-sm font-medium text-gray-700 mb-2">
 
@@ -1174,7 +1179,9 @@ function SelectField({
         required={required}
 
         className="
+          block
           w-full
+          min-w-0
           border
           border-gray-300
           rounded-xl
@@ -1239,7 +1246,7 @@ function TextAreaField({
 
   return (
 
-    <div>
+    <div className="min-w-0">
 
       <label className="block text-sm font-medium text-gray-700 mb-2">
 
@@ -1262,7 +1269,9 @@ function TextAreaField({
         rows={3}
 
         className="
+          block
           w-full
+          min-w-0
           border
           border-gray-300
           rounded-xl

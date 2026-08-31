@@ -426,13 +426,13 @@ export default function WorkoutPage() {
   // =====================================================
 
   return (
-    <main className="min-h-screen bg-gray-50 flex">
+    <main className="min-h-screen bg-gray-50 lg:flex">
 
       <AppSidebar />
 
-      <section className="flex-1 p-10">
+      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
-        <div className="max-w-6xl">
+        <div className="mx-auto w-full max-w-6xl min-w-0">
 
           {/* HEADER */}
 
@@ -440,18 +440,18 @@ export default function WorkoutPage() {
             FITNESS PLAN
           </p>
 
-          <h1 className="text-4xl font-bold text-black mt-2">
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
             Workout
           </h1>
 
-          <p className="text-gray-600 mt-3 max-w-2xl">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
             Your personalized AI-powered weekly workout plan.
           </p>
 
           {/* LOADING */}
 
           {loadingSavedPlan && (
-            <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+            <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
 
               <p className="text-gray-500">
                 Loading your saved workout plan...
@@ -465,7 +465,7 @@ export default function WorkoutPage() {
           {!loadingSavedPlan &&
             errorMessage &&
             !plan && (
-              <div className="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
+              <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-5 sm:p-6">
 
                 <p className="font-semibold text-red-700">
                   Workout data error
@@ -482,13 +482,13 @@ export default function WorkoutPage() {
 
           {!loadingSavedPlan &&
             !plan && (
-              <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-8">
+              <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
 
-                <h2 className="text-2xl font-semibold text-black">
+                <h2 className="text-xl font-semibold text-black sm:text-2xl">
                   Create Your Workout Plan
                 </h2>
 
-                <p className="text-gray-500 mt-2">
+                <p className="mt-2 break-words text-sm leading-6 text-gray-500 sm:text-base">
                   AI will generate a weekly workout using your goal,
                   activity level, workout days and available time.
                 </p>
@@ -499,16 +499,18 @@ export default function WorkoutPage() {
                   disabled={loading}
                   className="
                     mt-6
+                    w-full
+                    rounded-xl
                     bg-black
-                    text-white
                     px-6
                     py-3
-                    rounded-xl
                     font-semibold
+                    text-white
                     hover:bg-gray-800
-                    disabled:bg-gray-400
                     disabled:cursor-not-allowed
+                    disabled:bg-gray-400
                     cursor-pointer
+                    sm:w-auto
                   "
                 >
                   {loading
@@ -537,15 +539,15 @@ export default function WorkoutPage() {
 
                 {/* SUMMARY */}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+                <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 md:gap-5">
 
-                  <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                  <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                     <p className="text-sm text-gray-500">
                       Weekly Training
                     </p>
 
-                    <p className="text-3xl font-bold text-black mt-2">
+                    <p className="mt-2 text-2xl font-bold text-black sm:text-3xl">
                       {plan.workout_days}
 
                       <span className="text-base font-normal ml-1">
@@ -555,13 +557,13 @@ export default function WorkoutPage() {
 
                   </div>
 
-                  <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                  <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                     <p className="text-sm text-gray-500">
                       Recovery Days
                     </p>
 
-                    <p className="text-3xl font-bold text-black mt-2">
+                    <p className="mt-2 text-2xl font-bold text-black sm:text-3xl">
                       {7 -
                         plan.workout_days}
 
@@ -576,9 +578,9 @@ export default function WorkoutPage() {
 
                 {/* DAY NAVIGATION */}
 
-                <div className="mt-10 bg-white border border-gray-200 rounded-2xl p-4">
+                <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-200 bg-white p-3 sm:mt-10 sm:p-4">
 
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex min-w-max gap-2 sm:min-w-0 sm:flex-wrap">
 
                     {plan.days.map(
                       (day) => (
@@ -624,15 +626,15 @@ export default function WorkoutPage() {
                 {currentDay && (
                   <section className="mt-8">
 
-                    <div className="flex justify-between items-start">
+                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
                       <div>
 
-                        <h2 className="text-3xl font-bold text-black">
+                        <h2 className="break-words text-2xl font-bold text-black sm:text-3xl">
                           {currentDay.day}
                         </h2>
 
-                        <p className="text-gray-500 mt-2">
+                        <p className="mt-2 break-words text-sm leading-6 text-gray-500 sm:text-base">
                           {currentDay.focus}
                           {" • "}
                           {currentDay.duration_minutes} minutes
@@ -645,7 +647,7 @@ export default function WorkoutPage() {
                         onClick={
                           generateNewPlan
                         }
-                        className="text-sm text-gray-500 hover:text-black cursor-pointer"
+                        className="w-fit text-left text-sm text-gray-500 hover:text-black cursor-pointer"
                       >
                         Generate New Plan
                       </button>
@@ -656,13 +658,13 @@ export default function WorkoutPage() {
 
                     {currentDay.type ===
                       "rest" && (
-                        <div className="mt-6 bg-white border border-gray-200 rounded-2xl p-8">
+                        <div className="mt-6 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-8">
 
                           <h3 className="text-2xl font-semibold text-black">
                             Recovery Day
                           </h3>
 
-                          <p className="text-gray-500 mt-2">
+                          <p className="mt-2 break-words text-sm leading-6 text-gray-500 sm:text-base">
                             Focus on recovery, light movement
                             and preparation for your next workout.
                           </p>
@@ -674,7 +676,7 @@ export default function WorkoutPage() {
                                 Activity
                               </p>
 
-                              <p className="text-gray-600 mt-2">
+                              <p className="mt-2 break-words text-gray-600">
                                 {currentDay.cardio.activity}
                                 {" — "}
                                 {currentDay.cardio.duration_minutes} minutes
@@ -723,7 +725,7 @@ export default function WorkoutPage() {
 
                           {/* WARMUP */}
 
-                          <div className="mt-6 bg-white border border-gray-200 rounded-2xl p-6">
+                          <div className="mt-6 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                             <h3 className="text-xl font-semibold text-black">
                               Warm-up
@@ -741,7 +743,7 @@ export default function WorkoutPage() {
                                   ) => (
                                     <li
                                       key={index}
-                                      className="text-gray-700"
+                                      className="break-words text-gray-700"
                                     >
                                       • {item}
                                     </li>
@@ -754,9 +756,9 @@ export default function WorkoutPage() {
 
                           {/* EXERCISES */}
 
-                          <div className="mt-6 bg-white border border-gray-200 rounded-2xl overflow-hidden">
+                          <div className="mt-6 min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white">
 
-                            <div className="p-6 border-b border-gray-200">
+                            <div className="border-b border-gray-200 p-5 sm:p-6">
 
                               <h3 className="text-xl font-semibold text-black">
                                 Exercises
@@ -766,25 +768,25 @@ export default function WorkoutPage() {
 
                             <div className="overflow-x-auto">
 
-                              <table className="w-full">
+                              <table className="w-full min-w-[620px]">
 
                                 <thead className="bg-gray-50">
 
                                   <tr>
 
-                                    <th className="text-left px-6 py-4 text-sm text-gray-500">
+                                    <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
                                       Exercise
                                     </th>
 
-                                    <th className="text-left px-6 py-4 text-sm text-gray-500">
+                                    <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
                                       Sets
                                     </th>
 
-                                    <th className="text-left px-6 py-4 text-sm text-gray-500">
+                                    <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
                                       Reps
                                     </th>
 
-                                    <th className="text-left px-6 py-4 text-sm text-gray-500">
+                                    <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
                                       Rest
                                     </th>
 
@@ -807,19 +809,19 @@ export default function WorkoutPage() {
                                           className="border-t border-gray-100"
                                         >
 
-                                          <td className="px-6 py-4 font-medium text-black">
+                                          <td className="px-4 py-4 font-medium text-black sm:px-6">
                                             {exercise.name}
                                           </td>
 
-                                          <td className="px-6 py-4 text-gray-600">
+                                          <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
                                             {exercise.sets}
                                           </td>
 
-                                          <td className="px-6 py-4 text-gray-600">
+                                          <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
                                             {exercise.reps}
                                           </td>
 
-                                          <td className="px-6 py-4 text-gray-600">
+                                          <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
                                             {exercise.rest_seconds} sec
                                           </td>
 
@@ -838,13 +840,13 @@ export default function WorkoutPage() {
                           {/* CARDIO */}
 
                           {currentDay.cardio && (
-                            <div className="mt-6 bg-white border border-gray-200 rounded-2xl p-6">
+                            <div className="mt-6 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                               <h3 className="text-xl font-semibold text-black">
                                 Cardio
                               </h3>
 
-                              <p className="text-gray-600 mt-3">
+                              <p className="mt-3 break-words text-gray-600">
                                 {currentDay.cardio.activity}
                                 {" — "}
                                 {currentDay.cardio.duration_minutes} minutes
@@ -855,7 +857,7 @@ export default function WorkoutPage() {
 
                           {/* COOLDOWN */}
 
-                          <div className="mt-6 bg-white border border-gray-200 rounded-2xl p-6">
+                          <div className="mt-6 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
 
                             <h3 className="text-xl font-semibold text-black">
                               Cool-down
@@ -873,7 +875,7 @@ export default function WorkoutPage() {
                                   ) => (
                                     <li
                                       key={index}
-                                      className="text-gray-700"
+                                      className="break-words text-gray-700"
                                     >
                                       • {item}
                                     </li>
