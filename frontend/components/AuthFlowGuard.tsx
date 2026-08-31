@@ -338,7 +338,7 @@ export default function AuthFlowGuard({
 
           <p className="font-semibold text-black">
 
-            AI Wellness Coach
+            Daily Ally
 
           </p>
 
