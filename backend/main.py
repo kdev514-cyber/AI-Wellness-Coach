@@ -44,7 +44,7 @@ app.add_middleware(
 
         # Stable Vercel production domain
 
-        "https://ai-wellness-coach-ekxr.vercel.app",
+        "https://daily-ally8701.vercel.app",
 
     ],
 
