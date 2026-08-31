@@ -60,7 +60,7 @@ const navItems = [
     icon: ChartNoAxesCombined,
   },
   {
-    name: "AI Coach",
+    name: "Ask Nalamera",
     href: "/coach",
     icon: Bot,
   },
@@ -201,7 +201,7 @@ export default function AppSidebar() {
               "
             >
 
-              AI Wellness Coach
+              Daily Ally
 
             </h1>
 
@@ -213,7 +213,7 @@ export default function AppSidebar() {
               "
             >
 
-              Personal wellness
+              Your everyday wellness companion
 
             </p>
 
@@ -483,7 +483,7 @@ export default function AppSidebar() {
             "
           >
 
-            AI Wellness Coach
+            Daily Ally
 
           </p>
 

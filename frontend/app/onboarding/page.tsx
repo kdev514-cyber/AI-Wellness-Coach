@@ -534,7 +534,7 @@ export default function OnboardingPage() {
           <p className="mt-3 text-gray-500 max-w-xl mx-auto">
 
             Your answers will personalize your nutrition plan,
-            workout plan, dashboard and AI Coach.
+            workout plan, dashboard and Nalamera.
 
           </p>
 

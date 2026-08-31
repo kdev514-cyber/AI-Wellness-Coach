@@ -114,7 +114,7 @@ export default function CoachPage() {
     ) {
 
       setError(
-        "AI Coach backend is not configured."
+        "Nalamera backend is not configured."
       );
 
       return;
@@ -527,7 +527,7 @@ export default function CoachPage() {
       catch {
 
         throw new Error(
-          "The AI Coach backend returned an invalid response."
+          "Nalamera returned an invalid response."
         );
 
       }
@@ -556,7 +556,7 @@ export default function CoachPage() {
 
           data.error ||
 
-          "AI Coach could not answer."
+          "Nalamera could not answer."
 
         );
 
@@ -568,7 +568,7 @@ export default function CoachPage() {
       ) {
 
         throw new Error(
-          "AI Coach returned an empty answer."
+          "Nalamera returned an empty answer."
         );
 
       }
@@ -604,7 +604,7 @@ export default function CoachPage() {
     ) {
 
       console.error(
-        "AI Coach error:",
+        "Nalamera error:",
         err
       );
 
@@ -746,7 +746,7 @@ export default function CoachPage() {
 
           <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
 
-            AI Coach
+            Nalamera
 
           </h1>
 
@@ -988,7 +988,7 @@ export default function CoachPage() {
 
                             <p className="text-xs font-semibold text-gray-400 mb-3">
 
-                              AI WELLNESS COACH
+                              NALAMERA
 
                             </p>
 
@@ -1030,7 +1030,7 @@ export default function CoachPage() {
 
                       <p className="text-xs font-semibold text-gray-400">
 
-                        AI WELLNESS COACH
+                        NALAMERA
 
                       </p>
 
@@ -1069,7 +1069,7 @@ export default function CoachPage() {
 
                 <p className="text-red-700 font-semibold">
 
-                  AI Coach Error
+                  Nalamera Error
 
                 </p>
 
@@ -1120,7 +1120,7 @@ export default function CoachPage() {
                     )
                 }
 
-                placeholder="Ask your AI Coach something..."
+                placeholder="Ask Nalamera about your wellness..."
 
                 rows={
                   4

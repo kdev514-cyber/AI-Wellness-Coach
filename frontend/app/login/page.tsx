@@ -217,7 +217,7 @@ export default function LoginPage() {
 
           <h1 className="text-4xl font-bold text-black">
 
-            AI Wellness Coach
+            Daily Ally
 
           </h1>
 
@@ -413,7 +413,7 @@ export default function LoginPage() {
 
             <p className="text-sm text-gray-500">
 
-              New to AI Wellness Coach?
+              New to Daily Ally?
 
             </p>
 

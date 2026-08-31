@@ -47,10 +47,10 @@ const geistMono =
 export const metadata: Metadata = {
 
   title:
-    "AI Wellness Coach",
+    "Daily Ally",
 
   description:
-    "Personalized AI-powered nutrition, fitness and wellness tracking.",
+    "Your everyday companion for nutrition, fitness, sleep and wellbeing.",
 
 };
 

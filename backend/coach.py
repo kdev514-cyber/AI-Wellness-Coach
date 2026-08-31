@@ -608,7 +608,7 @@ def format_json(
 # =========================================================
 
 OUT_OF_SCOPE_RESPONSE = (
-    "I’m your AI Wellness Coach, so I can help with your nutrition, "
+    "I’m Nalamera, your wellness companion in Daily Ally. I can help with your nutrition, "
     "fitness, sleep, wellness progress, habits, and using this app. "
     "Ask me something related to your wellness journey."
 )
@@ -623,7 +623,7 @@ def classify_question_scope(question: str) -> str:
         return "OUT_OF_SCOPE"
 
     classifier_prompt = """
-You are a strict scope classifier for an AI Wellness Coach application.
+You are a strict scope classifier for Daily Ally, a wellness application whose AI wellness companion is Nalamera.
 
 Classify the user's message into EXACTLY ONE label:
 WELLNESS
@@ -641,7 +641,7 @@ Because this is a wellness coach, contextual questions such as
 wellness keywords.
 
 APP includes questions about using this wellness application: Daily Tracker,
-Progress, Nutrition, Workout, Profile, AI Coach, editing wellness profile
+Progress, Nutrition, Workout, Profile, Nalamera, editing wellness profile
 information, recording wellness metrics, and generating/viewing plans.
 
 OUT_OF_SCOPE includes programming/coding, homework, assignments, politics,
@@ -671,11 +671,11 @@ Output ONLY one exact label.
         if label in {"WELLNESS", "APP", "OUT_OF_SCOPE"}:
             return label
 
-        print("Unexpected AI Coach scope label:", label)
+        print("Unexpected Nalamera scope label:", label)
         return "OUT_OF_SCOPE"
 
     except Exception as error:
-        print("AI Coach scope classification error:", error)
+        print("Nalamera scope classification error:", error)
         return "OUT_OF_SCOPE"
 
 
@@ -697,7 +697,7 @@ def build_coach_response(
 
     scope = classify_question_scope(question)
 
-    print("AI COACH QUESTION SCOPE:", scope)
+    print("NALAMERA QUESTION SCOPE:", scope)
 
     if scope == "OUT_OF_SCOPE":
         return OUT_OF_SCOPE_RESPONSE
@@ -717,8 +717,8 @@ def build_coach_response(
     # =====================================================
 
     system_prompt = """
-You are the AI Wellness Coach inside a personal wellness
-tracking application.
+You are Nalamera, the AI wellness companion inside Daily Ally,
+a personal wellness tracking application.
 
 You receive:
 
@@ -737,7 +737,7 @@ wellness questions or questions about using this wellness application.
 Do not drift into unrelated general-purpose assistance.
 
 If an apparently allowed question is actually unrelated, respond exactly:
-I’m your AI Wellness Coach, so I can help with your nutrition, fitness, sleep, wellness progress, habits, and using this app. Ask me something related to your wellness journey.
+I’m Nalamera, your wellness companion in Daily Ally. I can help with your nutrition, fitness, sleep, wellness progress, habits, and using this app. Ask me something related to your wellness journey.
 
 =========================================================
 DATA RULES
@@ -885,7 +885,7 @@ USER QUESTION
     )
 
     print(
-        "AI COACH REQUEST RECEIVED"
+        "NALAMERA REQUEST RECEIVED"
     )
 
     print(
@@ -949,7 +949,7 @@ USER QUESTION
     if not content:
 
         raise ValueError(
-            "AI Coach returned an empty response."
+            "Nalamera returned an empty response."
         )
 
 
@@ -962,7 +962,7 @@ USER QUESTION
     )
 
     print(
-        "AI COACH RESPONSE"
+        "NALAMERA RESPONSE"
     )
 
     print(

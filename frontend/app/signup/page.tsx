@@ -218,7 +218,7 @@ export default function SignupPage() {
 
           <h1 className="text-4xl font-bold text-black">
 
-            AI Wellness Coach
+            Daily Ally
 
           </h1>
 

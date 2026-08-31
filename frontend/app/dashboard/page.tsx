@@ -2274,7 +2274,7 @@ export default function Dashboard() {
 
               <DashboardCard
 
-                title="AI Coach"
+                title="Ask Nalamera"
 
                 description="Ask questions about your progress."
 
