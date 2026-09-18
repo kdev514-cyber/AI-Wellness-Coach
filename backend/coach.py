@@ -655,12 +655,12 @@ Output ONLY one exact label.
 
     try:
         response = client.chat.completions.create(
-            model="qwen/qwen3.6-27b",
+            model="openai/gpt-oss-20b",
             messages=[
                 {"role": "system", "content": classifier_prompt},
                 {"role": "user", "content": clean_question},
             ],
-            reasoning_effort="none",
+            reasoning_effort="low",
             temperature=0,
             max_completion_tokens=20,
         )
@@ -909,7 +909,7 @@ USER QUESTION
 
     response = client.chat.completions.create(
 
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-20b",
 
         messages=[
 
@@ -925,7 +925,7 @@ USER QUESTION
 
         ],
 
-        reasoning_effort="none",
+        reasoning_effort="low",
 
         temperature=0.35,
 

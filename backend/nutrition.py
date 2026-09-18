@@ -299,7 +299,7 @@ RETURN THIS JSON STRUCTURE:
 
     response = client.chat.completions.create(
 
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-20b",
 
         messages=[
 
@@ -315,7 +315,7 @@ RETURN THIS JSON STRUCTURE:
 
         ],
 
-        reasoning_effort="none",
+        reasoning_effort="low",
 
         response_format={
             "type": "json_object"

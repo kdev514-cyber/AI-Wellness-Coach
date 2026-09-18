@@ -155,9 +155,13 @@ Preferred Workout Duration:
 
 RULES
 
-1. Create exactly {workout_days} workout days.
 
-2. Add rest/recovery days where appropriate.
+1. The "days" array MUST contain exactly 7 entries, one for each calendar day:
+   Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, and Sunday.
+
+2. Exactly {workout_days} of those 7 days MUST have "type": "workout".
+   Every remaining day MUST have "type": "rest".
+   Do not omit any day and do not duplicate any day.
 
 3. Every workout day must include:
    - workout focus
@@ -193,6 +197,16 @@ RULES
 12. Provide general wellness guidance only.
 
 13. Return ONLY valid JSON.
+
+IMPORTANT:
+The "days" array must always contain exactly these 7 unique days in this order:
+Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.
+
+Never return fewer than 7 days.
+Never return more than 7 days.
+Never duplicate a day.
+Exactly {workout_days} days must have "type": "workout".
+All other days must have "type": "rest".
 
 
 RETURN THIS EXACT GENERAL STRUCTURE:
@@ -284,7 +298,7 @@ RETURN THIS EXACT GENERAL STRUCTURE:
 
     response = client.chat.completions.create(
 
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-20b",
 
         messages=[
             {
@@ -298,7 +312,7 @@ RETURN THIS EXACT GENERAL STRUCTURE:
             },
         ],
 
-        reasoning_effort="none",
+        reasoning_effort="low",
 
         response_format={
             "type": "json_object"

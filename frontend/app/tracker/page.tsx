@@ -139,11 +139,24 @@ export default function TrackerPage() {
 
 
   const [
-    workoutCompleted,
-    setWorkoutCompleted
+    workoutCompletionPercent,
+    setWorkoutCompletionPercent
+  ] = useState(
+    0
+  );
+
+
+  const [
+    recoveryCompleted,
+    setRecoveryCompleted
   ] = useState(
     false
   );
+
+
+  const workoutCompleted =
+    workoutCompletionPercent ===
+      100;
 
 
   // =======================================================
@@ -417,8 +430,19 @@ export default function TrackerPage() {
               false
           );
 
-          setWorkoutCompleted(
-            trackerData.workout_completed ??
+          setWorkoutCompletionPercent(
+            Number(
+              trackerData.workout_completion_percent ??
+                (
+                  trackerData.workout_completed
+                    ? 100
+                    : 0
+                )
+            )
+          );
+
+          setRecoveryCompleted(
+            trackerData.recovery_completed ??
               false
           );
 
@@ -494,7 +518,11 @@ export default function TrackerPage() {
             false
           );
 
-          setWorkoutCompleted(
+          setWorkoutCompletionPercent(
+            0
+          );
+
+          setRecoveryCompleted(
             false
           );
 
@@ -891,6 +919,16 @@ export default function TrackerPage() {
         workout_completed:
           workoutCompleted,
 
+        workout_completion_percent:
+          workoutDay?.type === "workout"
+            ? workoutCompletionPercent
+            : 0,
+
+        recovery_completed:
+          workoutDay?.type === "rest"
+            ? recoveryCompleted
+            : false,
+
         water_litres:
           Number(
             water ||
@@ -1030,7 +1068,7 @@ export default function TrackerPage() {
     workoutDay?.type ===
       "rest"
 
-      ? true
+      ? recoveryCompleted
 
       : workoutCompleted;
 
@@ -1498,9 +1536,37 @@ export default function TrackerPage() {
                         }
 
 
-                        <p className="text-sm text-gray-400 mt-6">
+                        <button
 
-                          Recovery days automatically count toward your daily workout target.
+                          type="button"
+
+                          onClick={
+                            () =>
+                              setRecoveryCompleted(
+                                !recoveryCompleted
+                              )
+                          }
+
+                          className={`mt-6 w-full rounded-xl px-5 py-3 font-semibold cursor-pointer sm:w-auto ${
+                            recoveryCompleted
+                              ? "bg-green-100 text-green-800"
+                              : "bg-black text-white"
+                          }`}
+
+                        >
+
+                          {
+                            recoveryCompleted
+                              ? "✓ Recovery Completed"
+                              : "Mark Recovery Complete"
+                          }
+
+                        </button>
+
+
+                        <p className="text-sm text-gray-400 mt-4">
+
+                          Complete your planned recovery activity, then mark the recovery day complete.
 
                         </p>
 
@@ -1578,53 +1644,60 @@ export default function TrackerPage() {
 
                               {
                                 workoutDay.duration_minutes
-                              } minutes
+                              } minutes · {
+                                workoutCompletionPercent
+                              }% complete
 
                             </p>
 
                           </div>
 
 
-                          <button
+                          <div className="w-full sm:w-auto">
 
-                            type="button"
-
-                            onClick={
-                              () =>
-                                setWorkoutCompleted(
-                                  !workoutCompleted
-                                )
-                            }
-
-                            className={`
-                              w-full
-                              rounded-xl
-                              px-5
-                              py-3
-                              font-semibold
-                              cursor-pointer
-                              sm:w-auto
-
-                              ${
-                                workoutCompleted
-
-                                  ? "bg-white text-black"
-
-                                  : "bg-black text-white"
-                              }
-                            `}
-
-                          >
-
-                            {
+                            <label className={
                               workoutCompleted
+                                ? "text-sm font-semibold text-gray-200"
+                                : "text-sm font-semibold text-gray-600"
+                            }>
 
-                                ? "✓ Completed"
+                              Workout progress
 
-                                : "Mark Complete"
-                            }
+                            </label>
 
-                          </button>
+
+                            <select
+
+                              value={
+                                workoutCompletionPercent
+                              }
+
+                              onChange={
+                                event =>
+                                  setWorkoutCompletionPercent(
+                                    Number(
+                                      event.target.value
+                                    )
+                                  )
+                              }
+
+                              className={
+                                workoutCompleted
+                                  ? "mt-2 w-full rounded-xl border border-gray-600 bg-white px-4 py-3 font-semibold text-black sm:w-auto"
+                                  : "mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-semibold text-black sm:w-auto"
+                              }
+
+                            >
+
+                              <option value={0}>0% — Not started</option>
+                              <option value={25}>25% — Started</option>
+                              <option value={50}>50% — Half completed</option>
+                              <option value={75}>75% — Mostly completed</option>
+                              <option value={100}>100% — Completed</option>
+
+                            </select>
+
+                          </div>
 
                         </div>
 

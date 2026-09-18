@@ -49,6 +49,8 @@ type TrackerRecord = {
   dinner_completed: boolean;
 
   workout_completed: boolean;
+  workout_completion_percent: number | null;
+  recovery_completed: boolean;
 
   water_litres: number | null;
   steps: number | null;
@@ -203,6 +205,8 @@ export default function ProgressPage() {
               lunch_completed,
               dinner_completed,
               workout_completed,
+              workout_completion_percent,
+              recovery_completed,
               water_litres,
               steps,
               sleep_hours,
@@ -354,6 +358,12 @@ export default function ProgressPage() {
               0,
 
             completedWorkouts:
+              0,
+
+            workoutDays:
+              0,
+
+            completedRecoveries:
               0,
 
             completedMeals:
@@ -518,26 +528,73 @@ export default function ProgressPage() {
         // WORKOUT COMPLETION
         // =================================================
 
-        const completedWorkouts =
+        const workoutRecords =
           records.filter(
             record =>
+              Number(
+                record.workout_completion_percent ??
+                  (
+                    record.workout_completed
+                      ? 100
+                      : 0
+                  )
+              ) >
+                0 ||
               record.workout_completed
+          );
+
+
+        const completedWorkouts =
+          workoutRecords.filter(
+            record =>
+              Number(
+                record.workout_completion_percent ??
+                  (
+                    record.workout_completed
+                      ? 100
+                      : 0
+                  )
+              ) ===
+                100
           ).length;
 
 
+        const totalWorkoutProgress =
+          workoutRecords.reduce(
+            (
+              total,
+              record
+            ) =>
+              total +
+              Number(
+                record.workout_completion_percent ??
+                  (
+                    record.workout_completed
+                      ? 100
+                      : 0
+                  )
+              ),
+            0
+          );
+
+
         const workoutCompletion =
-          records.length >
+          workoutRecords.length >
             0
 
             ? Math.round(
-                (
-                  completedWorkouts /
-                  records.length
-                ) *
-                  100
+                totalWorkoutProgress /
+                  workoutRecords.length
               )
 
             : 0;
+
+
+        const completedRecoveries =
+          records.filter(
+            record =>
+              record.recovery_completed
+          ).length;
 
 
         // =================================================
@@ -623,7 +680,18 @@ export default function ProgressPage() {
 
                 record.dinner_completed,
 
-                record.workout_completed,
+                (
+                  record.recovery_completed ||
+                  Number(
+                    record.workout_completion_percent ??
+                      (
+                        record.workout_completed
+                          ? 100
+                          : 0
+                      )
+                  ) ===
+                    100
+                ),
 
                 Number(
                   record.water_litres ||
@@ -804,6 +872,11 @@ export default function ProgressPage() {
             records.length,
 
           completedWorkouts,
+
+          workoutDays:
+            workoutRecords.length,
+
+          completedRecoveries,
 
           completedMeals,
 
@@ -1367,7 +1440,7 @@ export default function ProgressPage() {
                       }
 
                       subtitle={
-                        `${stats.completedWorkouts} of ${stats.trackedDays} tracked days`
+                        `${stats.workoutCompletion}% average across ${stats.workoutDays} recorded workout days`
                       }
 
                     />
@@ -1938,9 +2011,26 @@ export default function ProgressPage() {
                                       <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
 
                                         {
-                                          record.workout_completed
-                                            ? "✓"
-                                            : "—"
+                                          record.recovery_completed
+                                            ? "Recovery ✓"
+                                            : Number(
+                                                record.workout_completion_percent ??
+                                                  (
+                                                    record.workout_completed
+                                                      ? 100
+                                                      : 0
+                                                  )
+                                              ) >
+                                                0
+                                              ? `${Number(
+                                                  record.workout_completion_percent ??
+                                                    (
+                                                      record.workout_completed
+                                                        ? 100
+                                                        : 0
+                                                    )
+                                                )}%`
+                                              : "—"
                                         }
 
                                       </td>
