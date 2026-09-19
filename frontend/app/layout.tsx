@@ -12,6 +12,7 @@ import {
 } from "next/font/google";
 
 import AuthFlowGuard from "../components/AuthFlowGuard";
+import BackToTop from "../components/BackToTop";
 
 import "./globals.css";
 
@@ -60,10 +61,14 @@ export const metadata: Metadata = {
 // =========================================================
 
 export default function RootLayout({
+
   children,
+
 }: {
+
   children:
     ReactNode;
+
 }) {
 
   return (
@@ -83,6 +88,8 @@ export default function RootLayout({
         <AuthFlowGuard>
 
           {children}
+
+          <BackToTop />
 
         </AuthFlowGuard>
 

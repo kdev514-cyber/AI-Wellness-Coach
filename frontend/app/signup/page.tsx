@@ -172,16 +172,80 @@ export default function SignupPage() {
         error instanceof Error
       ) {
 
-        setErrorMessage(
+        const errorText =
           error.message
-        );
+            .toLowerCase();
+
+
+        // ===============================================
+        // EMAIL / REQUEST RATE LIMIT
+        // ===============================================
+
+        if (
+          errorText.includes(
+            "rate limit"
+          ) ||
+          errorText.includes(
+            "rate_limit"
+          ) ||
+          errorText.includes(
+            "too many requests"
+          ) ||
+          errorText.includes(
+            "email rate limit exceeded"
+          )
+        ) {
+
+          setErrorMessage(
+            "Too many email requests have been made. Please wait a few minutes before trying again."
+          );
+
+        }
+
+
+        // ===============================================
+        // ACCOUNT MAY ALREADY EXIST
+        // ===============================================
+
+        else if (
+          errorText.includes(
+            "already registered"
+          ) ||
+          errorText.includes(
+            "already exists"
+          )
+        ) {
+
+          setErrorMessage(
+            "An account may already exist with this email. Try logging in instead."
+          );
+
+        }
+
+
+        // ===============================================
+        // OTHER SUPABASE ERRORS
+        // ===============================================
+
+        else {
+
+          setErrorMessage(
+            error.message
+          );
+
+        }
 
       }
+
+
+      // =================================================
+      // UNKNOWN ERROR
+      // =================================================
 
       else {
 
         setErrorMessage(
-          "Could not create your account."
+          "Could not create your account. Please try again."
         );
 
       }

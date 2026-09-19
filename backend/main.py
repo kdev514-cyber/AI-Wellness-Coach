@@ -1,15 +1,11 @@
 from typing import Any
 
 from fastapi import FastAPI
-
 from fastapi.middleware.cors import CORSMiddleware
-
 from pydantic import BaseModel
 
 from nutrition import build_nutrition_plan
-
 from workout import build_workout_plan
-
 from coach import build_coach_response
 
 
@@ -18,13 +14,9 @@ from coach import build_coach_response
 # =========================================================
 
 app = FastAPI(
-
     title="Daily Ally API",
-
     description="Backend API for Daily Ally",
-
     version="1.0.0",
-
 )
 
 
@@ -33,39 +25,31 @@ app = FastAPI(
 # =========================================================
 
 app.add_middleware(
-
     CORSMiddleware,
 
     allow_origins=[
-
         "http://localhost:3000",
-
         "http://127.0.0.1:3000",
 
         # Stable Vercel production domain
-
         "https://daily-ally8701.vercel.app",
 
+        # Daily Ally custom domain
+        "https://dailyally.dr-k.online",
     ],
 
     # Also allow Vercel preview/deployment URLs
-
     allow_origin_regex=r"https://.*\.vercel\.app",
 
     allow_credentials=True,
 
     allow_methods=[
-
         "*"
-
     ],
 
     allow_headers=[
-
         "*"
-
     ],
-
 )
 
 
@@ -74,25 +58,18 @@ app.add_middleware(
 # =========================================================
 
 class NutritionRequest(BaseModel):
-
     profile: dict
 
 
 class WorkoutRequest(BaseModel):
-
     profile: dict
 
 
 class CoachRequest(BaseModel):
-
     question: str
-
     profile: dict
-
     nutrition_plan: Any = None
-
     workout_plan: Any = None
-
     tracker_history: Any = None
 
 
@@ -101,14 +78,10 @@ class CoachRequest(BaseModel):
 # =========================================================
 
 @app.get("/")
-
 def root():
-
     return {
-
         "message":
             "Daily Ally API is running!"
-
     }
 
 
@@ -117,14 +90,10 @@ def root():
 # =========================================================
 
 @app.get("/health")
-
 def health_check():
-
     return {
-
         "status":
             "healthy"
-
     }
 
 
@@ -133,84 +102,57 @@ def health_check():
 # =========================================================
 
 @app.post("/nutrition-plan")
-
 def nutrition_plan(
-
     request: NutritionRequest
-
 ):
-
     try:
 
         print(
-
             "\n===================================="
-
         )
 
         print(
-
             "NUTRITION PLAN REQUEST RECEIVED"
-
         )
 
         print(
-
             "===================================="
-
         )
 
         plan = build_nutrition_plan(
-
             request.profile
-
         )
 
         return {
-
             "success":
                 True,
-
             "plan":
                 plan
-
         }
-
 
     except Exception as error:
 
         print(
-
             "\n===================================="
-
         )
 
         print(
-
             "NUTRITION ERROR"
-
         )
 
         print(
-
             "===================================="
-
         )
 
         print(
-
             repr(error)
-
         )
 
         return {
-
             "success":
                 False,
-
             "error":
                 str(error)
-
         }
 
 
@@ -219,84 +161,57 @@ def nutrition_plan(
 # =========================================================
 
 @app.post("/workout-plan")
-
 def workout_plan(
-
     request: WorkoutRequest
-
 ):
-
     try:
 
         print(
-
             "\n===================================="
-
         )
 
         print(
-
             "WORKOUT PLAN REQUEST RECEIVED"
-
         )
 
         print(
-
             "===================================="
-
         )
 
         plan = build_workout_plan(
-
             request.profile
-
         )
 
         return {
-
             "success":
                 True,
-
             "plan":
                 plan
-
         }
-
 
     except Exception as error:
 
         print(
-
             "\n===================================="
-
         )
 
         print(
-
             "WORKOUT ERROR"
-
         )
 
         print(
-
             "===================================="
-
         )
 
         print(
-
             repr(error)
-
         )
 
         return {
-
             "success":
                 False,
-
             "error":
                 str(error)
-
         }
 
 
@@ -305,48 +220,33 @@ def workout_plan(
 # =========================================================
 
 @app.post("/coach")
-
 def coach(
-
     request: CoachRequest
-
 ):
-
     try:
 
         print(
-
             "\n===================================="
-
         )
 
         print(
-
             "NALAMERA REQUEST RECEIVED"
-
         )
 
         print(
-
             "===================================="
-
         )
 
         if not request.question.strip():
 
             return {
-
                 "success":
                     False,
-
                 "error":
                     "Please enter a question."
-
             }
 
-
         answer = build_coach_response(
-
             question=
                 request.question,
 
@@ -361,53 +261,36 @@ def coach(
 
             tracker_history=
                 request.tracker_history,
-
         )
 
-
         return {
-
             "success":
                 True,
-
             "answer":
                 answer
-
         }
-
 
     except Exception as error:
 
         print(
-
             "\n===================================="
-
         )
 
         print(
-
             "NALAMERA ERROR"
-
         )
 
         print(
-
             "===================================="
-
         )
 
         print(
-
             repr(error)
-
         )
 
         return {
-
             "success":
                 False,
-
             "error":
                 str(error)
-
         }

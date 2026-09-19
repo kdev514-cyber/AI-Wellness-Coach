@@ -46,6 +46,8 @@ import { supabase } from "../../lib/supabase";
 
 
 
+
+
 // =========================================================
 
 // TYPES
@@ -78,6 +80,8 @@ type Profile = {
 
 
 
+
+
 type Meal = {
 
   name: string;
@@ -94,6 +98,8 @@ type Meal = {
 
 
 
+
+
 type NutritionDay = {
 
   day: string;
@@ -101,6 +107,8 @@ type NutritionDay = {
   meals: Meal[];
 
 };
+
+
 
 
 
@@ -118,6 +126,8 @@ type Exercise = {
 
 
 
+
+
 type Cardio = {
 
   activity: string;
@@ -125,6 +135,8 @@ type Cardio = {
   duration_minutes: number;
 
 };
+
+
 
 
 
@@ -147,6 +159,8 @@ type WorkoutDay = {
   cooldown: string[];
 
 };
+
+
 
 
 
@@ -173,6 +187,8 @@ type TrackerRecord = {
   energy: number | null;
 
 };
+
+
 
 
 
@@ -204,6 +220,8 @@ export default function Dashboard() {
 
 
 
+
+
   const [
 
     nutritionDay,
@@ -215,6 +233,8 @@ export default function Dashboard() {
     null
 
   );
+
+
 
 
 
@@ -232,6 +252,8 @@ export default function Dashboard() {
 
 
 
+
+
   const [
 
     tracker,
@@ -243,6 +265,8 @@ export default function Dashboard() {
     null
 
   );
+
+
 
 
 
@@ -260,6 +284,8 @@ export default function Dashboard() {
 
 
 
+
+
   const [
 
     errorMessage,
@@ -271,6 +297,8 @@ export default function Dashboard() {
     ""
 
   );
+
+
 
 
 
@@ -292,6 +320,8 @@ export default function Dashboard() {
 
 
 
+
+
   const todayName =
 
     new Date()
@@ -309,6 +339,8 @@ export default function Dashboard() {
         }
 
       );
+
+
 
 
 
@@ -340,6 +372,8 @@ export default function Dashboard() {
 
 
 
+
+
   // =======================================================
 
   // LOAD DASHBOARD
@@ -361,6 +395,8 @@ export default function Dashboard() {
         ""
 
       );
+
+
 
 
 
@@ -390,6 +426,8 @@ export default function Dashboard() {
 
 
 
+
+
         if (
 
           userError ||
@@ -405,6 +443,8 @@ export default function Dashboard() {
           return;
 
         }
+
+
 
 
 
@@ -474,6 +514,8 @@ export default function Dashboard() {
 
 
 
+
+
         if (
 
           profileError
@@ -498,11 +540,15 @@ export default function Dashboard() {
 
 
 
+
+
         setProfile(
 
           profileData
 
         );
+
+
 
 
 
@@ -578,6 +624,8 @@ export default function Dashboard() {
 
 
 
+
+
         if (
 
           nutritionError
@@ -593,6 +641,8 @@ export default function Dashboard() {
           );
 
         }
+
+
 
 
 
@@ -628,6 +678,8 @@ export default function Dashboard() {
 
 
 
+
+
           setNutritionDay(
 
             day ??
@@ -647,6 +699,8 @@ export default function Dashboard() {
           );
 
         }
+
+
 
 
 
@@ -722,6 +776,8 @@ export default function Dashboard() {
 
 
 
+
+
         if (
 
           workoutError
@@ -737,6 +793,8 @@ export default function Dashboard() {
           );
 
         }
+
+
 
 
 
@@ -772,6 +830,8 @@ export default function Dashboard() {
 
 
 
+
+
           setWorkoutDay(
 
             day ??
@@ -791,6 +851,8 @@ export default function Dashboard() {
           );
 
         }
+
+
 
 
 
@@ -868,6 +930,8 @@ export default function Dashboard() {
 
 
 
+
+
         if (
 
           trackerError
@@ -886,6 +950,8 @@ export default function Dashboard() {
 
 
 
+
+
         setTracker(
 
           trackerData ??
@@ -893,6 +959,8 @@ export default function Dashboard() {
             null
 
         );
+
+
 
 
 
@@ -909,6 +977,8 @@ export default function Dashboard() {
           err
 
         );
+
+
 
 
 
@@ -952,6 +1022,8 @@ export default function Dashboard() {
 
 
 
+
+
     loadDashboard();
 
   }, [
@@ -961,6 +1033,8 @@ export default function Dashboard() {
     todayName
 
   ]);
+
+
 
 
 
@@ -979,6 +1053,8 @@ export default function Dashboard() {
       "/login";
 
   }
+
+
 
 
 
@@ -1020,6 +1096,8 @@ export default function Dashboard() {
 
 
 
+
+
         const workoutDone =
 
           workoutDay?.type ===
@@ -1029,6 +1107,8 @@ export default function Dashboard() {
             ? true
 
             : tracker.workout_completed;
+
+
 
 
 
@@ -1076,6 +1156,8 @@ export default function Dashboard() {
 
 
 
+
+
         const completed =
 
           habits.filter(
@@ -1083,6 +1165,8 @@ export default function Dashboard() {
             Boolean
 
           ).length;
+
+
 
 
 
@@ -1126,6 +1210,8 @@ export default function Dashboard() {
 
 
 
+
+
   // =======================================================
 
   // MEALS
@@ -1144,6 +1230,8 @@ export default function Dashboard() {
 
 
 
+
+
   const lunch =
 
     findMeal(
@@ -1156,6 +1244,8 @@ export default function Dashboard() {
 
 
 
+
+
   const dinner =
 
     findMeal(
@@ -1165,6 +1255,8 @@ export default function Dashboard() {
       "dinner"
 
     );
+
+
 
 
 
@@ -1201,6 +1293,8 @@ export default function Dashboard() {
     );
 
   }
+
+
 
 
 
@@ -1248,6 +1342,8 @@ export default function Dashboard() {
 
 
 
+
+
   // =======================================================
 
   // PAGE
@@ -1262,9 +1358,13 @@ export default function Dashboard() {
 
 
 
+
+
       <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
 
         <div className="mx-auto w-full max-w-7xl min-w-0">
+
+
 
 
 
@@ -1272,9 +1372,11 @@ export default function Dashboard() {
 
               HEADER
 
-          \============================================ */}
+          \\============================================ */}
 
           <div className="flex min-w-0 flex-col gap-5 sm:gap-6 md:flex-row md:items-start md:justify-between">
+
+
 
 
 
@@ -1285,6 +1387,8 @@ export default function Dashboard() {
                 DASHBOARD
 
               </p>
+
+
 
 
 
@@ -1302,6 +1406,8 @@ export default function Dashboard() {
 
 
 
+
+
               <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
 
                 {
@@ -1313,6 +1419,8 @@ export default function Dashboard() {
               </p>
 
             </div>
+
+
 
 
 
@@ -1364,17 +1472,23 @@ export default function Dashboard() {
 
 
 
+
+
           {/* ============================================
 
               TODAY'S COMPLETION
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="mt-8 overflow-hidden rounded-2xl bg-black p-5 text-white sm:mt-10 sm:p-8">
 
 
 
+
+
             <div className="flex min-w-0 flex-col gap-6 md:flex-row md:items-end md:justify-between">
+
+
 
 
 
@@ -1385,6 +1499,8 @@ export default function Dashboard() {
                   Today&apos;s Completion
 
                 </p>
+
+
 
 
 
@@ -1410,6 +1526,8 @@ export default function Dashboard() {
 
 
 
+
+
                 <p className="text-sm text-gray-300 mt-3">
 
                   {
@@ -1425,6 +1543,8 @@ export default function Dashboard() {
                 </p>
 
               </div>
+
+
 
 
 
@@ -1466,6 +1586,8 @@ export default function Dashboard() {
 
 
 
+
+
             <div className="mt-6 h-3 bg-gray-700 rounded-full overflow-hidden">
 
               <div
@@ -1488,13 +1610,17 @@ export default function Dashboard() {
 
 
 
+
+
           {/* ============================================
 
               QUICK STATS
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+
+
 
 
 
@@ -1534,6 +1660,8 @@ export default function Dashboard() {
 
 
 
+
+
             <StatCard
 
               title="Water Today"
@@ -1551,6 +1679,8 @@ export default function Dashboard() {
               icon={<Droplets size={24} strokeWidth={2} className="text-black" />}
 
             />
+
+
 
 
 
@@ -1574,6 +1704,8 @@ export default function Dashboard() {
 
 
 
+
+
             <StatCard
 
               title="Sleep"
@@ -1594,7 +1726,11 @@ export default function Dashboard() {
 
 
 
+
+
           </section>
+
+
 
 
 
@@ -1602,9 +1738,11 @@ export default function Dashboard() {
 
               TODAY'S NUTRITION
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="mt-10">
+
+
 
 
 
@@ -1620,6 +1758,8 @@ export default function Dashboard() {
 
 
 
+
+
                 <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
 
                   Nutrition
@@ -1627,6 +1767,8 @@ export default function Dashboard() {
                 </h2>
 
               </div>
+
+
 
 
 
@@ -1646,6 +1788,8 @@ export default function Dashboard() {
 
 
 
+
+
             {
 
               nutritionDay
@@ -1653,6 +1797,8 @@ export default function Dashboard() {
                 ? (
 
                   <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mt-5">
+
+
 
 
 
@@ -1680,6 +1826,8 @@ export default function Dashboard() {
 
 
 
+
+
                     <MealCard
 
                       icon={<Salad size={24} strokeWidth={2} className="text-black" />}
@@ -1704,6 +1852,8 @@ export default function Dashboard() {
 
 
 
+
+
                     <MealCard
 
                       icon={<Utensils size={24} strokeWidth={2} className="text-black" />}
@@ -1725,6 +1875,8 @@ export default function Dashboard() {
                       }
 
                     />
+
+
 
 
 
@@ -1754,13 +1906,17 @@ export default function Dashboard() {
 
 
 
+
+
           {/* ============================================
 
               TODAY'S WORKOUT
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="mt-10">
+
+
 
 
 
@@ -1776,6 +1932,8 @@ export default function Dashboard() {
 
 
 
+
+
                 <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
 
                   Workout
@@ -1783,6 +1941,8 @@ export default function Dashboard() {
                 </h2>
 
               </div>
+
+
 
 
 
@@ -1799,6 +1959,8 @@ export default function Dashboard() {
               </a>
 
             </div>
+
+
 
 
 
@@ -1836,11 +1998,15 @@ export default function Dashboard() {
 
 
 
+
+
                             <h3 className="mt-4 break-words text-xl font-bold text-black sm:text-2xl">
 
                               Recovery Day
 
                             </h3>
+
+
 
 
 
@@ -1858,6 +2024,8 @@ export default function Dashboard() {
 
 
 
+
+
                           <span className="bg-green-50 text-green-700 px-4 py-2 rounded-xl text-sm font-semibold">
 
                             Recovery
@@ -1865,6 +2033,8 @@ export default function Dashboard() {
                           </span>
 
                         </div>
+
+
 
 
 
@@ -1879,6 +2049,8 @@ export default function Dashboard() {
                                 Suggested activity
 
                               </p>
+
+
 
 
 
@@ -1912,6 +2084,8 @@ export default function Dashboard() {
 
 
 
+
+
                         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
 
                           <div>
@@ -1932,6 +2106,8 @@ export default function Dashboard() {
 
 
 
+
+
                             <h3 className="mt-4 break-words text-xl font-bold text-black sm:text-2xl">
 
                               {
@@ -1941,6 +2117,8 @@ export default function Dashboard() {
                               }
 
                             </h3>
+
+
 
 
 
@@ -1961,6 +2139,8 @@ export default function Dashboard() {
                             </p>
 
                           </div>
+
+
 
 
 
@@ -2011,6 +2191,8 @@ export default function Dashboard() {
                           </span>
 
                         </div>
+
+
 
 
 
@@ -2074,6 +2256,8 @@ export default function Dashboard() {
 
 
 
+
+
                                         <p className="text-sm text-gray-500 mt-1">
 
                                           {
@@ -2130,77 +2314,155 @@ export default function Dashboard() {
 
 
 
+
+
           {/* ============================================
 
               WELLBEING
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="mt-10">
 
+            <div className="flex items-end justify-between gap-4">
 
+              <div>
 
-            <h2 className="text-xl font-bold text-black sm:text-2xl">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Daily check-in
+                </p>
 
-              Today&apos;s Wellbeing
+                <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
+                  Today&apos;s Wellbeing
+                </h2>
 
-            </h2>
+              </div>
 
-
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-
-
-
-              <WellbeingCard
-
-                icon={<Smile size={24} strokeWidth={2} className="text-black" />}
-
-                title="Mood"
-
-                value={
-
-                  tracker?.mood ??
-
-                  null
-
-                }
-
-              />
-
-
-
-              <WellbeingCard
-
-                icon={<Zap size={24} strokeWidth={2} className="text-black" />}
-
-                title="Energy"
-
-                value={
-
-                  tracker?.energy ??
-
-                  null
-
-                }
-
-              />
-
-
+              <a
+                href="/tracker"
+                className="hidden text-sm font-semibold text-black hover:underline sm:inline"
+              >
+                Open Daily Tracker
+              </a>
 
             </div>
 
-          </section>
 
+            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+
+              {/* PROMINENT MOOD CARD */}
+
+              <div className="rounded-2xl border-2 border-black bg-white p-6 md:col-span-2">
+
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+                  <div className="flex items-center gap-4">
+
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black text-white">
+                      <Smile size={28} strokeWidth={2} />
+                    </div>
+
+                    <div>
+
+                      <p className="text-sm font-semibold text-gray-500">
+                        Today&apos;s Mood
+                      </p>
+
+                      <p className="mt-1 text-2xl font-bold text-black sm:text-3xl">
+                        {
+                          tracker?.mood !== null &&
+                          tracker?.mood !== undefined
+                            ? `${tracker.mood} / 5`
+                            : "Not checked in yet"
+                        }
+                      </p>
+
+                      <p className="mt-1 text-sm text-gray-500">
+                        {
+                          tracker?.mood !== null &&
+                          tracker?.mood !== undefined
+                            ? "Your mood is recorded for today."
+                            : "Take a moment to record how you feel today."
+                        }
+                      </p>
+
+                    </div>
+
+                  </div>
+
+
+                  <a
+                    href="/tracker"
+                    className="
+                      inline-flex
+                      shrink-0
+                      items-center
+                      justify-center
+                      rounded-xl
+                      bg-black
+                      px-5
+                      py-3
+                      text-sm
+                      font-semibold
+                      text-white
+                      transition
+                      hover:bg-gray-800
+                    "
+                  >
+                    {
+                      tracker?.mood !== null &&
+                      tracker?.mood !== undefined
+                        ? "Update Mood"
+                        : "Log Today's Mood"
+                    }
+                  </a>
+
+                </div>
+
+              </div>
+
+
+              {/* ENERGY CARD */}
+
+              <WellbeingCard
+                icon={<Zap size={24} strokeWidth={2} className="text-black" />}
+                title="Energy"
+                value={
+                  tracker?.energy ??
+                  null
+                }
+              />
+
+            </div>
+
+
+            <a
+              href="/tracker"
+              className="
+                mt-4
+                inline-flex
+                text-sm
+                font-semibold
+                text-black
+                hover:underline
+                sm:hidden
+              "
+            >
+              Open Daily Tracker
+            </a>
+
+          </section>
 
 
           {/* ============================================
 
               QUICK ACTIONS
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="mt-10">
+
+
 
 
 
@@ -2212,7 +2474,11 @@ export default function Dashboard() {
 
 
 
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 mt-5">
+
+
 
 
 
@@ -2230,6 +2496,8 @@ export default function Dashboard() {
 
 
 
+
+
               <DashboardCard
 
                 title="Workout"
@@ -2241,6 +2509,8 @@ export default function Dashboard() {
                 href="/workout"
 
               />
+
+
 
 
 
@@ -2258,6 +2528,8 @@ export default function Dashboard() {
 
 
 
+
+
               <DashboardCard
 
                 title="Progress"
@@ -2269,6 +2541,8 @@ export default function Dashboard() {
                 href="/progress"
 
               />
+
+
 
 
 
@@ -2286,9 +2560,13 @@ export default function Dashboard() {
 
 
 
+
+
             </div>
 
           </section>
+
+
 
 
 
@@ -2296,9 +2574,11 @@ export default function Dashboard() {
 
               PROFILE SUMMARY
 
-          \============================================ */}
+          \\============================================ */}
 
           <section className="mt-10 mb-10">
+
+
 
 
 
@@ -2310,11 +2590,17 @@ export default function Dashboard() {
 
 
 
+
+
             <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
 
 
 
+
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
 
 
 
@@ -2336,6 +2622,8 @@ export default function Dashboard() {
 
 
 
+
+
                 <ProfileItem
 
                   label="Gender"
@@ -2351,6 +2639,8 @@ export default function Dashboard() {
                   }
 
                 />
+
+
 
 
 
@@ -2372,6 +2662,8 @@ export default function Dashboard() {
 
 
 
+
+
                 <ProfileItem
 
                   label="Activity Level"
@@ -2387,6 +2679,8 @@ export default function Dashboard() {
                   }
 
                 />
+
+
 
 
 
@@ -2408,6 +2702,8 @@ export default function Dashboard() {
 
 
 
+
+
                 <ProfileItem
 
                   label="Weekly Training"
@@ -2426,11 +2722,15 @@ export default function Dashboard() {
 
 
 
+
+
               </div>
 
             </div>
 
           </section>
+
+
 
 
 
@@ -2443,6 +2743,8 @@ export default function Dashboard() {
   );
 
 }
+
+
 
 
 
@@ -2488,6 +2790,8 @@ function StatCard({
 
 
 
+
+
       <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
 
         {
@@ -2497,6 +2801,8 @@ function StatCard({
         }
 
       </div>
+
+
 
 
 
@@ -2512,6 +2818,8 @@ function StatCard({
 
 
 
+
+
       <p className="text-3xl font-bold text-black mt-2">
 
         {
@@ -2519,6 +2827,8 @@ function StatCard({
           value
 
         }
+
+
 
 
 
@@ -2547,6 +2857,8 @@ function StatCard({
   );
 
 }
+
+
 
 
 
@@ -2592,7 +2904,11 @@ function MealCard({
 
 
 
+
+
       <div className="flex items-start justify-between gap-4">
+
+
 
 
 
@@ -2605,6 +2921,8 @@ function MealCard({
           }
 
         </div>
+
+
 
 
 
@@ -2658,6 +2976,8 @@ function MealCard({
 
 
 
+
+
       <h3 className="text-xl font-bold text-black mt-5">
 
         {
@@ -2677,6 +2997,8 @@ function MealCard({
         }
 
       </h3>
+
+
 
 
 
@@ -2701,6 +3023,8 @@ function MealCard({
                 }g protein
 
               </p>
+
+
 
 
 
@@ -2794,6 +3118,8 @@ function MealCard({
 
 
 
+
+
 // =========================================================
 
 // DASHBOARD CARD
@@ -2876,6 +3202,8 @@ function DashboardCard({
 
 
 
+
+
       <h3 className="text-lg font-semibold text-black mt-4">
 
         {
@@ -2885,6 +3213,8 @@ function DashboardCard({
         }
 
       </h3>
+
+
 
 
 
@@ -2903,6 +3233,8 @@ function DashboardCard({
   );
 
 }
+
+
 
 
 
@@ -2942,6 +3274,8 @@ function WellbeingCard({
 
 
 
+
+
       <div className="flex items-center gap-3">
 
         <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
@@ -2956,6 +3290,8 @@ function WellbeingCard({
 
 
 
+
+
         <div>
 
           <p className="text-sm text-gray-500">
@@ -2967,6 +3303,8 @@ function WellbeingCard({
             }
 
           </p>
+
+
 
 
 
@@ -2995,6 +3333,8 @@ function WellbeingCard({
   );
 
 }
+
+
 
 
 
@@ -3040,6 +3380,8 @@ function EmptyPlanCard({
 
 
 
+
+
       <h3 className="text-xl font-semibold text-black">
 
         {
@@ -3052,6 +3394,8 @@ function EmptyPlanCard({
 
 
 
+
+
       <p className="text-gray-500 mt-2">
 
         {
@@ -3061,6 +3405,8 @@ function EmptyPlanCard({
         }
 
       </p>
+
+
 
 
 
@@ -3089,6 +3435,8 @@ function EmptyPlanCard({
   );
 
 }
+
+
 
 
 
@@ -3132,6 +3480,8 @@ function ProfileItem({
 
 
 
+
+
       <p className="mt-1 break-words text-lg font-semibold text-black">
 
         {
@@ -3147,6 +3497,8 @@ function ProfileItem({
   );
 
 }
+
+
 
 
 
@@ -3236,6 +3588,8 @@ function cleanMealName(
 
 
 
+
+
 // =========================================================
 
 // FIND MEAL
@@ -3272,6 +3626,8 @@ function findMeal(
 
 
 
+
+
   return (
 
     day.meals.find(
@@ -3295,6 +3651,8 @@ function findMeal(
   );
 
 }
+
+
 
 
 
@@ -3325,6 +3683,8 @@ function formatGoal(
     return "Wellness";
 
   }
+
+
 
 
 
@@ -3362,6 +3722,8 @@ function formatGoal(
 
 
 
+
+
   return (
 
     goals[
@@ -3375,6 +3737,8 @@ function formatGoal(
   );
 
 }
+
+
 
 
 
@@ -3408,6 +3772,8 @@ function formatGender(
 
 
 
+
+
   const genders:
 
     Record<
@@ -3438,6 +3804,8 @@ function formatGender(
 
 
 
+
+
   return (
 
     genders[
@@ -3451,6 +3819,8 @@ function formatGender(
   );
 
 }
+
+
 
 
 
@@ -3484,6 +3854,8 @@ function formatActivity(
 
 
 
+
+
   const activities:
 
     Record<
@@ -3514,6 +3886,8 @@ function formatActivity(
 
 
 
+
+
   return (
 
     activities[
@@ -3527,6 +3901,8 @@ function formatActivity(
   );
 
 }
+
+
 
 
 
@@ -3557,6 +3933,8 @@ function formatDiet(
     return "--";
 
   }
+
+
 
 
 
@@ -3591,6 +3969,8 @@ function formatDiet(
         "High protein",
 
     };
+
+
 
 
 
