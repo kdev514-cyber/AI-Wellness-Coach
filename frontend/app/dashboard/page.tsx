@@ -6,6 +6,8 @@ import type { ReactNode } from "react";
 
 import {
 
+  ArrowRight,
+
   Bot,
 
   Check,
@@ -48,6 +50,10 @@ import { supabase } from "../../lib/supabase";
 
 
 
+
+
+
+
 // =========================================================
 
 // TYPES
@@ -82,6 +88,10 @@ type Profile = {
 
 
 
+
+
+
+
 type Meal = {
 
   name: string;
@@ -100,6 +110,10 @@ type Meal = {
 
 
 
+
+
+
+
 type NutritionDay = {
 
   day: string;
@@ -107,6 +121,10 @@ type NutritionDay = {
   meals: Meal[];
 
 };
+
+
+
+
 
 
 
@@ -128,6 +146,10 @@ type Exercise = {
 
 
 
+
+
+
+
 type Cardio = {
 
   activity: string;
@@ -135,6 +157,10 @@ type Cardio = {
   duration_minutes: number;
 
 };
+
+
+
+
 
 
 
@@ -164,6 +190,10 @@ type WorkoutDay = {
 
 
 
+
+
+
+
 type TrackerRecord = {
 
   breakfast_completed: boolean;
@@ -187,6 +217,10 @@ type TrackerRecord = {
   energy: number | null;
 
 };
+
+
+
+
 
 
 
@@ -222,6 +256,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   const [
 
     nutritionDay,
@@ -233,6 +271,10 @@ export default function Dashboard() {
     null
 
   );
+
+
+
+
 
 
 
@@ -254,6 +296,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   const [
 
     tracker,
@@ -265,6 +311,10 @@ export default function Dashboard() {
     null
 
   );
+
+
+
+
 
 
 
@@ -286,6 +336,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   const [
 
     errorMessage,
@@ -297,6 +351,10 @@ export default function Dashboard() {
     ""
 
   );
+
+
+
+
 
 
 
@@ -322,6 +380,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   const todayName =
 
     new Date()
@@ -339,6 +401,10 @@ export default function Dashboard() {
         }
 
       );
+
+
+
+
 
 
 
@@ -374,6 +440,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   // =======================================================
 
   // LOAD DASHBOARD
@@ -395,6 +465,10 @@ export default function Dashboard() {
         ""
 
       );
+
+
+
+
 
 
 
@@ -428,6 +502,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         if (
 
           userError ||
@@ -443,6 +521,10 @@ export default function Dashboard() {
           return;
 
         }
+
+
+
+
 
 
 
@@ -516,6 +598,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         if (
 
           profileError
@@ -542,11 +628,19 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         setProfile(
 
           profileData
 
         );
+
+
+
+
 
 
 
@@ -626,6 +720,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         if (
 
           nutritionError
@@ -641,6 +739,10 @@ export default function Dashboard() {
           );
 
         }
+
+
+
+
 
 
 
@@ -680,6 +782,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
           setNutritionDay(
 
             day ??
@@ -699,6 +805,10 @@ export default function Dashboard() {
           );
 
         }
+
+
+
+
 
 
 
@@ -778,6 +888,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         if (
 
           workoutError
@@ -793,6 +907,10 @@ export default function Dashboard() {
           );
 
         }
+
+
+
+
 
 
 
@@ -832,6 +950,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
           setWorkoutDay(
 
             day ??
@@ -851,6 +973,10 @@ export default function Dashboard() {
           );
 
         }
+
+
+
+
 
 
 
@@ -932,6 +1058,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         if (
 
           trackerError
@@ -952,6 +1082,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         setTracker(
 
           trackerData ??
@@ -959,6 +1093,10 @@ export default function Dashboard() {
             null
 
         );
+
+
+
+
 
 
 
@@ -977,6 +1115,10 @@ export default function Dashboard() {
           err
 
         );
+
+
+
+
 
 
 
@@ -1024,6 +1166,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
     loadDashboard();
 
   }, [
@@ -1033,6 +1179,10 @@ export default function Dashboard() {
     todayName
 
   ]);
+
+
+
+
 
 
 
@@ -1053,6 +1203,10 @@ export default function Dashboard() {
       "/login";
 
   }
+
+
+
+
 
 
 
@@ -1098,6 +1252,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         const workoutDone =
 
           workoutDay?.type ===
@@ -1107,6 +1265,10 @@ export default function Dashboard() {
             ? true
 
             : tracker.workout_completed;
+
+
+
+
 
 
 
@@ -1158,6 +1320,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
         const completed =
 
           habits.filter(
@@ -1165,6 +1331,10 @@ export default function Dashboard() {
             Boolean
 
           ).length;
+
+
+
+
 
 
 
@@ -1212,6 +1382,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   // =======================================================
 
   // MEALS
@@ -1232,6 +1406,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   const lunch =
 
     findMeal(
@@ -1246,6 +1424,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   const dinner =
 
     findMeal(
@@ -1255,6 +1437,10 @@ export default function Dashboard() {
       "dinner"
 
     );
+
+
+
+
 
 
 
@@ -1293,6 +1479,10 @@ export default function Dashboard() {
     );
 
   }
+
+
+
+
 
 
 
@@ -1344,6 +1534,10 @@ export default function Dashboard() {
 
 
 
+
+
+
+
   // =======================================================
 
   // PAGE
@@ -1351,2155 +1545,773 @@ export default function Dashboard() {
   // =======================================================
 
   return (
-
-    <main className="min-h-screen bg-gray-50 lg:flex">
-
+    <main className="min-h-screen bg-[#f4f8f5] lg:flex">
       <AppSidebar />
 
-
-
-
-
-      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
-
+      <section className="min-w-0 flex-1 px-4 pb-12 pt-20 sm:px-6 lg:p-10">
         <div className="mx-auto w-full max-w-7xl min-w-0">
 
-
-
-
-
-          {/* ============================================
-
-              HEADER
-
-          \\============================================ */}
-
-          <div className="flex min-w-0 flex-col gap-5 sm:gap-6 md:flex-row md:items-start md:justify-between">
-
-
-
-
-
-            <div>
-
-              <p className="text-sm font-semibold text-gray-500">
-
-                DASHBOARD
-
-              </p>
-
-
-
-
-
-              <h1 className="mt-2 break-words text-3xl font-bold leading-tight text-black sm:text-4xl">
-
-                Welcome back, {
-
-                  profile?.full_name ||
-
-                  "there"
-
-                }
-
-              </h1>
-
-
-
-
-
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
-
-                {
-
-                  todayReadable
-
-                } · Here&apos;s your wellness plan for today.
-
-              </p>
-
-            </div>
-
-
-
-
-
-            <button
-
-              type="button"
-
-              onClick={
-
-                logout
-
-              }
-
-              className="
-
-                px-5
-
-                py-3
-
-                rounded-xl
-
-                bg-black
-
-                text-white
-
-                text-sm
-
-                font-semibold
-
-                hover:bg-gray-800
-
-                cursor-pointer
-
-              "
-
-            >
-
-              <span className="inline-flex items-center gap-2">
-
-                <LogOut size={17} strokeWidth={2} />
-
-                Logout
-
-              </span>
-
-            </button>
-
-          </div>
-
-
-
-
-
-          {/* ============================================
-
-              TODAY'S COMPLETION
-
-          \\============================================ */}
-
-          <section className="mt-8 overflow-hidden rounded-2xl bg-black p-5 text-white sm:mt-10 sm:p-8">
-
-
-
-
-
-            <div className="flex min-w-0 flex-col gap-6 md:flex-row md:items-end md:justify-between">
-
-
-
-
-
-              <div>
-
-                <p className="text-sm text-gray-300">
-
-                  Today&apos;s Completion
-
-                </p>
-
-
-
-
-
-                <div className="flex items-end gap-2 mt-2">
-
-                  <p className="text-5xl font-bold sm:text-6xl">
-
-                    {
-
-                      todayStats.percentage
-
-                    }
-
-                  </p>
-
-                  <p className="mb-1 text-xl text-gray-300 sm:mb-2 sm:text-2xl">
-
-                    %
-
-                  </p>
-
+          {/* HERO */}
+          <section className="relative overflow-hidden rounded-[30px] border border-emerald-100 bg-gradient-to-br from-[#e7f8ef] via-white to-[#edf8f5] p-6 shadow-sm sm:p-8 lg:p-10">
+            <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-emerald-100/70 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 right-32 h-56 w-56 rounded-full bg-teal-100/60 blur-3xl" />
+
+            <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-800">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  Daily Ally
                 </div>
 
+                <h1 className="mt-5 break-words text-3xl font-bold leading-tight text-slate-950 sm:text-4xl lg:text-5xl">
+                  Welcome back, {profile?.full_name || "there"}.
+                </h1>
 
-
-
-
-                <p className="text-sm text-gray-300 mt-3">
-
-                  {
-
-                    todayStats.completed
-
-                  } of {
-
-                    todayStats.total
-
-                  } wellness targets completed
-
+                <p className="mt-3 text-base font-semibold text-emerald-800 sm:text-lg">
+                  Small steps. A healthier you.
                 </p>
 
-              </div>
-
-
-
-
-
-              <a
-
-                href="/tracker"
-
-                className="
-
-                  inline-flex
-
-                  items-center
-
-                  justify-center
-
-                  bg-white
-
-                  text-black
-
-                  px-6
-
-                  py-3
-
-                  rounded-xl
-
-                  font-semibold
-
-                  hover:bg-gray-100
-
-                "
-
-              >
-
-                Open Daily Tracker
-
-              </a>
-
-            </div>
-
-
-
-
-
-            <div className="mt-6 h-3 bg-gray-700 rounded-full overflow-hidden">
-
-              <div
-
-                className="h-full bg-white rounded-full transition-all"
-
-                style={{
-
-                  width:
-
-                    `${todayStats.percentage}%`
-
-                }}
-
-              />
-
-            </div>
-
-          </section>
-
-
-
-
-
-          {/* ============================================
-
-              QUICK STATS
-
-          \\============================================ */}
-
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
-
-
-
-
-
-            <StatCard
-
-              title="Weight"
-
-              value={
-
-                tracker?.weight_kg ??
-
-                profile?.weight_kg ??
-
-                "--"
-
-              }
-
-              unit={
-
-                tracker?.weight_kg !==
-
-                  null ||
-
-                profile?.weight_kg !==
-
-                  null
-
-                  ? "kg"
-
-                  : ""
-
-              }
-
-              icon={<Scale size={24} strokeWidth={2} className="text-black" />}
-
-            />
-
-
-
-
-
-            <StatCard
-
-              title="Water Today"
-
-              value={
-
-                tracker?.water_litres ??
-
-                0
-
-              }
-
-              unit="L"
-
-              icon={<Droplets size={24} strokeWidth={2} className="text-black" />}
-
-            />
-
-
-
-
-
-            <StatCard
-
-              title="Steps Today"
-
-              value={
-
-                tracker?.steps ??
-
-                0
-
-              }
-
-              unit=""
-
-              icon={<Footprints size={24} strokeWidth={2} className="text-black" />}
-
-            />
-
-
-
-
-
-            <StatCard
-
-              title="Sleep"
-
-              value={
-
-                tracker?.sleep_hours ??
-
-                0
-
-              }
-
-              unit="hrs"
-
-              icon={<Moon size={24} strokeWidth={2} className="text-black" />}
-
-            />
-
-
-
-
-
-          </section>
-
-
-
-
-
-          {/* ============================================
-
-              TODAY'S NUTRITION
-
-          \\============================================ */}
-
-          <section className="mt-10">
-
-
-
-
-
-            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
-
-              <div>
-
-                <p className="text-sm font-semibold text-gray-400">
-
-                  TODAY&apos;S PLAN
-
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                  {todayReadable} · Your nutrition, movement, recovery and wellbeing are together in one place.
                 </p>
 
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href="/tracker"
+                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
+                  >
+                    Open Daily Tracker
+                    <ArrowRight size={17} strokeWidth={2.2} />
+                  </a>
 
-
-
-
-                <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
-
-                  Nutrition
-
-                </h2>
-
+                  <a
+                    href="/coach"
+                    className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-emerald-50"
+                  >
+                    <Bot size={17} strokeWidth={2.2} />
+                    Ask Nalamera
+                  </a>
+                </div>
               </div>
 
-
-
-
-
-              <a
-
-                href="/nutrition"
-
-                className="w-fit text-sm font-semibold text-gray-500 hover:text-black"
-
-              >
-
-                View full plan →
-
-              </a>
-
-            </div>
-
-
-
-
-
-            {
-
-              nutritionDay
-
-                ? (
-
-                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mt-5">
-
-
-
-
-
-                    <MealCard
-
-                      icon={<Coffee size={24} strokeWidth={2} className="text-black" />}
-
-                      fallbackTitle="Breakfast"
-
-                      meal={
-
-                        breakfast
-
-                      }
-
-                      completed={
-
-                        tracker?.breakfast_completed ??
-
-                        false
-
-                      }
-
-                    />
-
-
-
-
-
-                    <MealCard
-
-                      icon={<Salad size={24} strokeWidth={2} className="text-black" />}
-
-                      fallbackTitle="Lunch"
-
-                      meal={
-
-                        lunch
-
-                      }
-
-                      completed={
-
-                        tracker?.lunch_completed ??
-
-                        false
-
-                      }
-
-                    />
-
-
-
-
-
-                    <MealCard
-
-                      icon={<Utensils size={24} strokeWidth={2} className="text-black" />}
-
-                      fallbackTitle="Dinner"
-
-                      meal={
-
-                        dinner
-
-                      }
-
-                      completed={
-
-                        tracker?.dinner_completed ??
-
-                        false
-
-                      }
-
-                    />
-
-
-
-
-
+              <div className="w-full rounded-2xl border border-white/80 bg-white/80 p-5 shadow-sm backdrop-blur lg:max-w-xs">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                      Today&apos;s progress
+                    </p>
+                    <p className="mt-2 text-4xl font-bold text-slate-950">
+                      {todayStats.percentage}%
+                    </p>
                   </div>
 
-                )
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                    <TrendingUp size={24} strokeWidth={2.2} />
+                  </div>
+                </div>
 
-                : (
-
-                  <EmptyPlanCard
-
-                    title="No active nutrition plan"
-
-                    description="Generate your weekly nutrition plan to see today's meals here."
-
-                    href="/nutrition"
-
-                    buttonText="Open Nutrition"
-
-                  />
-
-                )
-
-            }
-
-          </section>
-
-
-
-
-
-          {/* ============================================
-
-              TODAY'S WORKOUT
-
-          \\============================================ */}
-
-          <section className="mt-10">
-
-
-
-
-
-            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
-
-              <div>
-
-                <p className="text-sm font-semibold text-gray-400">
-
-                  TODAY&apos;S TRAINING
-
+                <p className="mt-2 text-sm text-slate-500">
+                  {todayStats.completed} of {todayStats.total} wellness targets completed
                 </p>
 
+                <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-emerald-100">
+                  <div
+                    className="h-full rounded-full bg-emerald-600 transition-all"
+                    style={{ width: `${todayStats.percentage}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
 
+          {/* QUICK STATS */}
+          <section className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <StatCard
+              title="Weight"
+              value={tracker?.weight_kg ?? profile?.weight_kg ?? "--"}
+              unit={
+                tracker?.weight_kg !== null || profile?.weight_kg !== null
+                  ? "kg"
+                  : ""
+              }
+              icon={<Scale size={22} strokeWidth={2} />}
+              tone="emerald"
+            />
 
+            <StatCard
+              title="Water"
+              value={tracker?.water_litres ?? 0}
+              unit="L"
+              icon={<Droplets size={22} strokeWidth={2} />}
+              tone="sky"
+            />
 
+            <StatCard
+              title="Steps"
+              value={tracker?.steps ?? 0}
+              unit=""
+              icon={<Footprints size={22} strokeWidth={2} />}
+              tone="amber"
+            />
 
-                <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
+            <StatCard
+              title="Sleep"
+              value={tracker?.sleep_hours ?? 0}
+              unit="hrs"
+              icon={<Moon size={22} strokeWidth={2} />}
+              tone="violet"
+            />
+          </section>
 
-                  Workout
+          {/* WELLNESS SPACE */}
+          <section className="mt-10">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
+              Explore
+            </p>
+            <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
+              Your wellness space
+            </h2>
 
-                </h2>
+            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+              <DashboardCard
+                title="Nutrition"
+                description="Meals personalized around your goals."
+                icon={<Salad size={23} strokeWidth={2} />}
+                href="/nutrition"
+                tone="emerald"
+              />
 
+              <DashboardCard
+                title="Workout"
+                description="Your weekly training and recovery."
+                icon={<Dumbbell size={23} strokeWidth={2} />}
+                href="/workout"
+                tone="blue"
+              />
+
+              <DashboardCard
+                title="Daily Tracker"
+                description="Record habits, mood and daily metrics."
+                icon={<ListChecks size={23} strokeWidth={2} />}
+                href="/tracker"
+                tone="amber"
+              />
+
+              <DashboardCard
+                title="Progress"
+                description="See trends, consistency and progress."
+                icon={<TrendingUp size={23} strokeWidth={2} />}
+                href="/progress"
+                tone="rose"
+              />
+
+              <DashboardCard
+                title="Nalamera"
+                description="Personalized AI wellness guidance."
+                icon={<Bot size={23} strokeWidth={2} />}
+                href="/coach"
+                tone="violet"
+              />
+            </div>
+          </section>
+
+          {/* TODAY'S PLAN */}
+          <section className="mt-10">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
+              Today&apos;s plan
+            </p>
+            <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
+              Plan · Track · Improve
+            </h2>
+
+            <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
+
+              {/* NUTRITION */}
+              <div className="overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
+                <div className="flex items-center justify-between gap-4 border-b border-emerald-50 bg-emerald-50/60 p-5 sm:p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                      <Salad size={23} strokeWidth={2} />
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">
+                        Nutrition
+                      </p>
+                      <h3 className="mt-0.5 text-lg font-bold text-slate-950">
+                        Today&apos;s meals
+                      </h3>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/nutrition"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800 hover:underline"
+                  >
+                    Full plan
+                    <ArrowRight size={15} />
+                  </a>
+                </div>
+
+                {nutritionDay ? (
+                  <div className="grid grid-cols-1 gap-3 p-5 sm:p-6">
+                    <MealCard
+                      icon={<Coffee size={20} strokeWidth={2} />}
+                      fallbackTitle="Breakfast"
+                      meal={breakfast}
+                      completed={tracker?.breakfast_completed ?? false}
+                    />
+
+                    <MealCard
+                      icon={<Salad size={20} strokeWidth={2} />}
+                      fallbackTitle="Lunch"
+                      meal={lunch}
+                      completed={tracker?.lunch_completed ?? false}
+                    />
+
+                    <MealCard
+                      icon={<Utensils size={20} strokeWidth={2} />}
+                      fallbackTitle="Dinner"
+                      meal={dinner}
+                      completed={tracker?.dinner_completed ?? false}
+                    />
+                  </div>
+                ) : (
+                  <div className="p-5 sm:p-6">
+                    <EmptyPlanCard
+                      title="No active nutrition plan"
+                      description="Generate your weekly nutrition plan to see today's meals here."
+                      href="/nutrition"
+                      buttonText="Open Nutrition"
+                    />
+                  </div>
+                )}
               </div>
 
-
-
-
-
-              <a
-
-                href="/workout"
-
-                className="w-fit text-sm font-semibold text-gray-500 hover:text-black"
-
-              >
-
-                View full plan →
-
-              </a>
-
-            </div>
-
-
-
-
-
-            {
-
-              workoutDay
-
-                ? (
-
-                  workoutDay.type ===
-
-                    "rest"
-
-                    ? (
-
-                      <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-5 sm:p-7">
-
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-
-                          <div>
-
-                            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-
-                              <HeartPulse
-
-                                size={25}
-
-                                strokeWidth={2}
-
-                                className="text-black"
-
-                              />
-
-                            </div>
-
-
-
-
-
-                            <h3 className="mt-4 break-words text-xl font-bold text-black sm:text-2xl">
-
-                              Recovery Day
-
-                            </h3>
-
-
-
-
-
-                            <p className="text-gray-500 mt-2">
-
-                              {
-
-                                workoutDay.focus
-
-                              }
-
-                            </p>
-
-                          </div>
-
-
-
-
-
-                          <span className="bg-green-50 text-green-700 px-4 py-2 rounded-xl text-sm font-semibold">
-
-                            Recovery
-
-                          </span>
-
-                        </div>
-
-
-
-
-
-                        {
-
-                          workoutDay.cardio && (
-
-                            <div className="mt-6 pt-5 border-t border-gray-100">
-
-                              <p className="text-sm text-gray-500">
-
-                                Suggested activity
-
-                              </p>
-
-
-
-
-
-                              <p className="font-semibold text-black mt-2">
-
-                                {
-
-                                  workoutDay.cardio.activity
-
-                                } · {
-
-                                  workoutDay.cardio.duration_minutes
-
-                                } minutes
-
-                              </p>
-
-                            </div>
-
-                          )
-
-                        }
-
-                      </div>
-
-                    )
-
-                    : (
-
-                      <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-5 sm:p-7">
-
-
-
-
-
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-
-                          <div>
-
-                            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-
-                              <Dumbbell
-
-                                size={25}
-
-                                strokeWidth={2}
-
-                                className="text-black"
-
-                              />
-
-                            </div>
-
-
-
-
-
-                            <h3 className="mt-4 break-words text-xl font-bold text-black sm:text-2xl">
-
-                              {
-
-                                workoutDay.focus
-
-                              }
-
-                            </h3>
-
-
-
-
-
-                            <p className="text-gray-500 mt-2">
-
-                              {
-
-                                workoutDay.duration_minutes
-
-                              } minutes · {
-
-                                workoutDay.exercises?.length ||
-
-                                0
-
-                              } exercises
-
-                            </p>
-
-                          </div>
-
-
-
-
-
-                          <span className={`
-
-                            px-4
-
-                            py-2
-
-                            rounded-xl
-
-                            text-sm
-
-                            font-semibold
-
-                            ${
-
-                              tracker?.workout_completed
-
-                                ? "bg-green-50 text-green-700"
-
-                                : "bg-gray-100 text-gray-600"
-
-                            }
-
-                          `}>
-
-                            {
-
-                              tracker?.workout_completed
-
-                                ? (
-
-                                  <span className="inline-flex items-center gap-1.5">
-
-                                    <Check size={15} strokeWidth={2.2} />
-
-                                    Completed
-
-                                  </span>
-
-                                )
-
-                                : "Not completed"
-
-                            }
-
-                          </span>
-
-                        </div>
-
-
-
-
-
-                        {
-
-                          Array.isArray(
-
-                            workoutDay.exercises
-
-                          ) &&
-
-                          workoutDay.exercises.length >
-
-                            0 && (
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
-
-                              {
-
-                                workoutDay.exercises
-
-                                  .slice(
-
-                                    0,
-
-                                    6
-
-                                  )
-
-                                  .map(
-
-                                    (
-
-                                      exercise,
-
-                                      index
-
-                                    ) => (
-
-                                      <div
-
-                                        key={
-
-                                          `${exercise.name}-${index}`
-
-                                        }
-
-                                        className="bg-gray-50 rounded-xl p-4"
-
-                                      >
-
-                                        <p className="break-words font-semibold text-black">
-
-                                          {
-
-                                            exercise.name
-
-                                          }
-
-                                        </p>
-
-
-
-
-
-                                        <p className="text-sm text-gray-500 mt-1">
-
-                                          {
-
-                                            exercise.sets
-
-                                          } sets × {
-
-                                            exercise.reps
-
-                                          }
-
-                                        </p>
-
-                                      </div>
-
-                                    )
-
-                                  )
-
-                              }
-
-                            </div>
-
-                          )
-
-                        }
-
-                      </div>
-
-                    )
-
-                )
-
-                : (
-
-                  <EmptyPlanCard
-
-                    title="No active workout plan"
-
-                    description="Generate your weekly training plan to see today's workout here."
-
+              {/* WORKOUT */}
+              <div className="overflow-hidden rounded-3xl border border-blue-100 bg-white shadow-sm">
+                <div className="flex items-center justify-between gap-4 border-b border-blue-50 bg-blue-50/60 p-5 sm:p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+                      <Dumbbell size={23} strokeWidth={2} />
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-blue-700">
+                        Training
+                      </p>
+                      <h3 className="mt-0.5 text-lg font-bold text-slate-950">
+                        Today&apos;s movement
+                      </h3>
+                    </div>
+                  </div>
+
+                  <a
                     href="/workout"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-blue-800 hover:underline"
+                  >
+                    Full plan
+                    <ArrowRight size={15} />
+                  </a>
+                </div>
 
-                    buttonText="Open Workout"
+                <div className="p-5 sm:p-6">
+                  {workoutDay ? (
+                    workoutDay.type === "rest" ? (
+                      <div className="rounded-2xl bg-blue-50/60 p-5">
+                        <div className="flex items-start gap-4">
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm">
+                            <HeartPulse size={24} strokeWidth={2} />
+                          </div>
 
-                  />
+                          <div>
+                            <p className="text-sm font-semibold text-blue-700">
+                              Recovery Day
+                            </p>
+                            <h4 className="mt-1 text-xl font-bold text-slate-950">
+                              {workoutDay.focus}
+                            </h4>
+                            <p className="mt-2 text-sm leading-6 text-slate-500">
+                              Give your body time to recover so you can come back stronger.
+                            </p>
+                          </div>
+                        </div>
 
-                )
+                        {workoutDay.cardio && (
+                          <div className="mt-5 rounded-xl border border-blue-100 bg-white p-4">
+                            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                              Suggested activity
+                            </p>
+                            <p className="mt-1 font-semibold text-slate-900">
+                              {workoutDay.cardio.activity} · {workoutDay.cardio.duration_minutes} minutes
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                          <div>
+                            <span className="inline-flex rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">
+                              {workoutDay.duration_minutes} min session
+                            </span>
+                            <h4 className="mt-3 text-2xl font-bold text-slate-950">
+                              {workoutDay.focus}
+                            </h4>
+                            <p className="mt-1 text-sm text-slate-500">
+                              {workoutDay.exercises?.length || 0} exercises planned for today
+                            </p>
+                          </div>
 
-            }
+                          <span
+                            className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
+                              tracker?.workout_completed
+                                ? "bg-emerald-50 text-emerald-700"
+                                : "bg-slate-100 text-slate-500"
+                            }`}
+                          >
+                            {tracker?.workout_completed && (
+                              <Check size={14} strokeWidth={2.2} />
+                            )}
+                            {tracker?.workout_completed ? "Completed" : "Pending"}
+                          </span>
+                        </div>
 
+                        {Array.isArray(workoutDay.exercises) &&
+                          workoutDay.exercises.length > 0 && (
+                            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                              {workoutDay.exercises
+                                .slice(0, 6)
+                                .map((exercise, index) => (
+                                  <div
+                                    key={`${exercise.name}-${index}`}
+                                    className="rounded-xl border border-slate-100 bg-slate-50 p-4"
+                                  >
+                                    <p className="font-semibold text-slate-900">
+                                      {exercise.name}
+                                    </p>
+                                    <p className="mt-1 text-sm text-slate-500">
+                                      {exercise.sets} sets × {exercise.reps}
+                                    </p>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                      </div>
+                    )
+                  ) : (
+                    <EmptyPlanCard
+                      title="No active workout plan"
+                      description="Generate your weekly training plan to see today's workout here."
+                      href="/workout"
+                      buttonText="Open Workout"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
           </section>
 
-
-
-
-
-          {/* ============================================
-
-              WELLBEING
-
-          \\============================================ */}
-
+          {/* WELLBEING */}
           <section className="mt-10">
-
             <div className="flex items-end justify-between gap-4">
-
               <div>
-
-                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
                   Daily check-in
                 </p>
-
-                <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
-                  Today&apos;s Wellbeing
+                <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
+                  How are you feeling?
                 </h2>
-
               </div>
 
               <a
                 href="/tracker"
-                className="hidden text-sm font-semibold text-black hover:underline sm:inline"
+                className="hidden text-sm font-semibold text-emerald-800 hover:underline sm:inline"
               >
-                Open Daily Tracker
+                Update check-in
               </a>
-
             </div>
 
-
             <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-700 to-teal-700 p-6 text-white shadow-sm md:col-span-2">
+                <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-white/10" />
 
-              {/* PROMINENT MOOD CARD */}
-
-              <div className="rounded-2xl border-2 border-black bg-white p-6 md:col-span-2">
-
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-
+                <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-4">
-
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black text-white">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15">
                       <Smile size={28} strokeWidth={2} />
                     </div>
 
                     <div>
-
-                      <p className="text-sm font-semibold text-gray-500">
+                      <p className="text-sm font-semibold text-emerald-100">
                         Today&apos;s Mood
                       </p>
-
-                      <p className="mt-1 text-2xl font-bold text-black sm:text-3xl">
-                        {
-                          tracker?.mood !== null &&
-                          tracker?.mood !== undefined
-                            ? `${tracker.mood} / 5`
-                            : "Not checked in yet"
-                        }
+                      <p className="mt-1 text-2xl font-bold sm:text-3xl">
+                        {tracker?.mood !== null && tracker?.mood !== undefined
+                          ? `${tracker.mood} / 5`
+                          : "Not checked in yet"}
                       </p>
-
-                      <p className="mt-1 text-sm text-gray-500">
-                        {
-                          tracker?.mood !== null &&
-                          tracker?.mood !== undefined
-                            ? "Your mood is recorded for today."
-                            : "Take a moment to record how you feel today."
-                        }
+                      <p className="mt-1 text-sm text-emerald-100">
+                        {tracker?.mood !== null && tracker?.mood !== undefined
+                          ? "Your mood is recorded for today."
+                          : "Take a moment to record how you feel today."}
                       </p>
-
                     </div>
-
                   </div>
-
 
                   <a
                     href="/tracker"
-                    className="
-                      inline-flex
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-xl
-                      bg-black
-                      px-5
-                      py-3
-                      text-sm
-                      font-semibold
-                      text-white
-                      transition
-                      hover:bg-gray-800
-                    "
+                    className="inline-flex shrink-0 items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50"
                   >
-                    {
-                      tracker?.mood !== null &&
-                      tracker?.mood !== undefined
-                        ? "Update Mood"
-                        : "Log Today's Mood"
-                    }
+                    {tracker?.mood !== null && tracker?.mood !== undefined
+                      ? "Update Mood"
+                      : "Log Today's Mood"}
                   </a>
-
                 </div>
-
               </div>
-
-
-              {/* ENERGY CARD */}
 
               <WellbeingCard
-                icon={<Zap size={24} strokeWidth={2} className="text-black" />}
+                icon={<Zap size={24} strokeWidth={2} />}
                 title="Energy"
-                value={
-                  tracker?.energy ??
-                  null
-                }
+                value={tracker?.energy ?? null}
               />
-
             </div>
-
-
-            <a
-              href="/tracker"
-              className="
-                mt-4
-                inline-flex
-                text-sm
-                font-semibold
-                text-black
-                hover:underline
-                sm:hidden
-              "
-            >
-              Open Daily Tracker
-            </a>
-
           </section>
 
-
-          {/* ============================================
-
-              QUICK ACTIONS
-
-          \\============================================ */}
-
-          <section className="mt-10">
-
-
-
-
-
-            <h2 className="text-xl font-bold text-black sm:text-2xl">
-
-              Quick Actions
-
-            </h2>
-
-
-
-
-
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 mt-5">
-
-
-
-
-
-              <DashboardCard
-
-                title="Nutrition"
-
-                description="View or regenerate your meal plan."
-
-                icon={<Salad size={24} strokeWidth={2} />}
-
-                href="/nutrition"
-
-              />
-
-
-
-
-
-              <DashboardCard
-
-                title="Workout"
-
-                description="See your weekly training plan."
-
-                icon={<Dumbbell size={24} strokeWidth={2} />}
-
-                href="/workout"
-
-              />
-
-
-
-
-
-              <DashboardCard
-
-                title="Daily Tracker"
-
-                description="Record today's habits and metrics."
-
-                icon={<ListChecks size={24} strokeWidth={2} />}
-
-                href="/tracker"
-
-              />
-
-
-
-
-
-              <DashboardCard
-
-                title="Progress"
-
-                description="Review trends and consistency."
-
-                icon={<TrendingUp size={24} strokeWidth={2} />}
-
-                href="/progress"
-
-              />
-
-
-
-
-
-              <DashboardCard
-
-                title="Ask Nalamera"
-
-                description="Ask questions about your progress."
-
-                icon={<Bot size={24} strokeWidth={2} />}
-
-                href="/coach"
-
-              />
-
-
-
-
-
-            </div>
-
-          </section>
-
-
-
-
-
-          {/* ============================================
-
-              PROFILE SUMMARY
-
-          \\============================================ */}
-
-          <section className="mt-10 mb-10">
-
-
-
-
-
-            <h2 className="text-xl font-bold text-black sm:text-2xl">
-
-              Your Profile
-
-            </h2>
-
-
-
-
-
-            <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-6">
-
-
-
-
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-
-
-
-
-                <ProfileItem
-
-                  label="Age"
-
-                  value={
-
-                    profile?.age
-
-                      ? `${profile.age} years`
-
-                      : "--"
-
-                  }
-
-                />
-
-
-
-
-
-                <ProfileItem
-
-                  label="Gender"
-
-                  value={
-
-                    formatGender(
-
-                      profile?.gender
-
-                    )
-
-                  }
-
-                />
-
-
-
-
-
-                <ProfileItem
-
-                  label="Primary Goal"
-
-                  value={
-
-                    formatGoal(
-
-                      profile?.goal
-
-                    )
-
-                  }
-
-                />
-
-
-
-
-
-                <ProfileItem
-
-                  label="Activity Level"
-
-                  value={
-
-                    formatActivity(
-
-                      profile?.activity_level
-
-                    )
-
-                  }
-
-                />
-
-
-
-
-
-                <ProfileItem
-
-                  label="Diet"
-
-                  value={
-
-                    formatDiet(
-
-                      profile?.diet_preference
-
-                    )
-
-                  }
-
-                />
-
-
-
-
-
-                <ProfileItem
-
-                  label="Weekly Training"
-
-                  value={
-
-                    profile?.workout_days
-
-                      ? `${profile.workout_days} days`
-
-                      : "--"
-
-                  }
-
-                />
-
-
-
-
-
+          {/* PROFILE */}
+          <section className="mb-10 mt-10">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                  Personalization
+                </p>
+                <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
+                  Your profile
+                </h2>
               </div>
 
+              <a
+                href="/profile"
+                className="text-sm font-semibold text-emerald-800 hover:underline"
+              >
+                Edit profile
+              </a>
             </div>
 
+            <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
+                <ProfileItem
+                  label="Age"
+                  value={profile?.age ? `${profile.age} years` : "--"}
+                />
+                <ProfileItem
+                  label="Gender"
+                  value={formatGender(profile?.gender)}
+                />
+                <ProfileItem
+                  label="Primary Goal"
+                  value={formatGoal(profile?.goal)}
+                />
+                <ProfileItem
+                  label="Activity"
+                  value={formatActivity(profile?.activity_level)}
+                />
+                <ProfileItem
+                  label="Diet"
+                  value={formatDiet(profile?.diet_preference)}
+                />
+                <ProfileItem
+                  label="Training"
+                  value={profile?.workout_days ? `${profile.workout_days} days` : "--"}
+                />
+              </div>
+            </div>
           </section>
 
-
-
-
+          <div className="flex justify-center pb-4">
+            <button
+              type="button"
+              onClick={logout}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950"
+            >
+              <LogOut size={17} strokeWidth={2} />
+              Logout
+            </button>
+          </div>
 
         </div>
-
       </section>
-
     </main>
-
   );
-
 }
 
-
-
-
-
 // =========================================================
-
 // STAT CARD
-
 // =========================================================
 
 function StatCard({
-
   title,
-
   value,
-
   unit,
-
   icon,
-
+  tone,
 }: {
-
-  title:
-
-    string;
-
-  value:
-
-    number | string;
-
-  unit:
-
-    string;
-
-  icon:
-
-    ReactNode;
-
+  title: string;
+  value: number | string;
+  unit: string;
+  icon: ReactNode;
+  tone: "emerald" | "sky" | "amber" | "violet";
 }) {
+  const tones = {
+    emerald: "bg-emerald-50 text-emerald-700",
+    sky: "bg-sky-50 text-sky-700",
+    amber: "bg-amber-50 text-amber-700",
+    violet: "bg-violet-50 text-violet-700",
+  };
 
   return (
-
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-
-
-
-
-
-      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
-
-        {
-
-          icon
-
-        }
-
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+      <div
+        className={`flex h-10 w-10 items-center justify-center rounded-xl ${tones[tone]}`}
+      >
+        {icon}
       </div>
 
-
-
-
-
-      <p className="text-sm text-gray-500 mt-4">
-
-        {
-
-          title
-
-        }
-
+      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+        {title}
       </p>
 
-
-
-
-
-      <p className="text-3xl font-bold text-black mt-2">
-
-        {
-
-          value
-
-        }
-
-
-
-
-
-        {
-
-          unit && (
-
-            <span className="text-base font-normal ml-1">
-
-              {
-
-                unit
-
-              }
-
-            </span>
-
-          )
-
-        }
-
+      <p className="mt-1 break-words text-2xl font-bold text-slate-950 sm:text-3xl">
+        {value}
+        {unit && (
+          <span className="ml-1 text-sm font-semibold text-slate-400">
+            {unit}
+          </span>
+        )}
       </p>
-
     </div>
-
   );
-
 }
 
 
-
-
-
 // =========================================================
-
 // MEAL CARD
-
 // =========================================================
 
 function MealCard({
-
   icon,
-
   fallbackTitle,
-
   meal,
-
   completed,
-
 }: {
-
-  icon:
-
-    ReactNode;
-
-  fallbackTitle:
-
-    string;
-
-  meal:
-
-    Meal | null;
-
-  completed:
-
-    boolean;
-
+  icon: ReactNode;
+  fallbackTitle: string;
+  meal: Meal | null;
+  completed: boolean;
 }) {
-
   return (
-
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-
-
-
-
-
-      <div className="flex items-start justify-between gap-4">
-
-
-
-
-
-        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
-
-          {
-
-            icon
-
-          }
-
+    <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+          {icon}
         </div>
 
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                {fallbackTitle}
+              </p>
+              <h4 className="mt-1 break-words font-bold text-slate-950">
+                {meal ? cleanMealName(meal.name, fallbackTitle) : fallbackTitle}
+              </h4>
+            </div>
 
+            <span
+              className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                completed
+                  ? "bg-emerald-100 text-emerald-700"
+                  : "bg-white text-slate-400"
+              }`}
+            >
+              {completed && <Check size={12} strokeWidth={2.3} />}
+              {completed ? "Done" : "Pending"}
+            </span>
+          </div>
 
-
-
-        <span className={`
-
-          text-xs
-
-          font-semibold
-
-          px-3
-
-          py-2
-
-          rounded-xl
-
-          ${
-
-            completed
-
-              ? "bg-green-50 text-green-700"
-
-              : "bg-gray-100 text-gray-500"
-
-          }
-
-        `}>
-
-          {
-
-            completed
-
-              ? (
-
-                  <span className="inline-flex items-center gap-1.5">
-
-                    <Check size={14} strokeWidth={2.2} />
-
-                    Completed
-
-                  </span>
-
-                )
-
-              : "Pending"
-
-          }
-
-        </span>
-
-      </div>
-
-
-
-
-
-      <h3 className="text-xl font-bold text-black mt-5">
-
-        {
-
-          meal
-
-            ? cleanMealName(
-
-                meal.name,
-
-                fallbackTitle
-
-              )
-
-            : fallbackTitle
-
-        }
-
-      </h3>
-
-
-
-
-
-      {
-
-        meal
-
-          ? (
-
+          {meal ? (
             <>
-
-              <p className="text-sm text-gray-500 mt-2">
-
-                {
-
-                  meal.calories
-
-                } kcal · {
-
-                  meal.protein_grams
-
-                }g protein
-
+              <p className="mt-2 text-sm text-slate-500">
+                {meal.calories} kcal · {meal.protein_grams}g protein
               </p>
 
-
-
-
-
-              {
-
-                Array.isArray(
-
-                  meal.foods
-
-                ) &&
-
-                meal.foods.length >
-
-                  0 && (
-
-                  <ul className="mt-4 space-y-2 text-sm text-gray-700">
-
-                    {
-
-                      meal.foods
-
-                        .slice(
-
-                          0,
-
-                          4
-
-                        )
-
-                        .map(
-
-                          (
-
-                            food,
-
-                            index
-
-                          ) => (
-
-                            <li
-
-                              key={
-
-                                `${food}-${index}`
-
-                              }
-
-                            >
-
-                              • {
-
-                                food
-
-                              }
-
-                            </li>
-
-                          )
-
-                        )
-
-                    }
-
-                  </ul>
-
-                )
-
-              }
-
+              {Array.isArray(meal.foods) && meal.foods.length > 0 && (
+                <p className="mt-2 text-sm leading-5 text-slate-600">
+                  {meal.foods.slice(0, 3).join(" · ")}
+                </p>
+              )}
             </>
-
-          )
-
-          : (
-
-            <p className="text-sm text-gray-500 mt-3">
-
+          ) : (
+            <p className="mt-2 text-sm text-slate-500">
               Meal details unavailable.
-
             </p>
-
-          )
-
-      }
-
+          )}
+        </div>
+      </div>
     </div>
-
   );
-
 }
 
 
-
-
-
 // =========================================================
-
 // DASHBOARD CARD
-
 // =========================================================
 
 function DashboardCard({
-
   title,
-
   description,
-
   icon,
-
   href,
-
+  tone,
 }: {
-
-  title:
-
-    string;
-
-  description:
-
-    string;
-
-  icon:
-
-    ReactNode;
-
-  href:
-
-    string;
-
+  title: string;
+  description: string;
+  icon: ReactNode;
+  href: string;
+  tone: "emerald" | "blue" | "amber" | "rose" | "violet";
 }) {
+  const tones = {
+    emerald: "bg-emerald-50 text-emerald-700 group-hover:bg-emerald-100",
+    blue: "bg-blue-50 text-blue-700 group-hover:bg-blue-100",
+    amber: "bg-amber-50 text-amber-700 group-hover:bg-amber-100",
+    rose: "bg-rose-50 text-rose-700 group-hover:bg-rose-100",
+    violet: "bg-violet-50 text-violet-700 group-hover:bg-violet-100",
+  };
 
   return (
-
     <a
-
-      href={
-
-        href
-
-      }
-
-      className="
-
-        block
-
-        bg-white
-
-        border
-
-        border-gray-200
-
-        rounded-2xl
-
-        p-6
-
-        hover:shadow-md
-
-        hover:border-gray-300
-
-        transition
-
-      "
-
+      href={href}
+      className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
     >
-
-      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-black">
-
-        {
-
-          icon
-
-        }
-
+      <div
+        className={`flex h-11 w-11 items-center justify-center rounded-xl transition ${tones[tone]}`}
+      >
+        {icon}
       </div>
 
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <h3 className="font-bold text-slate-950">
+          {title}
+        </h3>
+        <ArrowRight
+          size={16}
+          className="shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-600"
+        />
+      </div>
 
-
-
-
-      <h3 className="text-lg font-semibold text-black mt-4">
-
-        {
-
-          title
-
-        }
-
-      </h3>
-
-
-
-
-
-      <p className="text-gray-500 mt-2 text-sm">
-
-        {
-
-          description
-
-        }
-
+      <p className="mt-2 text-sm leading-5 text-slate-500">
+        {description}
       </p>
-
     </a>
-
   );
-
 }
 
 
-
-
-
 // =========================================================
-
 // WELLBEING CARD
-
 // =========================================================
 
 function WellbeingCard({
-
   icon,
-
   title,
-
   value,
-
 }: {
-
-  icon:
-
-    ReactNode;
-
-  title:
-
-    string;
-
-  value:
-
-    number | null;
-
+  icon: ReactNode;
+  title: string;
+  value: number | null;
 }) {
-
   return (
-
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-
-
-
-
-
-      <div className="flex items-center gap-3">
-
-        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
-
-          {
-
-            icon
-
-          }
-
-        </div>
-
-
-
-
-
-        <div>
-
-          <p className="text-sm text-gray-500">
-
-            {
-
-              title
-
-            }
-
-          </p>
-
-
-
-
-
-          <p className="mt-1 text-xl font-bold text-black sm:text-2xl">
-
-            {
-
-              value !==
-
-                null
-
-                ? `${value} / 5`
-
-                : "--"
-
-            }
-
-          </p>
-
-        </div>
-
+    <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-sm">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
+        {icon}
       </div>
 
+      <p className="mt-5 text-sm font-semibold text-slate-500">
+        {title}
+      </p>
+
+      <p className="mt-1 text-3xl font-bold text-slate-950">
+        {value !== null ? `${value} / 5` : "--"}
+      </p>
+
+      <p className="mt-2 text-sm leading-5 text-slate-500">
+        Your daily energy check-in helps Nalamera understand your routine.
+      </p>
     </div>
-
   );
-
 }
 
 
-
-
-
 // =========================================================
-
 // EMPTY PLAN CARD
-
 // =========================================================
 
 function EmptyPlanCard({
-
   title,
-
   description,
-
   href,
-
   buttonText,
-
 }: {
-
-  title:
-
-    string;
-
-  description:
-
-    string;
-
-  href:
-
-    string;
-
-  buttonText:
-
-    string;
-
+  title: string;
+  description: string;
+  href: string;
+  buttonText: string;
 }) {
-
   return (
-
-    <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-5 sm:p-7">
-
-
-
-
-
-      <h3 className="text-xl font-semibold text-black">
-
-        {
-
-          title
-
-        }
-
+    <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 p-5">
+      <h3 className="text-lg font-bold text-slate-950">
+        {title}
       </h3>
 
-
-
-
-
-      <p className="text-gray-500 mt-2">
-
-        {
-
-          description
-
-        }
-
+      <p className="mt-2 text-sm leading-6 text-slate-500">
+        {description}
       </p>
 
-
-
-
-
       <a
-
-        href={
-
-          href
-
-        }
-
-        className="inline-block mt-5 bg-black text-white px-5 py-3 rounded-xl font-semibold"
-
+        href={href}
+        className="mt-4 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
       >
-
-        {
-
-          buttonText
-
-        }
-
+        {buttonText}
+        <ArrowRight size={15} />
       </a>
-
     </div>
-
   );
-
 }
 
 
-
-
-
 // =========================================================
-
 // PROFILE ITEM
-
 // =========================================================
 
 function ProfileItem({
-
   label,
-
   value,
-
 }: {
-
-  label:
-
-    string;
-
-  value:
-
-    string;
-
+  label: string;
+  value: string;
 }) {
-
   return (
-
-    <div>
-
-      <p className="text-sm text-gray-500">
-
-        {
-
-          label
-
-        }
-
+    <div className="min-w-0">
+      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+        {label}
       </p>
 
-
-
-
-
-      <p className="mt-1 break-words text-lg font-semibold text-black">
-
-        {
-
-          value
-
-        }
-
+      <p className="mt-1 break-words text-sm font-semibold text-slate-900 sm:text-base">
+        {value}
       </p>
-
     </div>
-
   );
-
 }
-
-
-
 
 
 // =========================================================
@@ -3590,6 +2402,10 @@ function cleanMealName(
 
 
 
+
+
+
+
 // =========================================================
 
 // FIND MEAL
@@ -3628,6 +2444,10 @@ function findMeal(
 
 
 
+
+
+
+
   return (
 
     day.meals.find(
@@ -3651,6 +2471,10 @@ function findMeal(
   );
 
 }
+
+
+
+
 
 
 
@@ -3683,6 +2507,10 @@ function formatGoal(
     return "Wellness";
 
   }
+
+
+
+
 
 
 
@@ -3724,6 +2552,10 @@ function formatGoal(
 
 
 
+
+
+
+
   return (
 
     goals[
@@ -3737,6 +2569,10 @@ function formatGoal(
   );
 
 }
+
+
+
+
 
 
 
@@ -3774,6 +2610,10 @@ function formatGender(
 
 
 
+
+
+
+
   const genders:
 
     Record<
@@ -3806,6 +2646,10 @@ function formatGender(
 
 
 
+
+
+
+
   return (
 
     genders[
@@ -3819,6 +2663,10 @@ function formatGender(
   );
 
 }
+
+
+
+
 
 
 
@@ -3856,6 +2704,10 @@ function formatActivity(
 
 
 
+
+
+
+
   const activities:
 
     Record<
@@ -3888,6 +2740,10 @@ function formatActivity(
 
 
 
+
+
+
+
   return (
 
     activities[
@@ -3901,6 +2757,10 @@ function formatActivity(
   );
 
 }
+
+
+
+
 
 
 
@@ -3938,6 +2798,10 @@ function formatDiet(
 
 
 
+
+
+
+
   const diets:
 
     Record<
@@ -3969,6 +2833,10 @@ function formatDiet(
         "High protein",
 
     };
+
+
+
+
 
 
 
