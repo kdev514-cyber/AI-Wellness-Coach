@@ -979,7 +979,7 @@ export default function ProgressPage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 lg:flex">
+    <main className="min-h-screen bg-[#f4f8f5] lg:flex">
 
       <AppSidebar />
 
@@ -998,21 +998,21 @@ export default function ProgressPage() {
 
             <div>
 
-              <p className="text-sm font-semibold text-gray-500">
+              <p className="text-sm font-semibold text-slate-500">
 
                 YOUR PROGRESS
 
               </p>
 
 
-              <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-bold leading-tight text-slate-950 sm:text-4xl">
 
                 Progress
 
               </h1>
 
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
 
                 Understand your habits and track how consistently
                 you&apos;re following your wellness routine.
@@ -1024,7 +1024,7 @@ export default function ProgressPage() {
 
             {/* RANGE */}
 
-            <div className="flex w-full rounded-xl border border-gray-200 bg-white p-1 sm:w-auto">
+            <div className="flex w-full rounded-xl border border-slate-200 bg-white p-1 sm:w-auto">
 
 
               <button
@@ -1052,9 +1052,9 @@ export default function ProgressPage() {
                     range ===
                       7
 
-                      ? "bg-black text-white"
+                      ? "bg-emerald-700 text-white shadow-sm"
 
-                      : "text-gray-500 hover:text-black"
+                      : "text-slate-500 hover:text-slate-950"
                   }
                 `}
 
@@ -1090,9 +1090,9 @@ export default function ProgressPage() {
                     range ===
                       30
 
-                      ? "bg-black text-white"
+                      ? "bg-emerald-700 text-white shadow-sm"
 
-                      : "text-gray-500 hover:text-black"
+                      : "text-slate-500 hover:text-slate-950"
                   }
                 `}
 
@@ -1115,9 +1115,9 @@ export default function ProgressPage() {
           {
             loading && (
 
-              <div className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
+              <div className="mt-8 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:mt-10 sm:p-8">
 
-                <p className="text-gray-500">
+                <p className="text-slate-500">
 
                   Loading your progress...
 
@@ -1163,16 +1163,16 @@ export default function ProgressPage() {
             records.length ===
               0 && (
 
-              <div className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-10">
+              <div className="mt-8 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:mt-10 sm:p-10">
 
-                <h2 className="text-xl font-semibold text-black sm:text-2xl">
+                <h2 className="text-xl font-semibold text-slate-950 sm:text-2xl">
 
                   No progress data yet
 
                 </h2>
 
 
-                <p className="text-gray-500 mt-2">
+                <p className="text-slate-500 mt-2">
 
                   Start using your Daily Tracker and your progress
                   will appear here automatically.
@@ -1184,7 +1184,7 @@ export default function ProgressPage() {
 
                   href="/tracker"
 
-                  className="mt-6 inline-block w-full rounded-xl bg-black px-6 py-3 text-center font-semibold text-white sm:w-auto"
+                  className="mt-6 inline-block w-full rounded-xl bg-emerald-700 px-6 py-3 text-center font-semibold text-white sm:w-auto"
 
                 >
 
@@ -1215,7 +1215,7 @@ export default function ProgressPage() {
                     CONSISTENCY
                 ======================================== */}
 
-                <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-black p-5 text-white sm:mt-10 sm:p-8">
+                <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-emerald-700 p-5 text-white sm:mt-10 sm:p-8">
 
                   <div className="flex min-w-0 flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
@@ -1259,7 +1259,7 @@ export default function ProgressPage() {
 
                     <div className="text-left md:text-right">
 
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-slate-400">
 
                         Tracked Days
 
@@ -1273,7 +1273,7 @@ export default function ProgressPage() {
 
                       </p>
 
-                      <p className="text-sm text-gray-400 mt-1">
+                      <p className="text-sm text-slate-400 mt-1">
 
                         of {
                           range
@@ -1286,7 +1286,7 @@ export default function ProgressPage() {
                   </div>
 
 
-                  <div className="mt-6 h-3 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="mt-6 h-3 bg-emerald-900 rounded-full overflow-hidden">
 
                     <div
 
@@ -1315,7 +1315,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    icon={<Moon size={24} strokeWidth={2} className="text-black" />}
+                    icon={<Moon size={24} strokeWidth={2} className="text-slate-950" />}
 
                     title="Average Sleep"
 
@@ -1338,7 +1338,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    icon={<Droplets size={24} strokeWidth={2} className="text-black" />}
+                    icon={<Droplets size={24} strokeWidth={2} className="text-slate-950" />}
 
                     title="Average Water"
 
@@ -1361,7 +1361,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    icon={<Footprints size={24} strokeWidth={2} className="text-black" />}
+                    icon={<Footprints size={24} strokeWidth={2} className="text-slate-950" />}
 
                     title="Average Steps"
 
@@ -1382,7 +1382,7 @@ export default function ProgressPage() {
 
                   <StatCard
 
-                    icon={<Scale size={24} strokeWidth={2} className="text-black" />}
+                    icon={<Scale size={24} strokeWidth={2} className="text-slate-950" />}
 
                     title="Current Weight"
 
@@ -1412,14 +1412,14 @@ export default function ProgressPage() {
 
                 <section className="mt-8">
 
-                  <h2 className="text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
                     Plan Adherence
 
                   </h2>
 
 
-                  <p className="mt-1 break-words text-sm leading-6 text-gray-500 sm:text-base">
+                  <p className="mt-1 break-words text-sm leading-6 text-slate-500 sm:text-base">
 
                     How consistently you followed your meals and training.
 
@@ -1431,7 +1431,7 @@ export default function ProgressPage() {
 
                     <PercentageCard
 
-                      icon={<Dumbbell size={24} strokeWidth={2} className="text-black" />}
+                      icon={<Dumbbell size={24} strokeWidth={2} className="text-slate-950" />}
 
                       title="Workout Completion"
 
@@ -1448,7 +1448,7 @@ export default function ProgressPage() {
 
                     <PercentageCard
 
-                      icon={<Salad size={24} strokeWidth={2} className="text-black" />}
+                      icon={<Salad size={24} strokeWidth={2} className="text-slate-950" />}
 
                       title="Meal Completion"
 
@@ -1476,16 +1476,16 @@ export default function ProgressPage() {
                   stats.weightChange !==
                     null && (
 
-                    <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+                    <div className="mt-5 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-slate-500">
 
                         Weight Change
 
                       </p>
 
 
-                      <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
+                      <p className="mt-2 break-words text-2xl font-bold text-slate-950 sm:text-3xl">
 
                         {
                           stats.weightChange >
@@ -1507,7 +1507,7 @@ export default function ProgressPage() {
                       </p>
 
 
-                      <p className="text-sm text-gray-500 mt-2">
+                      <p className="text-sm text-slate-500 mt-2">
 
                         Between your first and latest recorded weight
                         in the selected {
@@ -1739,7 +1739,7 @@ export default function ProgressPage() {
 
                 <section className="mt-8">
 
-                  <h2 className="text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
                     Wellbeing
 
@@ -1751,7 +1751,7 @@ export default function ProgressPage() {
 
                     <StatCard
 
-                      icon={<Smile size={24} strokeWidth={2} className="text-black" />}
+                      icon={<Smile size={24} strokeWidth={2} className="text-slate-950" />}
 
                       title="Average Mood"
 
@@ -1774,7 +1774,7 @@ export default function ProgressPage() {
 
                     <StatCard
 
-                      icon={<Zap size={24} strokeWidth={2} className="text-black" />}
+                      icon={<Zap size={24} strokeWidth={2} className="text-slate-950" />}
 
                       title="Average Energy"
 
@@ -1880,67 +1880,67 @@ export default function ProgressPage() {
 
                 <section className="mt-10 mb-10">
 
-                  <h2 className="text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
                     Recent Activity
 
                   </h2>
 
 
-                  <p className="mt-1 break-words text-sm leading-6 text-gray-500 sm:text-base">
+                  <p className="mt-1 break-words text-sm leading-6 text-slate-500 sm:text-base">
 
                     Your most recent Daily Tracker entries.
 
                   </p>
 
 
-                  <div className="mt-5 min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+                  <div className="mt-5 min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                     <div className="overflow-x-auto">
 
                       <table className="w-full min-w-[760px]">
 
-                        <thead className="bg-gray-50">
+                        <thead className="bg-[#f4f8f5]">
 
                           <tr>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Date
 
                             </th>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Meals
 
                             </th>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Workout
 
                             </th>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Water
 
                             </th>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Steps
 
                             </th>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Sleep
 
                             </th>
 
-                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-gray-500 sm:px-6">
+                            <th className="whitespace-nowrap px-4 py-4 text-left text-sm text-slate-500 sm:px-6">
 
                               Mood
 
@@ -1984,11 +1984,11 @@ export default function ProgressPage() {
                                         record.id
                                       }
 
-                                      className="border-t border-gray-100"
+                                      className="border-t border-slate-100"
 
                                     >
 
-                                      <td className="whitespace-nowrap px-4 py-4 font-medium text-black sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 font-medium text-slate-950 sm:px-6">
 
                                         {
                                           formatReadableDate(
@@ -1999,7 +1999,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 text-slate-600 sm:px-6">
 
                                         {
                                           mealsCompleted
@@ -2008,7 +2008,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 text-slate-600 sm:px-6">
 
                                         {
                                           record.recovery_completed
@@ -2036,7 +2036,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 text-slate-600 sm:px-6">
 
                                         {
                                           record.water_litres !==
@@ -2052,7 +2052,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 text-slate-600 sm:px-6">
 
                                         {
                                           record.steps !==
@@ -2068,7 +2068,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 text-slate-600 sm:px-6">
 
                                         {
                                           record.sleep_hours !==
@@ -2084,7 +2084,7 @@ export default function ProgressPage() {
                                       </td>
 
 
-                                      <td className="whitespace-nowrap px-4 py-4 text-gray-600 sm:px-6">
+                                      <td className="whitespace-nowrap px-4 py-4 text-slate-600 sm:px-6">
 
                                         {
                                           record.mood !==
@@ -2165,16 +2165,16 @@ function StatCard({
 
   return (
 
-    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
+      <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
 
         {icon}
 
       </div>
 
 
-      <p className="text-sm text-gray-500 mt-4">
+      <p className="text-sm text-slate-500 mt-4">
 
         {
           title
@@ -2183,7 +2183,7 @@ function StatCard({
       </p>
 
 
-      <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
+      <p className="mt-2 break-words text-2xl font-bold text-slate-950 sm:text-3xl">
 
         {
           value
@@ -2245,16 +2245,16 @@ function PercentageCard({
 
   return (
 
-    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
+      <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
 
         {icon}
 
       </div>
 
 
-      <p className="text-gray-500 mt-4">
+      <p className="text-slate-500 mt-4">
 
         {
           title
@@ -2263,7 +2263,7 @@ function PercentageCard({
       </p>
 
 
-      <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
+      <p className="mt-2 break-words text-2xl font-bold text-slate-950 sm:text-3xl">
 
         {
           percentage
@@ -2272,11 +2272,11 @@ function PercentageCard({
       </p>
 
 
-      <div className="mt-4 h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="mt-4 h-2 bg-emerald-50 rounded-full overflow-hidden">
 
         <div
 
-          className="h-full bg-black rounded-full"
+          className="h-full bg-emerald-700 rounded-full"
 
           style={{
 
@@ -2290,7 +2290,7 @@ function PercentageCard({
       </div>
 
 
-      <p className="text-sm text-gray-400 mt-3">
+      <p className="text-sm text-slate-400 mt-3">
 
         {
           subtitle
@@ -2332,9 +2332,9 @@ function ChartCard({
 
   return (
 
-    <section className="mt-8 min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+    <section className="mt-8 min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm p-4 sm:p-6">
 
-      <h2 className="text-xl font-bold text-black sm:text-2xl">
+      <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
         {
           title
@@ -2343,7 +2343,7 @@ function ChartCard({
       </h2>
 
 
-      <p className="mb-5 mt-1 break-words text-sm leading-6 text-gray-500 sm:mb-6 sm:text-base">
+      <p className="mb-5 mt-1 break-words text-sm leading-6 text-slate-500 sm:mb-6 sm:text-base">
 
         {
           description

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 import {
+  ArrowRight,
   Apple,
   Coffee,
   Droplets,
@@ -836,608 +837,226 @@ export default function NutritionPage() {
   // =====================================================
 
   return (
-
-    <main className="min-h-screen bg-gray-50 lg:flex">
-
+    <main className="min-h-screen bg-[#f4f8f5] lg:flex">
       <AppSidebar />
 
-
-      <section className="min-w-0 flex-1 px-4 pb-10 pt-20 sm:px-6 lg:p-10">
-
-        <div className="mx-auto w-full max-w-6xl min-w-0">
-
-
-          {/* HEADER */}
-
-          <p className="text-sm font-semibold text-gray-500">
-
-            WELLNESS PLAN
-
-          </p>
-
-
-          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
-
-            Nutrition
-
-          </h1>
-
-
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
-
-            Your personalized AI-powered weekly nutrition plan.
-
-          </p>
-
-
-          {/* LOADING */}
-
-          {loadingSavedPlan && (
-
-            <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
-
-              <div className="flex items-center gap-3">
-
-                <RefreshCw
-                  size={20}
-                  strokeWidth={2}
-                  className="text-black animate-spin"
-                />
-
-
-                <p className="text-gray-500">
-
-                  Loading your saved nutrition plan...
-
-                </p>
-
-              </div>
-
-            </div>
-
-          )}
-
-
-          {/* LOAD ERROR */}
-
-          {!loadingSavedPlan &&
-            errorMessage &&
-            !plan && (
-
-              <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-5 sm:p-6">
-
-                <p className="font-semibold text-red-700">
-
-                  Nutrition data error
-
-                </p>
-
-
-                <p className="text-red-600 mt-2">
-
-                  {errorMessage}
-
-                </p>
-
-              </div>
-
-            )}
-
-
-          {/* GENERATOR */}
-
-          {!loadingSavedPlan &&
-            !plan && (
-
-              <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 sm:mt-10 sm:p-8">
-
-                <div className="flex items-center gap-3">
-
-                  <div
-                    className="
-                      w-11
-                      h-11
-                      rounded-xl
-                      bg-gray-100
-                      flex
-                      items-center
-                      justify-center
-                    "
-                  >
-
-                    <Sparkles
-                      size={22}
-                      strokeWidth={2}
-                      className="text-black"
-                    />
-
-                  </div>
-
-
-                  <h2 className="text-xl font-semibold text-black sm:text-2xl">
-
-                    Create Your Weekly Nutrition Plan
-
-                  </h2>
-
+      <section className="min-w-0 flex-1 px-4 pb-12 pt-20 sm:px-6 lg:p-10">
+        <div className="mx-auto w-full max-w-7xl min-w-0">
+          <section className="relative overflow-hidden rounded-[30px] border border-emerald-100 bg-gradient-to-br from-[#e7f8ef] via-white to-[#edf8f5] p-6 shadow-sm sm:p-8 lg:p-10">
+            <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-emerald-100/70 blur-3xl" />
+            <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-800">
+                  <Sparkles size={14} strokeWidth={2.2} />
+                  AI Nutrition
                 </div>
-
-
-                <p className="text-gray-500 mt-4 max-w-2xl">
-
-                  AI will create a seven-day meal plan using your profile,
-                  goals, diet preferences and foods.
-
+                <h1 className="mt-5 text-3xl font-bold leading-tight text-slate-950 sm:text-4xl lg:text-5xl">
+                  Nutrition that fits your day.
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                  Your personalized seven-day meal plan, built around your wellness profile, goals and dietary preferences.
                 </p>
+              </div>
 
-
+              {plan && (
                 <button
                   type="button"
-
-                  onClick={
-                    generatePlan
-                  }
-
-                  disabled={
-                    loading
-                  }
-
-                  className="
-                    mt-6
-                    flex
-                    w-full
-                    items-center
-                    justify-center
-                    gap-2
-                    rounded-xl
-                    bg-black
-                    px-6
-                    py-3
-                    font-semibold
-                    text-white
-                    transition
-                    hover:bg-gray-800
-                    disabled:cursor-not-allowed
-                    disabled:bg-gray-400
-                    cursor-pointer
-                    sm:w-auto
-                  "
+                  onClick={generateNewWeek}
+                  className="inline-flex w-fit items-center gap-2 rounded-xl border border-emerald-200 bg-white px-5 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50"
                 >
+                  <RefreshCw size={17} strokeWidth={2} />
+                  Generate New Week
+                </button>
+              )}
+            </div>
+          </section>
 
+          {loadingSavedPlan && (
+            <div className="mt-6 rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                  <RefreshCw size={19} strokeWidth={2} className="animate-spin" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Loading your nutrition plan</p>
+                  <p className="mt-0.5 text-sm text-slate-500">Getting your latest personalized week ready.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!loadingSavedPlan && errorMessage && !plan && (
+            <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 sm:p-6">
+              <p className="font-semibold text-red-700">Nutrition data error</p>
+              <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
+            </div>
+          )}
+
+          {!loadingSavedPlan && !plan && (
+            <section className="mt-6 overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 sm:p-8">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-700 text-white">
+                  <Sparkles size={23} strokeWidth={2} />
+                </div>
+                <h2 className="mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                  Create your weekly nutrition plan
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                  Nalamera will use your profile, goals and diet preferences to create a complete seven-day nutrition plan.
+                </p>
+                <button
+                  type="button"
+                  onClick={generatePlan}
+                  disabled={loading}
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
+                >
                   {loading ? (
-
                     <>
-                      <RefreshCw
-                        size={18}
-                        strokeWidth={2}
-                        className="animate-spin"
-                      />
-
+                      <RefreshCw size={18} strokeWidth={2} className="animate-spin" />
                       Generating 7-Day Plan...
                     </>
-
                   ) : (
-
                     <>
-                      <Sparkles
-                        size={18}
-                        strokeWidth={2}
-                      />
-
+                      <Sparkles size={18} strokeWidth={2} />
                       Generate Nutrition Plan
+                      <ArrowRight size={17} strokeWidth={2} />
                     </>
-
                   )}
-
                 </button>
-
-
                 {message && (
-
-                  <div className="mt-5 bg-blue-50 rounded-xl p-4">
-
-                    <p className="text-blue-700 text-sm">
-
-                      {message}
-
-                    </p>
-
+                  <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50 p-4">
+                    <p className="text-sm font-medium text-blue-700">{message}</p>
                   </div>
-
                 )}
-
               </div>
+            </section>
+          )}
 
-            )}
-
-
-          {/* PLAN */}
-
-          {plan &&
-            Array.isArray(
-              plan.days
-            ) && (
-
-              <>
-
-
-                {/* DAILY TARGETS */}
-
-                <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 md:grid-cols-3 md:gap-5">
-
-                  <TargetCard
-                    title="Daily Calories"
-                    value={
-                      plan.daily_calories
-                    }
-                    unit="kcal"
-                    icon={
-                      <Flame
-                        size={22}
-                        strokeWidth={2}
-                        className="text-black"
-                      />
-                    }
-                  />
-
-
-                  <TargetCard
-                    title="Protein"
-                    value={
-                      plan.protein_grams
-                    }
-                    unit="g"
-                    icon={
-                      <Dumbbell
-                        size={22}
-                        strokeWidth={2}
-                        className="text-black"
-                      />
-                    }
-                  />
-
-
-                  <TargetCard
-                    title="Water"
-                    value={
-                      plan.water_litres
-                    }
-                    unit="L"
-                    icon={
-                      <Droplets
-                        size={22}
-                        strokeWidth={2}
-                        className="text-black"
-                      />
-                    }
-                  />
-
+          {plan && Array.isArray(plan.days) && (
+            <>
+              <section className="mt-8">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
+                  Daily targets
+                </p>
+                <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
+                  Your nutrition goals
+                </h2>
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <TargetCard title="Daily Calories" value={plan.daily_calories} unit="kcal" icon={<Flame size={22} strokeWidth={2} />} tone="orange" />
+                  <TargetCard title="Protein" value={plan.protein_grams} unit="g" icon={<Dumbbell size={22} strokeWidth={2} />} tone="violet" />
+                  <TargetCard title="Water" value={plan.water_litres} unit="L" icon={<Droplets size={22} strokeWidth={2} />} tone="sky" />
                 </div>
+              </section>
 
+              <section className="mt-8">
+                <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+                  <div className="flex min-w-max gap-2 sm:min-w-0 sm:grid sm:grid-cols-7">
+                    {plan.days.map((day) => (
+                      <button
+                        key={day.day}
+                        type="button"
+                        onClick={() => setSelectedDay(day.day)}
+                        className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                          selectedDay === day.day
+                            ? "bg-emerald-700 text-white shadow-sm"
+                            : "bg-transparent text-slate-500 hover:bg-emerald-50 hover:text-emerald-800"
+                        }`}
+                      >
+                        <span className="xl:hidden">{day.day.slice(0, 3)}</span>
+                        <span className="hidden xl:inline">{day.day}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </section>
 
-                {/* DAY SELECTOR */}
-
-                <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-200 bg-white p-3 sm:mt-10 sm:p-4">
-
-                  <div className="flex min-w-max gap-2 sm:min-w-0 sm:flex-wrap">
-
-                    {plan.days.map(
-                      (
-                        day
-                      ) => (
-
-                        <button
-                          key={
-                            day.day
-                          }
-
-                          type="button"
-
-                          onClick={() =>
-                            setSelectedDay(
-                              day.day
-                            )
-                          }
-
-                          className={`
-                            px-4
-                            py-2
-                            rounded-xl
-                            font-medium
-                            cursor-pointer
-                            transition
-
-                            ${
-                              selectedDay ===
-                              day.day
-                                ? "bg-black text-white"
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black"
-                            }
-                          `}
-                        >
-
-                          {day.day.slice(
-                            0,
-                            3
-                          )}
-
-                        </button>
-
-                      )
-                    )}
-
+              {currentDay && (
+                <section className="mt-8">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
+                      Daily meal plan
+                    </p>
+                    <h2 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
+                      {currentDay.day}
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Meals selected to support your daily targets.
+                    </p>
                   </div>
 
-                </div>
-
-
-                {/* CURRENT DAY */}
-
-                {currentDay && (
-
-                  <section className="mt-8">
-
-                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-
-                      <div>
-
-                        <p className="text-sm font-semibold text-gray-500">
-
-                          DAILY MEAL PLAN
-
-                        </p>
-
-
-                        <h2 className="mt-1 text-2xl font-bold text-black sm:text-3xl">
-
-                          {currentDay.day}
-
-                        </h2>
-
-                      </div>
-
-
-                      <button
-                        type="button"
-
-                        onClick={
-                          generateNewWeek
-                        }
-
-                        className="
-                          flex
-                          w-fit
-                          items-center
-                          gap-2
-                          text-left
-                          text-sm
-                          text-gray-500
-                          transition
-                          hover:text-black
-                          cursor-pointer
-                        "
-                      >
-
-                        <RefreshCw
-                          size={17}
-                          strokeWidth={2}
-                          className="text-current"
-                        />
-
-                        Generate New Week
-
-                      </button>
-
-                    </div>
-
-
-                    {/* MEALS */}
-
-                    <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-3 xl:gap-6">
-
-                      {Array.isArray(
-                        currentDay.meals
-                      ) &&
-                        currentDay.meals.map(
-                          (
-                            meal,
-                            index
-                          ) => (
-
-                            <div
-                              key={`${meal.name}-${index}`}
-
-                              className="
-                                min-w-0
-                                rounded-2xl
-                                border
-                                border-gray-200
-                                bg-white
-                                p-5
-                                transition
-                                hover:shadow-sm
-                                sm:p-6
-                              "
-                            >
-
-
-                              {/* MEAL HEADER */}
-
-                              <div className="flex items-center gap-3">
-
-                                <div
-                                  className="
-                                    w-11
-                                    h-11
-                                    rounded-xl
-                                    bg-gray-100
-                                    flex
-                                    items-center
-                                    justify-center
-                                    shrink-0
-                                  "
-                                >
-
-                                  {getMealIcon(
-                                    meal.name
-                                  )}
-
-                                </div>
-
-
-                                <h3 className="break-words text-lg font-bold text-black sm:text-xl">
-
-                                  {meal.name}
-
-                                </h3>
-
+                  <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-3">
+                    {Array.isArray(currentDay.meals) &&
+                      currentDay.meals.map((meal, index) => (
+                        <article
+                          key={`${meal.name}-${index}`}
+                          className="min-w-0 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                        >
+                          <div className="border-b border-emerald-50 bg-gradient-to-r from-emerald-50 to-white p-5 sm:p-6">
+                            <div className="flex min-w-0 items-center gap-3">
+                              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                                {getMealIcon(meal.name)}
                               </div>
-
-
-                              {/* MACROS */}
-
-                              <div className="flex flex-wrap gap-4 mt-5 text-sm text-gray-500">
-
-                                <div className="flex items-center gap-1.5">
-
-                                  <Flame
-                                    size={17}
-                                    strokeWidth={2}
-                                    className="text-black"
-                                  />
-
-
-                                  <span>
-
-                                    {meal.calories} kcal
-
-                                  </span>
-
-                                </div>
-
-
-                                <div className="flex items-center gap-1.5">
-
-                                  <Dumbbell
-                                    size={17}
-                                    strokeWidth={2}
-                                    className="text-black"
-                                  />
-
-
-                                  <span>
-
-                                    {meal.protein_grams}g protein
-
-                                  </span>
-
-                                </div>
-
-                              </div>
-
-
-                              {/* FOODS */}
-
-                              <div className="mt-6">
-
-                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-
-                                  Foods
-
+                              <div className="min-w-0">
+                                <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
+                                  Meal {index + 1}
                                 </p>
-
-
-                                <div className="mt-3 space-y-3">
-
-                                  {Array.isArray(
-                                    meal.foods
-                                  ) &&
-                                    meal.foods.map(
-                                      (
-                                        food,
-                                        foodIndex
-                                      ) => (
-
-                                        <div
-                                          key={`${food}-${foodIndex}`}
-
-                                          className="flex gap-3 items-start"
-                                        >
-
-                                          <div
-                                            className="
-                                              w-1.5
-                                              h-1.5
-                                              bg-gray-400
-                                              rounded-full
-                                              mt-2
-                                              shrink-0
-                                            "
-                                          />
-
-
-                                          <p className="min-w-0 break-words text-gray-700 leading-relaxed">
-
-                                            {food}
-
-                                          </p>
-
-                                        </div>
-
-                                      )
-                                    )}
-
-                                </div>
-
+                                <h3 className="mt-1 break-words text-lg font-bold text-slate-950 sm:text-xl">
+                                  {meal.name}
+                                </h3>
                               </div>
-
-
-                              {/* REASON */}
-
-                              {meal.reason && (
-
-                                <div className="mt-6 pt-5 border-t border-gray-100">
-
-                                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-
-                                    Why this meal?
-
-                                  </p>
-
-
-                                  <p className="mt-2 break-words text-sm leading-relaxed text-gray-600">
-
-                                    {meal.reason}
-
-                                  </p>
-
-                                </div>
-
-                              )}
-
                             </div>
 
-                          )
-                        )}
+                            <div className="mt-5 flex flex-wrap gap-2">
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
+                                <Flame size={14} className="text-orange-600" />
+                                {meal.calories} kcal
+                              </span>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
+                                <Dumbbell size={14} className="text-violet-600" />
+                                {meal.protein_grams}g protein
+                              </span>
+                            </div>
+                          </div>
 
-                    </div>
+                          <div className="p-5 sm:p-6">
+                            <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                              What&apos;s included
+                            </p>
+                            <div className="mt-4 space-y-3">
+                              {Array.isArray(meal.foods) &&
+                                meal.foods.map((food, foodIndex) => (
+                                  <div key={`${food}-${foodIndex}`} className="flex items-start gap-3">
+                                    <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                                    <p className="min-w-0 break-words text-sm leading-6 text-slate-700">
+                                      {food}
+                                    </p>
+                                  </div>
+                                ))}
+                            </div>
 
-                  </section>
-
-                )}
-
-              </>
-
-            )}
-
+                            {meal.reason && (
+                              <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+                                <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                                  Why this meal?
+                                </p>
+                                <p className="mt-2 break-words text-sm leading-6 text-slate-600">
+                                  {meal.reason}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </article>
+                      ))}
+                  </div>
+                </section>
+              )}
+            </>
+          )}
         </div>
-
       </section>
-
     </main>
   );
 }
-
 
 // =========================================================
 // TARGET CARD
@@ -1448,72 +1067,32 @@ function TargetCard({
   value,
   unit,
   icon,
+  tone,
 }: {
   title: string;
   value: number;
   unit: string;
   icon: ReactNode;
+  tone: "orange" | "violet" | "sky";
 }) {
+  const tones = {
+    orange: "bg-orange-50 text-orange-700",
+    violet: "bg-violet-50 text-violet-700",
+    sky: "bg-sky-50 text-sky-700",
+  };
 
   return (
-
-    <div
-      className="
-        flex
-        min-w-0
-        items-start
-        justify-between
-        gap-4
-        rounded-2xl
-        border
-        border-gray-200
-        bg-white
-        p-5
-        sm:p-6
-      "
-    >
-
+    <div className="flex min-w-0 items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <div>
-
-        <p className="text-sm text-gray-500">
-
-          {title}
-
-        </p>
-
-
-        <p className="mt-2 break-words text-2xl font-bold text-black sm:text-3xl">
-
+        <p className="text-sm font-medium text-slate-500">{title}</p>
+        <p className="mt-1 break-words text-2xl font-bold text-slate-950 sm:text-3xl">
           {value}
-
-          <span className="text-base font-normal ml-1 text-gray-500">
-
-            {unit}
-
-          </span>
-
+          <span className="ml-1 text-sm font-semibold text-slate-400">{unit}</span>
         </p>
-
       </div>
-
-
-      <div
-        className="
-          w-11
-          h-11
-          rounded-xl
-          bg-gray-100
-          flex
-          items-center
-          justify-center
-          shrink-0
-        "
-      >
-
+      <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${tones[tone]}`}>
         {icon}
-
       </div>
-
     </div>
   );
 }

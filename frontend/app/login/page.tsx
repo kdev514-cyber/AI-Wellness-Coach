@@ -1,444 +1,183 @@
 "use client";
 
-import {
-  FormEvent,
-  useState,
-} from "react";
+import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Leaf, LockKeyhole, Mail, Sparkles } from "lucide-react";
 
-import {
-  useRouter,
-} from "next/navigation";
-
-import {
-  supabase,
-} from "../../lib/supabase";
-
-import {
-  getAuthFlowStatus,
-} from "../../lib/authFlow";
-
-
-// =========================================================
-// LOGIN PAGE
-// =========================================================
+import { supabase } from "../../lib/supabase";
+import { getAuthFlowStatus } from "../../lib/authFlow";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const router =
-    useRouter();
-
-
-  const [
-    email,
-    setEmail,
-  ] =
-    useState("");
-
-
-  const [
-    password,
-    setPassword,
-  ] =
-    useState("");
-
-
-  const [
-    message,
-    setMessage,
-  ] =
-    useState("");
-
-
-  const [
-    loading,
-    setLoading,
-  ] =
-    useState(false);
-
-
-  // =====================================================
-  // LOGIN
-  // =====================================================
-
-  async function handleLogin(
-    event:
-      FormEvent<HTMLFormElement>
-  ) {
-
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (loading) return;
 
-
-    if (
-      loading
-    ) {
-
-      return;
-
-    }
-
-
-    setLoading(
-      true
-    );
-
-
-    setMessage(
-      ""
-    );
-
+    setLoading(true);
+    setMessage("");
 
     try {
+      const cleanEmail = email.trim().toLowerCase();
 
-      const cleanEmail =
-        email
-          .trim()
-          .toLowerCase();
+      const { error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
 
+      if (error) throw error;
 
-      const {
-        error,
-      } =
-        await supabase.auth.signInWithPassword({
+      const flow = await getAuthFlowStatus();
 
-          email:
-            cleanEmail,
-
-          password,
-
-        });
-
-
-      if (
-        error
-      ) {
-
-        throw error;
-
+      if (!flow.isLoggedIn || !flow.userId) {
+        throw new Error("Login succeeded, but your session could not be loaded.");
       }
 
-
-      // =================================================
-      // CHECK USER FLOW
-      // =================================================
-
-      const flow =
-        await getAuthFlowStatus();
-
-
-      if (
-        !flow.isLoggedIn ||
-        !flow.userId
-      ) {
-
-        throw new Error(
-          "Login succeeded, but your session could not be loaded."
-        );
-
-      }
-
-
-      // =================================================
-      // EXISTING USER WITH PROFILE
-      // =================================================
-
-      if (
-        flow.hasProfile
-      ) {
-
-        router.replace(
-          "/dashboard"
-        );
-
+      if (flow.hasProfile) {
+        router.replace("/dashboard");
         return;
-
       }
 
-
-      // =================================================
-      // USER HAS NOT COMPLETED ONBOARDING
-      // =================================================
-
-      router.replace(
-        "/onboarding"
-      );
-
-
-    } catch (
-      error
-    ) {
-
-      console.error(
-        "Login error:",
-        error
-      );
-
-
-      if (
-        error instanceof Error
-      ) {
-
-        setMessage(
-          error.message
-        );
-
-      } else {
-
-        setMessage(
-          "Could not log in."
-        );
-
-      }
-
+      router.replace("/onboarding");
+    } catch (error) {
+      console.error("Login error:", error);
+      setMessage(error instanceof Error ? error.message : "Could not log in.");
     } finally {
-
-      setLoading(
-        false
-      );
-
+      setLoading(false);
     }
-
   }
 
-
-  // =====================================================
-  // PAGE
-  // =====================================================
-
   return (
-
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-12">
-
-      <div className="w-full max-w-md">
-
-
-        {/* HEADER */}
-
-        <div className="text-center mb-8">
-
-          <h1 className="text-4xl font-bold text-black">
-
-            Daily Ally
-
-          </h1>
-
-
-          <p className="mt-3 text-gray-600">
-
-            Welcome back
-
-          </p>
-
-        </div>
-
-
-        {/* FORM */}
-
-        <form
-
-          onSubmit={
-            handleLogin
-          }
-
-          className="
-            bg-white
-            border
-            border-gray-200
-            rounded-2xl
-            p-8
-            shadow-sm
-          "
-
-        >
-
-
-          {/* EMAIL */}
-
-          <div className="mb-5">
-
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-
-              Email
-
-            </label>
-
-
-            <input
-
-              type="email"
-
-              value={
-                email
-              }
-
-              onChange={
-                event =>
-                  setEmail(
-                    event.target.value
-                  )
-              }
-
-              placeholder="you@example.com"
-
-              required
-
-              autoComplete="email"
-
-              className="
-                w-full
-                rounded-xl
-                border
-                border-gray-300
-                px-4
-                py-3
-                text-black
-                outline-none
-                focus:ring-2
-                focus:ring-black
-              "
-
-            />
-
-          </div>
-
-
-          {/* PASSWORD */}
-
-          <div className="mb-6">
-
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-
-              Password
-
-            </label>
-
-
-            <input
-
-              type="password"
-
-              value={
-                password
-              }
-
-              onChange={
-                event =>
-                  setPassword(
-                    event.target.value
-                  )
-              }
-
-              placeholder="Your password"
-
-              required
-
-              autoComplete="current-password"
-
-              className="
-                w-full
-                rounded-xl
-                border
-                border-gray-300
-                px-4
-                py-3
-                text-black
-                outline-none
-                focus:ring-2
-                focus:ring-black
-              "
-
-            />
-
-          </div>
-
-
-          {/* BUTTON */}
-
-          <button
-
-            type="submit"
-
-            disabled={
-              loading
-            }
-
-            className="
-              w-full
-              rounded-xl
-              bg-black
-              px-4
-              py-3
-              font-semibold
-              text-white
-              hover:bg-gray-800
-              disabled:opacity-50
-              disabled:cursor-not-allowed
-              cursor-pointer
-            "
-
-          >
-
-            {
-              loading
-                ? "Checking your account..."
-                : "Log In"
-            }
-
-          </button>
-
-
-          {/* ERROR */}
-
-          {
-            message && (
-
-              <div className="mt-5 bg-red-50 border border-red-200 rounded-xl p-4">
-
-                <p className="text-sm text-red-700">
-
-                  {
-                    message
-                  }
-
-                </p>
-
+    <main className="min-h-screen bg-[#f4f8f5] px-5 py-8 sm:px-8 lg:flex lg:items-center lg:justify-center lg:py-12">
+      <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-[32px] border border-emerald-100 bg-white shadow-xl shadow-emerald-950/5 lg:grid-cols-[1.05fr_0.95fr]">
+        <section className="relative overflow-hidden bg-[#07875f] p-8 text-white sm:p-12 lg:min-h-[680px] lg:p-14">
+          <div className="relative z-10 flex h-full flex-col">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-semibold">
+              <Leaf className="h-4 w-4" />
+              Daily Ally
+            </div>
+
+            <div className="my-auto py-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15">
+                <Sparkles className="h-7 w-7" />
               </div>
+              <h1 className="mt-6 max-w-md text-4xl font-bold leading-tight sm:text-5xl">
+                Welcome back to your everyday wellness ally.
+              </h1>
+              <p className="mt-5 max-w-lg text-base leading-7 text-emerald-50">
+                Track your day, follow personalized nutrition and movement plans,
+                and ask Nalamera for guidance grounded in your progress.
+              </p>
+            </div>
 
-            )
-          }
+            <p className="text-sm text-emerald-100">
+              Small steps. Clear progress. Every day.
+            </p>
+          </div>
+        </section>
 
-
-          {/* SIGNUP LINK */}
-
-          <div className="mt-7 pt-6 border-t border-gray-100 text-center">
-
-            <p className="text-sm text-gray-500">
-
-              New to Daily Ally?
-
+        <section className="flex items-center p-6 sm:p-10 lg:p-14">
+          <div className="mx-auto w-full max-w-md">
+            <p className="text-sm font-bold tracking-wide text-[#07875f]">
+              WELCOME BACK
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-slate-950">Log in</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Continue your Daily Ally journey.
             </p>
 
+            <form onSubmit={handleLogin} className="mt-8">
+              <AuthField
+                label="Email"
+                type="email"
+                value={email}
+                onChange={setEmail}
+                placeholder="you@example.com"
+                autoComplete="email"
+                icon={<Mail className="h-5 w-5" />}
+              />
 
-            <a
+              <div className="mt-5">
+                <AuthField
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={setPassword}
+                  placeholder="Your password"
+                  autoComplete="current-password"
+                  icon={<LockKeyhole className="h-5 w-5" />}
+                />
+              </div>
 
-              href="/signup"
+              <button
+                type="submit"
+                disabled={loading}
+                className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#07875f] px-5 py-3.5 font-semibold text-white transition hover:bg-[#066f4f] disabled:cursor-not-allowed disabled:bg-slate-300"
+              >
+                {loading ? "Checking your account..." : "Log In"}
+                {!loading && <ArrowRight className="h-4 w-4" />}
+              </button>
 
-              className="inline-block mt-2 font-semibold text-black hover:underline"
+              {message && (
+                <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4">
+                  <p className="text-sm leading-6 text-red-700">{message}</p>
+                </div>
+              )}
 
-            >
-
-              Create an account
-
-            </a>
-
+              <div className="mt-8 border-t border-slate-100 pt-6 text-center">
+                <p className="text-sm text-slate-500">New to Daily Ally?</p>
+                <Link
+                  href="/signup"
+                  className="mt-2 inline-block font-semibold text-[#07875f] hover:underline"
+                >
+                  Create an account
+                </Link>
+              </div>
+            </form>
           </div>
-
-
-        </form>
-
+        </section>
       </div>
-
     </main>
-
   );
+}
 
+function AuthField({
+  label,
+  type,
+  value,
+  onChange,
+  placeholder,
+  autoComplete,
+  icon,
+}: {
+  label: string;
+  type: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  autoComplete: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-semibold text-slate-700">{label}</label>
+      <div className="flex items-center rounded-xl border border-slate-200 bg-[#fbfcfb] px-4 transition focus-within:border-emerald-400 focus-within:ring-4 focus-within:ring-emerald-50">
+        <span className="mr-3 text-slate-400">{icon}</span>
+        <input
+          type={type}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder={placeholder}
+          required
+          autoComplete={autoComplete}
+          className="w-full bg-transparent py-3.5 text-slate-950 outline-none placeholder:text-slate-400"
+        />
+      </div>
+    </div>
+  );
 }

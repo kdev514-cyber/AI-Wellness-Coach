@@ -1118,7 +1118,7 @@ export default function TrackerPage() {
 
   return (
 
-    <main className="min-h-screen bg-gray-50 lg:flex">
+    <main className="min-h-screen bg-[#f4f8f5] lg:flex">
 
       <AppSidebar />
 
@@ -1130,21 +1130,21 @@ export default function TrackerPage() {
 
           {/* HEADER */}
 
-          <p className="text-sm font-semibold text-gray-500">
+          <p className="text-sm font-semibold text-slate-500">
 
             DAILY WELLNESS
 
           </p>
 
 
-          <h1 className="mt-2 text-3xl font-bold leading-tight text-black sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-slate-950 sm:text-4xl">
 
             Daily Tracker
 
           </h1>
 
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
 
             Follow your personalized plan and track your daily wellness.
 
@@ -1153,9 +1153,9 @@ export default function TrackerPage() {
 
           {/* DATE */}
 
-          <div className="mt-8 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+          <div className="mt-8 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-slate-600">
 
               Tracking Date
 
@@ -1186,17 +1186,17 @@ export default function TrackerPage() {
                   min-w-0
                   rounded-xl
                   border
-                  border-gray-300
+                  border-slate-300
                   px-4
                   py-3
-                  text-black
+                  text-slate-950
                   sm:w-auto
                 "
 
               />
 
 
-              <p className="font-semibold text-black">
+              <p className="font-semibold text-slate-950">
 
                 {
                   selectedDayName
@@ -1214,9 +1214,9 @@ export default function TrackerPage() {
           {
             loading && (
 
-              <div className="mt-6 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-8">
+              <div className="mt-6 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-8">
 
-                <p className="text-gray-500">
+                <p className="text-slate-500">
 
                   Loading your daily plan...
 
@@ -1236,7 +1236,7 @@ export default function TrackerPage() {
 
                 {/* DAILY SCORE */}
 
-                <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-black p-5 text-white sm:p-8">
+                <div className="mt-8 min-w-0 overflow-hidden rounded-2xl bg-emerald-700 p-5 text-white sm:p-8">
 
                   <p className="text-gray-300 text-sm">
 
@@ -1254,7 +1254,7 @@ export default function TrackerPage() {
                   </p>
 
 
-                  <div className="mt-5 h-3 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="mt-5 h-3 bg-emerald-900 rounded-full overflow-hidden">
 
                     <div
 
@@ -1291,13 +1291,13 @@ export default function TrackerPage() {
 
                   <div>
 
-                    <p className="text-sm font-semibold text-gray-400">
+                    <p className="text-sm font-semibold text-slate-400">
 
                       TODAY&apos;S PLAN
 
                     </p>
 
-                    <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
+                    <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
 
                       Nutrition
 
@@ -1309,9 +1309,9 @@ export default function TrackerPage() {
                   {
                     !nutritionDay && (
 
-                      <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+                      <div className="mt-5 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-                        <p className="text-gray-500">
+                        <p className="text-slate-500">
 
                           No active nutrition plan found for {
                             selectedDayName
@@ -1426,14 +1426,14 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <p className="text-sm font-semibold text-gray-400">
+                  <p className="text-sm font-semibold text-slate-400">
 
                     TODAY&apos;S TRAINING
 
                   </p>
 
 
-                  <h2 className="mt-1 text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">
 
                     Workout
 
@@ -1443,9 +1443,9 @@ export default function TrackerPage() {
                   {
                     !workoutDay && (
 
-                      <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+                      <div className="mt-5 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-                        <p className="text-gray-500">
+                        <p className="text-slate-500">
 
                           No active workout plan found for {
                             selectedDayName
@@ -1464,31 +1464,31 @@ export default function TrackerPage() {
                     workoutDay.type ===
                       "rest" && (
 
-                      <div className="mt-5 min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-7">
+                      <div className="mt-5 min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-7">
 
                         <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:justify-between sm:gap-5">
 
                           <div>
 
-                            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
 
                               <HeartPulse
                                 size={25}
                                 strokeWidth={2}
-                                className="text-black"
+                                className="text-slate-950"
                               />
 
                             </div>
 
 
-                            <h3 className="text-xl font-bold text-black mt-4">
+                            <h3 className="text-xl font-bold text-slate-950 mt-4">
 
                               Recovery Day
 
                             </h3>
 
 
-                            <p className="mt-2 break-words text-gray-500">
+                            <p className="mt-2 break-words text-slate-500">
 
                               {
                                 workoutDay.focus
@@ -1511,16 +1511,16 @@ export default function TrackerPage() {
                         {
                           workoutDay.cardio && (
 
-                            <div className="mt-6 pt-5 border-t border-gray-100">
+                            <div className="mt-6 pt-5 border-t border-slate-100">
 
-                              <p className="text-sm font-semibold text-gray-500">
+                              <p className="text-sm font-semibold text-slate-500">
 
                                 Suggested activity
 
                               </p>
 
 
-                              <p className="mt-2 break-words text-black">
+                              <p className="mt-2 break-words text-slate-950">
 
                                 {
                                   workoutDay.cardio.activity
@@ -1550,7 +1550,7 @@ export default function TrackerPage() {
                           className={`mt-6 w-full rounded-xl px-5 py-3 font-semibold cursor-pointer sm:w-auto ${
                             recoveryCompleted
                               ? "bg-green-100 text-green-800"
-                              : "bg-black text-white"
+                              : "bg-emerald-700 text-white shadow-sm"
                           }`}
 
                         >
@@ -1564,7 +1564,7 @@ export default function TrackerPage() {
                         </button>
 
 
-                        <p className="text-sm text-gray-400 mt-4">
+                        <p className="text-sm text-slate-400 mt-4">
 
                           Complete your planned recovery activity, then mark the recovery day complete.
 
@@ -1593,9 +1593,9 @@ export default function TrackerPage() {
                         ${
                           workoutCompleted
 
-                            ? "bg-black text-white border-black"
+                            ? "bg-emerald-700 text-white shadow-sm border-black"
 
-                            : "bg-white text-black border-gray-200"
+                            : "bg-white text-slate-950 border-slate-200"
                         }
                       `}>
 
@@ -1608,7 +1608,7 @@ export default function TrackerPage() {
                               className={
                                 workoutCompleted
                                   ? "w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center"
-                                  : "w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center"
+                                  : "w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center"
                               }
                             >
 
@@ -1618,7 +1618,7 @@ export default function TrackerPage() {
                                 className={
                                   workoutCompleted
                                     ? "text-white"
-                                    : "text-black"
+                                    : "text-slate-950"
                                 }
                               />
 
@@ -1639,7 +1639,7 @@ export default function TrackerPage() {
 
                                 ? "text-gray-300 mt-2"
 
-                                : "text-gray-500 mt-2"
+                                : "text-slate-500 mt-2"
                             }>
 
                               {
@@ -1658,7 +1658,7 @@ export default function TrackerPage() {
                             <label className={
                               workoutCompleted
                                 ? "text-sm font-semibold text-gray-200"
-                                : "text-sm font-semibold text-gray-600"
+                                : "text-sm font-semibold text-slate-600"
                             }>
 
                               Workout progress
@@ -1683,8 +1683,8 @@ export default function TrackerPage() {
 
                               className={
                                 workoutCompleted
-                                  ? "mt-2 w-full rounded-xl border border-gray-600 bg-white px-4 py-3 font-semibold text-black sm:w-auto"
-                                  : "mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-semibold text-black sm:w-auto"
+                                  ? "mt-2 w-full rounded-xl border border-gray-600 bg-white px-4 py-3 font-semibold text-slate-950 sm:w-auto"
+                                  : "mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-950 sm:w-auto"
                               }
 
                             >
@@ -1719,7 +1719,7 @@ export default function TrackerPage() {
 
                                   ? "border-gray-700"
 
-                                  : "border-gray-100"
+                                  : "border-slate-100"
                               }
                             `}>
 
@@ -1729,7 +1729,7 @@ export default function TrackerPage() {
 
                                   ? "font-semibold text-gray-200"
 
-                                  : "font-semibold text-gray-500"
+                                  : "font-semibold text-slate-500"
                               }>
 
                                 Exercises
@@ -1757,7 +1757,7 @@ export default function TrackerPage() {
 
                                             ? "bg-gray-900 rounded-xl p-4"
 
-                                            : "bg-gray-50 rounded-xl p-4"
+                                            : "bg-[#f4f8f5] rounded-xl p-4"
                                         }
 
                                       >
@@ -1774,9 +1774,9 @@ export default function TrackerPage() {
                                         <p className={
                                           workoutCompleted
 
-                                            ? "text-gray-400 text-sm mt-1"
+                                            ? "text-slate-400 text-sm mt-1"
 
-                                            : "text-gray-500 text-sm mt-1"
+                                            : "text-slate-500 text-sm mt-1"
                                         }>
 
                                           {
@@ -1814,7 +1814,7 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <h2 className="text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
                     Daily Metrics
 
@@ -1832,7 +1832,7 @@ export default function TrackerPage() {
                         <Droplets
                           size={24}
                           strokeWidth={2}
-                          className="text-black"
+                          className="text-slate-950"
                         />
                       }
 
@@ -1859,7 +1859,7 @@ export default function TrackerPage() {
                         <Footprints
                           size={24}
                           strokeWidth={2}
-                          className="text-black"
+                          className="text-slate-950"
                         />
                       }
 
@@ -1886,7 +1886,7 @@ export default function TrackerPage() {
                         <Moon
                           size={24}
                           strokeWidth={2}
-                          className="text-black"
+                          className="text-slate-950"
                         />
                       }
 
@@ -1913,7 +1913,7 @@ export default function TrackerPage() {
                         <Scale
                           size={24}
                           strokeWidth={2}
-                          className="text-black"
+                          className="text-slate-950"
                         />
                       }
 
@@ -1943,7 +1943,7 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <h2 className="text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
                     How Do You Feel?
 
@@ -1961,7 +1961,7 @@ export default function TrackerPage() {
                         <Smile
                           size={24}
                           strokeWidth={2}
-                          className="text-black"
+                          className="text-slate-950"
                         />
                       }
 
@@ -1984,7 +1984,7 @@ export default function TrackerPage() {
                         <Zap
                           size={24}
                           strokeWidth={2}
-                          className="text-black"
+                          className="text-slate-950"
                         />
                       }
 
@@ -2010,7 +2010,7 @@ export default function TrackerPage() {
 
                 <section className="mt-10">
 
-                  <h2 className="text-xl font-bold text-black sm:text-2xl">
+                  <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
 
                     Notes
 
@@ -2043,10 +2043,10 @@ export default function TrackerPage() {
                       w-full
                       bg-white
                       border
-                      border-gray-200
+                      border-slate-200
                       rounded-2xl
                       p-5
-                      text-black
+                      text-slate-950
                       outline-none
                       focus:ring-2
                       focus:ring-black
@@ -2078,12 +2078,12 @@ export default function TrackerPage() {
                     className="
                       w-full
                       rounded-xl
-                      bg-black
+                      bg-emerald-700
                       px-8
                       py-4
                       font-semibold
                       text-white
-                      hover:bg-gray-800
+                      hover:bg-emerald-800
                       disabled:cursor-not-allowed
                       disabled:bg-gray-400
                       cursor-pointer
@@ -2217,9 +2217,9 @@ function MealTrackerCard({
       ${
         checked
 
-          ? "bg-black text-white border-black"
+          ? "bg-emerald-700 text-white shadow-sm border-black"
 
-          : "bg-white text-black border-gray-200"
+          : "bg-white text-slate-950 border-slate-200"
       }
     `}>
 
@@ -2238,7 +2238,7 @@ function MealTrackerCard({
             ${
               checked
                 ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-black"
+                : "bg-emerald-50 text-slate-950"
             }
           `}
         >
@@ -2272,9 +2272,9 @@ function MealTrackerCard({
             ${
               checked
 
-                ? "bg-white text-black"
+                ? "bg-white text-slate-950"
 
-                : "bg-black text-white"
+                : "bg-emerald-700 text-white shadow-sm"
             }
           `}
 
@@ -2313,7 +2313,7 @@ function MealTrackerCard({
 
                 ? "flex gap-4 text-sm text-gray-300 mt-2"
 
-                : "flex gap-4 text-sm text-gray-500 mt-2"
+                : "flex gap-4 text-sm text-slate-500 mt-2"
             }>
 
               <span>
@@ -2348,7 +2348,7 @@ function MealTrackerCard({
 
                     ? "mt-5 space-y-2 text-gray-200"
 
-                    : "mt-5 space-y-2 text-gray-700"
+                    : "mt-5 space-y-2 text-slate-700"
                 }>
 
                   {
@@ -2393,7 +2393,7 @@ function MealTrackerCard({
 
               ? "text-gray-300 text-sm mt-3"
 
-              : "text-gray-500 text-sm mt-3"
+              : "text-slate-500 text-sm mt-3"
           }>
 
             Meal details were not found in your plan.
@@ -2456,16 +2456,16 @@ function NumberCard({
 
   return (
 
-    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
-      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
+      <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
 
         {icon}
 
       </div>
 
 
-      <p className="font-semibold text-black mt-4">
+      <p className="font-semibold text-slate-950 mt-4">
 
         {
           title
@@ -2502,17 +2502,17 @@ function NumberCard({
           className="
             w-full
             border
-            border-gray-300
+            border-slate-300
             rounded-xl
             px-4
             py-3
-            text-black
+            text-slate-950
           "
 
         />
 
 
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-slate-500">
 
           {
             unit
@@ -2565,18 +2565,18 @@ function RatingCard({
 
   return (
 
-    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm p-5 sm:p-6">
 
       <div className="flex items-center gap-3">
 
-        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
+        <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
 
           {icon}
 
         </div>
 
 
-        <p className="font-semibold text-black text-lg">
+        <p className="font-semibold text-slate-950 text-lg">
 
           {
             title
@@ -2629,9 +2629,9 @@ function RatingCard({
                     value ===
                       rating
 
-                      ? "bg-black text-white"
+                      ? "bg-emerald-700 text-white shadow-sm"
 
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-emerald-50 text-slate-600 hover:bg-emerald-100"
                   }
                 `}
 
@@ -2651,7 +2651,7 @@ function RatingCard({
       </div>
 
 
-      <p className="text-sm text-gray-400 mt-3">
+      <p className="text-sm text-slate-400 mt-3">
 
         1 = Low · 5 = Excellent
 
